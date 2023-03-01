@@ -1,34 +1,23 @@
 from WMCore.Configuration import Configuration
-from CRABClient.UserUtilities import config, getUsernameFromSiteDB
 
 config = Configuration()
-
-config.section_("General")
-config.General.requestName = 'NanoPost1'
-config.General.transferLogs = True
-config.section_("JobType")
+config.section_('General')
+config.General.requestName = 'TT_Mtt700to1000_2018'
+config.General.transferLogs=True
+config.section_('JobType')
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'PSet.py'
 config.JobType.scriptExe = 'crab_script.sh'
-# hadd nano will not be needed once nano tools are in cmssw
-config.JobType.inputFiles = ['crab_script.py', '../scripts/haddnano.py']
+config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']
 config.JobType.sendPythonFolder = True
-config.section_("Data")
-config.Data.inputDataset = '/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17NanoAOD-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/NANOAODSIM'
-#config.Data.inputDBS = 'phys03'
+config.section_('Data')
+config.Data.inputDataset = '/TT_Mtt-700to1000_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/NANOAODSIM'
+config.Data.allowNonValidInputDataset = True
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
-#config.Data.splitting = 'EventAwareLumiBased'
-config.Data.unitsPerJob = 2
-config.Data.totalUnits = 10
-
-config.Data.outLFNDirBase = '/store/user/%s/NanoPost' % (
-    getUsernameFromSiteDB())
+config.Data.unitsPerJob = 1
+config.Data.outLFNDirBase = '/store/user/%s/%s' % ('acagnott', 'DM_v0')
 config.Data.publication = False
-config.Data.outputDatasetTag = 'NanoTestPost'
-config.section_("Site")
-config.Site.storageSite = "T2_DE_DESY"
-
-#config.Site.storageSite = "T2_CH_CERN"
-# config.section_("User")
-#config.User.voGroup = 'dcms'
+config.Data.outputDatasetTag = 'TT_Mtt700to1000_2018'
+config.section_('Site')
+config.Site.storageSite = 'T2_IT_Pisa'
