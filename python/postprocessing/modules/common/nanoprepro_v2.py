@@ -10,83 +10,92 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import *
 #from PhysicsTools.NanoAODTools.postprocessing.skimtree_utils import *
 
 
-def matching (genpart, gen, jet, sgn_top, dR = 0.4):
-    b = sgn_top*5
-    w = sgn_top*24
-    sgn_u = sgn_top
-    sgn_d = -sgn_top
-    match = False
+def matching(genpart, gen, jet, sgn_top, dR = 0.4):
+    b       = sgn_top*5
+    w       = sgn_top*24
+    sgn_u   = sgn_top
+    sgn_d   = -sgn_top
+    match   = False
     jet_out = None
 
-    if( gen.pdgId==b and gen.genPartIdxMother_prompt>-1 
-        and genpart[gen.genPartIdxMother_prompt].pdgId==sgn_top*6):
+    # Matching della b proveniente da un top con un jet/fatjet
+    if (gen.pdgId == b and gen.genPartIdxMother_prompt > -1 and genpart[gen.genPartIdxMother_prompt].pdgId == sgn_top*6):
         #print('b quark cand ', gen.pdgId)
         j, dr =  closest_(gen, jet)
-        if dr<dR:
+        if dr < dR:
             #print('found match b quark', j)
             jet_out = j
-            match = True
-    elif( gen.pdgId%2 == 0 and gen.pdgId/abs(gen.pdgId)==sgn_u and gen.genPartIdxMother_prompt>-1 
-          and genpart[gen.genPartIdxMother_prompt].pdgId==w ):
-        if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId==sgn_top*6):
+            match   = True
+    # Matching di un u/c proveniente da una W proveniente dal top con un jet/fatjet      
+    elif (gen.pdgId%2 == 0 and gen.pdgId/abs(gen.pdgId) == sgn_u and gen.genPartIdxMother_prompt > -1 and genpart[gen.genPartIdxMother_prompt].pdgId == w):
+        # La W deve provenire da un top 
+        if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId == sgn_top*6):
             #print('u quark cand', gen.pdgId)
-            j, dr =  closest_(gen, jet)
-            if dr<dR:
+            j, dr = closest_(gen, jet)
+            if dr < dR:
                 #print('found match up quark', j)
                 jet_out = j
-                match = True
-    elif( gen.pdgId%2 != 0 and gen.pdgId/abs(gen.pdgId)==sgn_d and gen.genPartIdxMother_prompt>-1
-          and genpart[gen.genPartIdxMother_prompt].pdgId==w ):
-        if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId==sgn_top*6):
+                match   = True
+    # Matching di un d/s proveniente da una W proveniente dal top con un jet/fatjet            
+    elif (gen.pdgId%2 != 0 and gen.pdgId/abs(gen.pdgId) == sgn_d and gen.genPartIdxMother_prompt > -1 and genpart[gen.genPartIdxMother_prompt].pdgId == w):
+        # La W deve provenire da un to
+        if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId == sgn_top*6):
             #print('d quark cand')
             j, dr =  closest_(gen, jet)
-            if dr<dR:
+            if dr < dR:
                 #print('found match down quark', j)
                 jet_out = j
                 match = True
     return match, jet_out
 
+
+
+
 class nanoprepro(Module):
     def __init__(self, isMC=1):
         self.isMC = isMC
         pass
+        
+        
     def beginJob(self):
         pass
+        
+        
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         
-        "branch deltaR to Jet collection"
-        #self.out.branch("Jet_deltaR", "F", lenVar="nJet") 
-        self.out.branch("Jet_matched", "F", lenVar="nJet") #0,1,2,3
-        self.out.branch("Jet_pdgId","F", lenVar="nJet")   # quark flav 
-        self.out.branch("Jet_topMother", "F", lenVar="nJet")
-        self.out.branch("FatJet_matched", "F", lenVar="nFatJet")#0,1,2,3
-        self.out.branch("FatJet_pdgId","F", lenVar="nFatJet") #quark falv
+        #self.out.branch("Jet_deltaR",      "F", lenVar="nJet") 
+        self.out.branch("Jet_matched",      "F", lenVar="nJet")    # 0,1,2,3
+        self.out.branch("Jet_pdgId",        "F", lenVar="nJet")    # quark flav 
+        self.out.branch("Jet_topMother",    "F", lenVar="nJet")
+        self.out.branch("FatJet_matched",   "F", lenVar="nFatJet") # 0,1,2,3
+        self.out.branch("FatJet_pdgId",     "F", lenVar="nFatJet") # quark flav
         self.out.branch("FatJet_topMother", "F", lenVar="nFatJet")
 
     def endFile(self, inputFile, outputFile, inputTree,wrappedOutputTree):
         pass
 
+
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""        
-        jets = Collection(event,"Jet")
-        Njets = len(jets)
-        fatjets = Collection(event,"FatJet")
-        Nfatjets = len(fatjets)
-        muons = Collection(event, "Muon")
-        electrons = Collection(event, "Electron")
+        jets       = Collection(event,"Jet")
+        Njets      = len(jets)
+        fatjets    = Collection(event,"FatJet")
+        Nfatjets   = len(fatjets)
+        muons      = Collection(event, "Muon")
+        electrons  = Collection(event, "Electron")
         if self.isMC==1:
-            LHE = Collection(event, "LHEPart")
+            LHE     = Collection(event, "LHEPart")
             genpart = Collection(event, "GenPart")
         '''init variables to branch'''
         #jets_deltar = []
         #ind_fatjets = []
-        #ind_jets = []
-        jets_pdgId = np.zeros(Njets)
-        jets_matched = np.zeros(Njets)
-        jets_topMother = np.zeros(Njets)
-        fatjets_pdgId = np.zeros(Nfatjets)
-        fatjets_matched = np.zeros(Nfatjets)
+        #ind_jets    = []
+        jets_pdgId        = np.zeros(Njets)
+        jets_matched      = np.zeros(Njets)
+        jets_topMother    = np.zeros(Njets)
+        fatjets_pdgId     = np.zeros(Nfatjets)
+        fatjets_matched   = np.zeros(Nfatjets)
         fatjets_topMother = np.zeros(Nfatjets)
         if self.isMC==1:
             #if (len(looseMu)>0 or len(looseEle)>0):# and met.pt>25:
@@ -96,34 +105,41 @@ class nanoprepro(Module):
                 #print flavquarks
                 #print("NEW EVENT <----------------------------")
                 
-                ntop = 0
+                ntop    = 0
                 sgn_top = 0
                 for gen in genpart:
-                    if (gen.genPartIdxMother == 0 and abs(gen.pdgId)==6):
-                        ntop +=1
-                        sgn_top = gen.pdgId/abs(gen.pdgId)
+                    # Trova i top nei tDM e TTbar
+                    if (gen.genPartIdxMother_prompt == -1 and abs(gen.pdgId)==6):
+                        if (gen.genPartIdxMother == 0):
+                            ntop   += 1
+                            sgn_top = gen.pdgId/abs(gen.pdgId)
+                    # Trova i top nei Tprime
+                    elif (gen.genPartIdxMother_prompt != -1 and abs(gen.pdgId)==6):
+                        if ((gen.genPartIdxMother == 0 or abs(genpart[gen.genPartIdxMother_prompt].pdgId) == 8000001)):
+                            ntop   += 1
+                            sgn_top = gen.pdgId/abs(gen.pdgId)
                 #print('# top ',ntop)
                 #print(' top sgn ', sgn_top)
-                if ntop ==1 :
-                    uquark_matched = False
-                    dquark_matched = False 
-                    bquark_matched = False 
+                if ntop == 1:
+                    uquark_matched   = False
+                    dquark_matched   = False 
+                    bquark_matched   = False 
                     uquarkFJ_matched = False
                     dquarkFJ_matched = False 
                     bquarkFJ_matched = False 
-                elif ntop ==2:
-                    b_matched = False
-                    u_matched = False
-                    dbar_matched = False
-                    bbar_matched = False                    
-                    d_matched = False
-                    ubar_matched = False
-                    bFJ_matched = False
-                    uFJ_matched = False
-                    dbarFJ_matched = False
-                    bbarFJ_matched = False                    
-                    dFJ_matched = False
-                    ubarFJ_matched = False
+                elif ntop == 2:
+                    b_matched        = False
+                    u_matched        = False
+                    dbar_matched     = False
+                    bbar_matched     = False                    
+                    d_matched        = False
+                    ubar_matched     = False
+                    bFJ_matched      = False
+                    uFJ_matched      = False
+                    dbarFJ_matched   = False
+                    bbarFJ_matched   = False                    
+                    dFJ_matched      = False
+                    ubarFJ_matched   = False
                 for gen in genpart:
                     tosave = False
                     if ntop == 1:
@@ -204,9 +220,9 @@ class nanoprepro(Module):
                             if tosave:
                                 #print "...saving jet pgd"
                                 jets_topMother[j] = sgn_top*6
-                                jets_matched[j] += 1
+                                jets_matched[j]  += 1
                                 #print(jets_matched[j])
-                                if jets_matched[j]==1: jets_pdgId[j] = abs(gen.pdgId)
+                                if jets_matched[j]  ==1: jets_pdgId[j] = abs(gen.pdgId)
                                 elif jets_matched[j]==2: jets_pdgId[j] += abs(gen.pdgId)*10
                                 elif jets_matched[j]==3: jets_pdgId[j] += abs(gen.pdgId)*100
                                 #ind_jets[-1] = j
