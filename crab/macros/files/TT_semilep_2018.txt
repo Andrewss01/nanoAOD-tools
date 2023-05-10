@@ -1,0 +1,3 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_semilep_2018/230219_150647/0000/tree_hadd_74.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_semilep_2018/230219_150647/0000/tree_hadd_64.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_semilep_2018/230219_150647/0000/tree_hadd_19.root

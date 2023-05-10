@@ -1,0 +1,15 @@
+Proxy_filename          = x509up
+Proxy_path              = /afs/cern.ch/user/a/acagnott/private/$(Proxy_filename)
+universe                = vanilla
+x509userproxy           = $(Proxy_path)
+use_x509userproxy       = true
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files    = $(Proxy_path)
++JobFlavour             = "microcentury"
+executable              = runner.sh
+arguments               = root://cms-xrd-global.cern.ch///store/mc/RunIIAutumn18NanoAODv7/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/NANOAODSIM/Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/70000/78C02AA4-B0A5-F042-BCB5-7245E027F3F6.root /eos/home-a/acagnott/DarkMatter/testfileskim/TprimeToTZ_1800_2018_Skim.root 78C02AA4-B0A5-F042-BCB5-7245E027F3F6_Skim.root TprimeToTZ_1800_2018
+output                  = condor/output/TprimeToTZ_1800_2018.out
+error                   = condor/error/TprimeToTZ_1800_2018.err
+log                     = condor/log/TprimeToTZ_1800_2018.log
+queue

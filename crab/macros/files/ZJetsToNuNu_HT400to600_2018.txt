@@ -1,0 +1,5 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraph/ZJetsToNuNu_HT400to600_2018/230218_132611/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraph/ZJetsToNuNu_HT400to600_2018/230218_132611/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraph/ZJetsToNuNu_HT400to600_2018/230218_132611/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraph/ZJetsToNuNu_HT400to600_2018/230218_132611/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraph/ZJetsToNuNu_HT400to600_2018/230218_132611/0000/tree_hadd_7.root

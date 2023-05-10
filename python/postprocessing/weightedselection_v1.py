@@ -1,7 +1,7 @@
 import os
 import sys
 import ROOT
-import math
+from math import sqrt, cos
 from array import array
 import ROOT
 import copy
@@ -17,6 +17,7 @@ from PhysicsTools.NanoAODTools.postprocessing.variables import *
 from tqdm import tqdm
 import optparse
 from plot_parameters import *
+from datetime import datetime
 
 usage = 'python weightedselection_v1.py'
 parser = optparse.OptionParser(usage)
@@ -46,12 +47,12 @@ verbose = True
 
 
     
-datasets = [TT_2018,
-            QCD_2018,
-            ZJetsToNuNu_2018,
-            tDM_mPhi50_mChi1_2018,tDM_mPhi500_mChi1_2018, tDM_mPhi1000_mChi1_2018,
-            TprimeToTZ_1800_2018,TprimeToTZ_1000_2018, TprimeToTZ_700_2018]
-
+datasets = [QCDHT_300to500_2018#TT_2018,
+            #QCD_2018,
+            #ZJetsToNuNu_2018,
+            #tDM_mPhi50_mChi1_2018,tDM_mPhi500_mChi1_2018, tDM_mPhi1000_mChi1_2018,
+            #TprimeToTZ_1800_2018,TprimeToTZ_1000_2018, TprimeToTZ_700_2018]
+    ]
 
     #TT_2018,QCD_2018,ZJetsToNuNu_2018,tDM_mPhi50_mChi1_2018,tDM_mPhi500_mChi1_2018, tDM_mPhi1000_mChi1_2018]
 
@@ -65,10 +66,11 @@ variables = [
     variable(name="top_m", title="Top mass [GeV]", nbins=30, xmin=0, xmax=500),
     variable(name="met_pt", title="MET pT [GeV]", nbins=50, xmin=0, xmax=1000),
     variable(name="min_dphi", title="#Delta #Phi", nbins=int(3/0.2), xmin=0, xmax=3),
-    variable(name="max_eta_jet", title="#eta", nbins=20, xmin=0, xmax=8)
+    #variable(name="max_eta_jet", title="#eta", nbins=20, xmin=0, xmax=8),
+    variable(name="mt", title="M_{T} [GeV]", nbins=30, xmin=0, xmax=1000)
     ]
 
-lumi = 59.7*1000
+lumi = 10**3#59.7*1000
 
 outfolder = "/eos/home-a/acagnott/DarkMatter/testSelection/"
 outfolder = outfolder+"met_"+str(pt_met)+"_mindphi_"+str(mDPhi)+"_dR_"+str(dRmin)+"_ptmaxres_"+str(ptmax_res)+"_ptmaxmix_"+str(ptmax_mix)+"/"
@@ -87,6 +89,13 @@ ROOT.gROOT.SetStyle('Plain')
 ROOT.gStyle.SetPalette(1)
 ROOT.gStyle.SetOptStat(0)
 ROOT.TH1.SetDefaultSumw2()
+
+def get_files_string(d):
+    folder_files = "../../crab/macros/files/"
+    infile_string = open(folder_files+d.label+".txt")
+    strings = infile_string.readlines()
+    for s in strings: s.replace('\n', '')
+    return strings
 
 def h_workflow(s):
     h_workflow = ROOT.TH1F("h_workflow_"+s, "", 4, -0.5, 3.5)
@@ -123,6 +132,9 @@ def top_select(top, trs, ptmin, ptmax, dR, category):
         if debug: print('deltaRs', drs)
     return top_sel
 
+
+t1 = datetime.now()
+
 for d in datasets:
     print("### processing :", d.label)
     outfile = ROOT.TFile.Open(outfolder+d.label+"_weightedhists.root", "RECREATE")
@@ -133,6 +145,7 @@ for d in datasets:
         signal = False
     if hasattr(d, "components"):
         samples = d.components
+        print(samples)
         tosum =True
     else:
         samples = [d]
@@ -154,10 +167,17 @@ for d in datasets:
     h = {v._name:{c: ROOT.TH1F("h_"+v._name+"_"+c+"_"+d.label, v._title, nbins[v._name][c], xmin[v._name][c], xmax[v._name][c]) for c in categories} for v in variables}
 
     for s in samples:
+        strings = get_files_string(s)
         print("- ", s.label)
-        infile = ROOT.TFile.Open(s.local_path)
-        tree = InputTree(infile.Get("Events"))
-        nevents = tree.GetEntries()
+        chain = ROOT.TChain("Events")
+        nevents = 0
+        for fi in strings[:1]:
+            chain.Add(fi)
+            infile = ROOT.TFile.Open(fi)
+            #tree = InputTree(infile.Get("Events"))
+            h_genweight = ROOT.TH1F(infile.Get("plots/h_genweight"))
+            nevents+=int(h_genweight.GetBinContent(1))
+            infile.Close()
         if verbose: print('# total events:',nevents)
         if verbose: print("starting loop")
         region1, region2, region3 = 0,0,0
@@ -179,7 +199,8 @@ for d in datasets:
         tmp_ef.GetXaxis().SetBinLabel(5, "# top merged")
         tmp = {v._name:{c: ROOT.TH1F("h_"+v._name+"_"+c+"_"+s.label, v._title, nbins[v._name][c], xmin[v._name][c], xmax[v._name][c]) for c in categories} for v in variables}
         
-        for i in range(nevents):#tqdm(range(nevents)):
+        for i in range(chain.GetEntries()):#tqdm(range(nevents)):
+            tree = InputTree(chain)
             event = Event(tree, i)
             toplowpt = Collection(event, "TopLowPt")
             tophighpt = Collection(event, "TopHighPt")
@@ -192,14 +213,17 @@ for d in datasets:
             if met.pt<pt_met:
                 met_cut +=1
                 continue
-            mindphi=1000
+            midphi = Object(event, "MinDelta")
+            mindphi = midphi.phi
+            '''mindphi=1000
             maxetajet=0
             for j in goodjet:
                 if j.pt<30 and j.jetId<2: continue
                 dphi = abs(deltaPhi(j.phi,met.phi))
                 if dphi<mindphi: mindphi = dphi
-                if j.pt<50:continue
+                if j.pt<50: continue
                 if abs(j.eta)>maxetajet: maxetajet=abs(j.eta)
+            '''
             if mindphi<mDPhi: 
                 dphi_cut +=1
                 continue
@@ -214,7 +238,7 @@ for d in datasets:
             n_tres=len(top_res)
             n_tmix= len(top_mix)
             n_tmer=len(top_mer)
-        
+            
             if n_tres>0 and n_tmix==0 and n_tmer==0:
                 cat = "resolved"
                 region1 +=1
@@ -227,8 +251,11 @@ for d in datasets:
                 if met.pt>xmax[variables[2]._name][cat]: tmp[variables[2]._name][cat].AddBinContent(nbins[variables[2]._name][cat], w)
                 tmp[variables[3]._name][cat].Fill(mindphi, w)
                 if mindphi>xmax[variables[3]._name][cat]: tmp[variables[3]._name][cat].AddBinContent(nbins[variables[3]._name][cat], w)
-                tmp[variables[4]._name][cat].Fill(maxetajet, w)
-                if maxetajet>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
+                #tmp[variables[4]._name][cat].Fill(maxetajet, w)
+                #if maxetajet>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
+                mt = sqrt(2*top_res[best_top].pt*met.pt*(1-cos(top_res[best_top].phi -met.phi)))
+                tmp[variables[4]._name][cat].Fill(mt, w)
+                if mt>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
             elif n_tres<2 and n_tmix>0 and n_tmer==0:
                 cat = "mix"
                 region2 +=1
@@ -241,8 +268,11 @@ for d in datasets:
                 if met.pt>xmax[variables[2]._name][cat]: tmp[variables[2]._name][cat].AddBinContent(nbins[variables[2]._name][cat], w)
                 tmp[variables[3]._name][cat].Fill(mindphi, w)
                 if mindphi>xmax[variables[3]._name][cat]: tmp[variables[3]._name][cat].AddBinContent(nbins[variables[3]._name][cat], w)
-                tmp[variables[4]._name][cat].Fill(maxetajet, w)
-                if maxetajet>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
+                #tmp[variables[4]._name][cat].Fill(maxetajet, w)
+                #if maxetajet>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
+                mt = sqrt(2*top_mix[best_top].pt*met.pt*(1-cos(top_mix[best_top].phi -met.phi)))
+                tmp[variables[4]._name][cat].Fill(mt, w)
+                if mt>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
             elif n_tres==0 and n_tmix<2 and n_tmer>0:
                 cat = "merged"
                 region3 +=1
@@ -255,8 +285,11 @@ for d in datasets:
                 if met.pt>xmax[variables[2]._name][cat]: tmp[variables[2]._name][cat].AddBinContent(nbins[variables[2]._name][cat], w)
                 tmp[variables[3]._name][cat].Fill(mindphi, w)
                 if mindphi>xmax[variables[3]._name][cat]: tmp[variables[3]._name][cat].AddBinContent(nbins[variables[3]._name][cat], w)
-                tmp[variables[4]._name][cat].Fill(maxetajet, w)
-                if maxetajet>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
+                #tmp[variables[4]._name][cat].Fill(maxetajet, w)
+                #if maxetajet>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
+                mt = sqrt(2*top_mer[best_top].pt*met.pt*(1-cos(top_mer[best_top].phi -met.phi)))
+                tmp[variables[4]._name][cat].Fill(mt, w)
+                if mt>xmax[variables[4]._name][cat]: tmp[variables[4]._name][cat].AddBinContent(nbins[variables[4]._name][cat], w)
         if verbose:
             print("# events dropped by met request", met_cut)
             print("top resolved ", region1)
@@ -293,3 +326,6 @@ for d in datasets:
         for c in categories:
             h[v._name][c].Write()
     outfile.Close()
+
+t2 = datetime.now()
+print(t2-t1)

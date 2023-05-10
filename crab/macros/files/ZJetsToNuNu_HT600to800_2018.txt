@@ -1,0 +1,2 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-600To800_13TeV-madgraph/ZJetsToNuNu_HT600to800_2018/230218_132702/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/ZJetsToNuNu_HT-600To800_13TeV-madgraph/ZJetsToNuNu_HT600to800_2018/230218_132702/0000/tree_hadd_1.root
