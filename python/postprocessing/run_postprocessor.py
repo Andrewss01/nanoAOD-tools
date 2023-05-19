@@ -16,7 +16,7 @@ fnames = [sys.argv[1]]
 label = sys.argv[4]
 
 if 'QCD' in fnames[0]:
-    p=PostProcessor(".",fnames,modules=[MCweight_writer(), preselection(), nanoTopcand(), nanoTopevaluate()],  provenance=True, histFileName="histOut.root", histDirName="plots", maxEntries=10)
+    p=PostProcessor(".",fnames,modules=[MCweight_writer(), preselection(), nanoTopcand(), nanoTopevaluate()],  provenance=True, histFileName="histOut"+label+".root", histDirName="plots", maxEntries=10)
 else:
     p=PostProcessor(".",fnames,modules=[MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour="-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24"),nanoprepro(),nanoTopcand(), nanoTopevaluate()], provenance=True, histFileName="histOut"+label+".root", histDirName="plots", maxEntries=10)
 p.run()
