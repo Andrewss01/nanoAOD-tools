@@ -1,0 +1,20 @@
+Your user certificate is going to expire in 9 days. See: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookStartingGrid#ObtainingCert 
+Your user certificate is going to expire in 9 days. See: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookStartingGrid#ObtainingCert 
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_17.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_35.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_42.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_27.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_21.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_22.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_44.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_31.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_41.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_37.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_26.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_24.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_47.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_45.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/QCD_Pt_300to470_2022/230529_141425/0000/tree_hadd_34.root
