@@ -85,7 +85,7 @@ class nanoprepro(Module):
         muons      = Collection(event, "Muon")
         electrons  = Collection(event, "Electron")
         if self.isMC==1:
-            LHE     = Collection(event, "LHEPart")
+            #LHE     = Collection(event, "LHEPart")
             genpart = Collection(event, "GenPart")
         '''init variables to branch'''
         #jets_deltar = []

@@ -30,7 +30,8 @@ class preselection(Module):
         goodJet, goodfatjet = presel(jets, fatjets)
         isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
         
-        isGoodEvent = not (len(goodJet)<3 and len(goodfatjet)<1) and met.pt>50 #((((len(goodMu) >= 1) and (len(goodEle) == 0)) or ((len(goodMu) == 0) and (len(goodEle) >= 1))) and len(goodJet)>=1)
+        isGoodEvent =  (len(goodJet)>2 or len(goodfatjet)>0) and met.pt>25 
+        #((((len(goodMu) >= 1) and (len(goodEle) == 0)) or ((len(goodMu) == 0) and (len(goodEle) >= 1))) and len(goodJet)>=1)
         goodEvent = isGoodPV and isGoodEvent
 
         for j in goodJet:

@@ -113,10 +113,10 @@ class nanoTopcand(Module):
         self.out.branch("TopHighPt_idxJet0", "I", lenVar="nTopHighPt")
         self.out.branch("TopHighPt_idxJet1", "I", lenVar="nTopHighPt")
         self.out.branch("TopHighPt_idxJet2", "I", lenVar="nTopHighPt")
-        self.out.branch("TopHighPt_sumjetPt", "F", lenVar="nTopHighPt")
-        self.out.branch("TopHighPt_sumjetEta", "F", lenVar="nTopHighPt")
-        self.out.branch("TopHighPt_sumjetPhi", "F", lenVar="nTopHighPt")
-        self.out.branch("TopHighPt_sumjetMass", "F", lenVar="nTopHighPt")
+        #self.out.branch("TopHighPt_sumjetPt", "F", lenVar="nTopHighPt")
+        #self.out.branch("TopHighPt_sumjetEta", "F", lenVar="nTopHighPt")
+        #self.out.branch("TopHighPt_sumjetPhi", "F", lenVar="nTopHighPt")
+        #self.out.branch("TopHighPt_sumjetMass", "F", lenVar="nTopHighPt")
         self.out.branch("TopHighPt_pt", "F", lenVar="nTopHighPt")
         self.out.branch("TopHighPt_eta", "F", lenVar="nTopHighPt")
         self.out.branch("TopHighPt_phi", "F", lenVar="nTopHighPt")
@@ -139,11 +139,6 @@ class nanoTopcand(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         
-        listOfBranches = event.getListOfBranches()
-        if "Jet_matched" in listOfBranches: 
-            file_signal = True
-        else:
-            file_signal = False
         jets = Collection(event,"Jet")
         njets = len(jets)
         fatjets = Collection(event,"FatJet")
@@ -151,7 +146,7 @@ class nanoTopcand(Module):
         goodjets, goodfatjets = presel(jets, fatjets)
         ngoodjets = len(goodjets)
         ngoodfatjets = len(goodfatjets)
-        
+
         pt_cut_low = 1000
         pt_cut_high = 50
         
@@ -195,7 +190,7 @@ class nanoTopcand(Module):
                         toplow_eta_.append(top_p4.Eta())
                         toplow_phi_.append(top_p4.Phi())
                         toplow_mass_.append(top_p4.M())
-                        if file_signal:
+                        if self.isMC:
                             toplow_truth.append(truth(j0=j0, j1=j1, j2=j2))
                         else:
                             toplow_truth.append(0)
@@ -216,7 +211,7 @@ class nanoTopcand(Module):
                             tophigh_eta_.append(top_p4.Eta())
                             tophigh_phi_.append(top_p4.Phi())
                             tophigh_mass_.append(top_p4.M())
-                            if file_signal:
+                            if self.isMC:
                                 tophigh_truth.append(truth(j0=j0, j1=j1, fj=fj))
                             else:
                                 tophigh_truth.append(0)
@@ -233,7 +228,7 @@ class nanoTopcand(Module):
                             tophigh_eta_.append(top_p4.Eta())
                             tophigh_phi_.append(top_p4.Phi())
                             tophigh_mass_.append(top_p4.M())
-                            if file_signal:
+                            if self.isMC:
                                 tophigh_truth.append(truth(j0=j0, j1=j1, j2=j2))
                             else:
                                 tophigh_truth.append(0)
@@ -251,7 +246,7 @@ class nanoTopcand(Module):
                                 tophigh_eta_.append(top_p4.Eta())
                                 tophigh_phi_.append(top_p4.Phi())
                                 tophigh_mass_.append(top_p4.M())
-                                if file_signal:
+                                if self.isMC:
                                     tophigh_truth.append(truth(j0=j0, j1=j1, j2=j2, fj=fj))
                                 else: 
                                     tophigh_truth.append(0)

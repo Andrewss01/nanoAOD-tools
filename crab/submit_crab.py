@@ -42,6 +42,8 @@ def cfg_writer(sample, isMC, outdir):
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt'\n")
         elif sample.year == '2018':
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
+        elif sample.year == '2022':
+            f.write("config.Data.lumiMask = '/eos/user/c/cmsdqm/www/CAF/certification/Collisions22/Cert_Collisions2022_355100_362760_Golden.json'\n")
         f.write("config.Data.unitsPerJob = 500\n")
     else:
         f.write("config.Data.splitting = 'FileBased'\n")
@@ -80,7 +82,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoprepro_v2 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopevaluate import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.topselection import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.globalvar import *\n")
 
     #f.write("infile = "+str(sample.files)+"\n")
     #f.write("outpath = '"+ outpath+"'\n")
@@ -97,8 +99,8 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
         #f.write("metCorrector_tot = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='Total', redojec=True)\n")
         #f.write("fatJetCorrector_tot = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='Total', redojec=True, jetType = 'AK8PFchs')\n")
         #f.write("HLT = HLT_fun('"+str(sample.year)+"', '"+str(sample.runP)+"')\n")
-        f.write("p=PostProcessor('.', inputFiles(), '"+presel+"', modules=["+modules+"], provenance=True, fwkJobReport=True, jsonInput=runsAndLumis(), haddFileName='tree_hadd.root', outputbranchsel='keep_and_drop.txt')\n")#
-
+        f.write("p=PostProcessor('.', inputFiles(), '"+presel+"', modules=["+modules+"], provenance=True, fwkJobReport=True, haddFileName='tree_hadd.root', outputbranchsel='keep_and_drop.txt')\n")#
+        #jsonInput=runsAndLumis()
     f.write("p.run()\n")
     f.write("print('DONE')\n")
     f.close()
@@ -168,10 +170,11 @@ for sample in samples:
         #    MCweight_mod = "LHAPDFWeight_NNPDF(),LHAPDFWeight_PDF4LHC15(),MCweight_writer(LHAPDFs=['LHANNPDF','LHAPDF4LHC15'])"
         if ('Data' in sample.label):
             isMC = False
-            if year == '2016':
-                presel = "Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter "
+            presel = ""
+            """if year == '2016':
+                presel = ""#"Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter "
             else:
-                presel = "Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter && Flag_ecalBadCalibFilterV2"
+                presel = ""#"Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter && Flag_ecalBadCalibFilterV2" """
         else:
             isMC = True
             presel = ""
@@ -179,7 +182,7 @@ for sample in samples:
         print('The flag isMC is: ' + str(isMC))
 
         print("Producing crab configuration file")
-        cfg_writer(sample, isMC, "DM_v0")
+        cfg_writer(sample, isMC, "DM_Run3_v0")
 
         if isMC:
             #if year != '2018':
@@ -188,16 +191,15 @@ for sample in samples:
             #    modules = MCweight_mod + ",  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + trg_mod + ", " + pu_mod + ", " + btag_mod + ", metCorrector(), fatJetCorrector(), metCorrector_tot(), fatJetCorrector_tot()" # Put here all the modules you want to be runned by crab
             #if("WP" in sample.label):
             #    modules=modules.replace("MCweight_writer()","LHAPDFWeight_NNPDF(),LHAPDFWeight_NNPDFLO(),LHAPDFWeight_PDF4LHC15(),MCweight_writer(LHAPDFs=['LHANNPDF','LHAPDF4LHC15','LHANNPDFLO'])")
-            if 'QCD' in sample.label:
-                modules = "MCweight_writer(), preselection(), nanoTopcand(), nanoTopevaluate(), topselection()"
-            else:
-                modules = "MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(), nanoTopevaluate(), topselection()"
+
+            modules = "MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), nanoTopevaluate(), globalvar()"
         else:
             #modules = "HLT(), preselection(), metCorrector(), fatJetCorrector(), metCorrector_tot(), fatJetCorrector_tot()" # Put here all the modules you want to be runned by crab
-            modules = "preselection(),nanoTopcand(), nanoTopevaluate(), topselection()"
+            modules = "preselection(),nanoTopcand(isMC=0), nanoTopevaluate(), globalvar()"
+        # RIMOSSO topselection() dai modules perché fa una selezione che ho implementato allo step successivo
 
         print("Producing crab script")
-        crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
+        crab_script_writer(sample,'', isMC, modules, presel)
         os.system("chmod +x crab_script.sh")
         
         #Launching crab

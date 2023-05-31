@@ -337,7 +337,8 @@ if not opt.dataset in sample_dict.keys():
                  ZJetsToNuNu_2018, 
                  TT_2018,
                  TprimeToTZ_700_2018, 
-                 TprimeToTZ_1000_2018,TprimeToTZ_1800_2018
+                 TprimeToTZ_1000_2018,TprimeToTZ_1800_2018,
+                 DataHTF_2022
              ]
 else : datasets = [sample_dict[opt.dataset]]
 
@@ -356,19 +357,22 @@ if opt.samples:
             #samples[d] = [d]
             tmp_samples = [d]
         
-        for s in tqdm(tmp_samples):#samples[d]:
+        for s in tmp_samples:#samples[d]:
             strings = get_files_string(s)
             hist = ROOT.TH1F()
             ntot = [] 
             #if len(strings)>5: strings = strings[:3]
             print("looping on strings: ", len(strings))
-            for f in strings: 
-                #chain.Add(f)
-                ifile = ROOT.TFile.Open(f)
-                h_genweight = ROOT.TH1F(ifile.Get("plots/h_genweight"))
-                #print("N event single file:", h_genweight.GetBinContent(1))
-                ntot.append(h_genweight.GetBinContent(1))
-                ifile.Close()
+            if 'Data' not in d.label:
+                for f in tqdm(strings): 
+                    #chain.Add(f)
+                    ifile = ROOT.TFile.Open(f)
+                    h_genweight = ROOT.TH1F(ifile.Get("plots/h_genweight"))
+                    #print("N event single file:", h_genweight.GetBinContent(1))
+                    ntot.append(h_genweight.GetBinContent(1))
+                    ifile.Close()
+            else:
+                ntot = [None for f in strings]
             samples[d.label][s.label] = {'strings': strings, 'ntot': ntot}
     print(samples)
     sample_file = open("samples/dict_samples.pkl", "wb")

@@ -199,6 +199,81 @@ TprimeToTZ_700_2018.year = 2018
 TprimeToTZ_700_2018.dataset = '/TprimeBToTZ_M-700_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/RunIIAutumn18NanoAODv7-Nano02Apr2020_102X_upgrade2018_realistic_v21_ext1-v1/NANOAODSIM'
 TprimeToTZ_700_2018.local_path = "/eos/home-a/acagnott/DarkMatter/topcandidate_file/"+TprimeToTZ_700_2018.label +"_Skim.root"
 
+
+###############################################################################################################################
+##########################################                                           ##########################################
+##########################################                    2022                   ##########################################
+##########################################                                           ##########################################
+###############################################################################################################################
+
+################################ QCD ################################
+QCD_Pt_300to470_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_Pt_300to470_2022")
+QCD_Pt_300to470_2022.sigma = 7589.0#pb
+QCD_Pt_300to470_2022.year = 2022
+QCD_Pt_300to470_2022.dataset ="/QCD_PT-300to470_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM"
+QCD_Pt_300to470_2022.process = 'QCD_2022'
+
+QCD_Pt_470to600_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_Pt_470to600_2022")
+QCD_Pt_470to600_2022.sigma = 626.4#pb
+QCD_Pt_470to600_2022.year = 2022
+QCD_Pt_470to600_2022.dataset = "/QCD_PT-470to600_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM"
+QCD_Pt_470to600_2022.process = 'QCD_2022'
+
+QCD_Pt_1000to1400_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_Pt_1000to1400_2022")
+QCD_Pt_1000to1400_2022.sigma = 8.92	 #pb
+QCD_Pt_1000to1400_2022.year = 2022
+QCD_Pt_1000to1400_2022.dataset = "/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM"
+QCD_Pt_1000to1400_2022.process = 'QCD_2022'
+
+QCD_Pt_1800to2400_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_Pt_1800to2400_2022")
+QCD_Pt_1800to2400_2022.sigma = 0.1148 #pb
+QCD_Pt_1800to2400_2022.year = 2022
+QCD_Pt_1800to2400_2022.dataset = "/QCD_PT-1800to2400_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM"
+QCD_Pt_1800to2400_2022.process = "QCD_2022"
+
+QCD_Pt_2400to3200_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_Pt_2400to3200_2022")
+QCD_Pt_2400to3200_2022.sigma = 0.007542	 #pb
+QCD_Pt_2400to3200_2022.year = 2022
+QCD_Pt_2400to3200_2022.dataset = "/QCD_PT-2400to3200_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM"
+QCD_Pt_2400to3200_2022.process = "QCD_2022"
+
+QCD_Pt_3200_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_Pt_3200_2022")
+QCD_Pt_3200_2022.sigma = 0.0002331 #pb
+QCD_Pt_3200_2022.year = 2022
+QCD_Pt_3200_2022.dataset = "/QCD_PT-3200_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM"
+QCD_Pt_3200_2022.process = "QCD_2022"
+
+QCD_2022 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_2018")
+QCD_2022.year = 2018
+QCD_2022.components = [ QCD_Pt_300to470_2022, QCD_Pt_470to600_2022,  QCD_Pt_1000to1400_2022, QCD_Pt_1800to2400_2022, QCD_Pt_2400to3200_2022, QCD_Pt_3200_2022 ]
+
+################################ TTbar ################################
+TT_semilep_2022 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_semilep_2022")
+TT_semilep_2022.sigma = 762.1 #pb
+TT_semilep_2022.year = 2022
+TT_semilep_2022.dataset = "/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1-v1/NANOAODSIM"
+TT_semilep_2022.process = 'TT_2022'
+
+TT_hadr_2022 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_hadr_2022")
+TT_hadr_2022.sigma = 762.1
+TT_hadr_2022.year = 2022
+TT_hadr_2022.dataset = "/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/Run3Summer22EENanoAODv11-126X_mcRun3_2022_realistic_postEE_v1-v1/NANOAODSIM"
+TT_hadr_2022.precess = 'TT_2022'
+
+TT_2022 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_2018")
+TT_2022.year = 2018
+TT_2022.components = [TT_semilep_2022, TT_hadr_2022]
+
+
+########################### DATA
+
+DataHTF_2022 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHTF_2022")
+DataHTF_2022.runP = 'F'
+DataHTF_2022.year = 2022
+DataHTF_2022.dataset = '/JetMET/Run2022F-PromptNanoAODv10_v1-v2/NANOAOD'
+
+
+
 sample_dict = {
     'TT_Mtt700to1000_2018':TT_Mtt700to1000_2018, 'TT_Mtt1000toInf_2018':TT_Mtt1000toInf_2018, 'TT_semilep_2018':TT_semilep_2018, 'TT_hadr_2018':TT_hadr_2018,'TT_2018':TT_2018,
     'QCDHT_300to500_2018':QCDHT_300to500_2018, 'QCDHT_500to700_2018':QCDHT_500to700_2018, 'QCDHT_700to1000_2018':QCDHT_700to1000_2018, 
@@ -208,5 +283,13 @@ sample_dict = {
     'ZJetsToNuNu_HT800to1200_2018':ZJetsToNuNu_HT800to1200_2018, 'ZJetsToNuNu_HT1200to2500_2018':ZJetsToNuNu_HT1200to2500_2018, 
     'ZJetsToNuNu_HT2500toInf_2018':ZJetsToNuNu_HT2500toInf_2018, 'ZJetsToNuNu_2018':ZJetsToNuNu_2018,
     'tDM_mPhi50_mChi1_2018' : tDM_mPhi50_mChi1_2018, 'tDM_mPhi500_mChi1_2018' : tDM_mPhi500_mChi1_2018,'tDM_mPhi1000_mChi1_2018' : tDM_mPhi1000_mChi1_2018,
-    'TprimeToTZ_1800_2018' : TprimeToTZ_1800_2018, 'TprimeToTZ_1000_2018' : TprimeToTZ_1000_2018, 'TprimeToTZ_700_2018' : TprimeToTZ_700_2018
+    'TprimeToTZ_1800_2018' : TprimeToTZ_1800_2018, 'TprimeToTZ_1000_2018' : TprimeToTZ_1000_2018, 'TprimeToTZ_700_2018' : TprimeToTZ_700_2018,
+    ## RUN III
+    ############ QCD
+    'QCD_2022' : QCD_2022, 'QCD_Pt_300to470_2022' : QCD_Pt_300to470_2022, 'QCD_Pt_470to600_2022' : QCD_Pt_470to600_2022,  
+    'QCD_Pt_1000to1400_2022' : QCD_Pt_1000to1400_2022, 'QCD_Pt_1800to2400_2022' : QCD_Pt_1800to2400_2022, 'QCD_Pt_2400to3200_2022' : QCD_Pt_2400to3200_2022, 'QCD_Pt_3200_2022' : QCD_Pt_3200_2022,
+    ########### TT
+    'TT_2022': TT_2022, 'TT_semilep_2022' : TT_semilep_2022, 'TT_hadr_2022' : TT_hadr_2022,
+    ############################################# DATA
+    'DataHTF_2022' : DataHTF_2022
     }

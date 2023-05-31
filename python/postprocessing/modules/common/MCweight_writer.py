@@ -32,8 +32,8 @@ class MCweight_writer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         Generator = Object(event, "Generator")
-        LHEPdfWeight = Collection(event, 'LHEPdfWeight')
-        LHEScaleWeight = Collection(event, 'LHEScaleWeight')
+        #LHEPdfWeight = Collection(event, 'LHEPdfWeight')
+        #LHEScaleWeight = Collection(event, 'LHEScaleWeight')
         PSWeight = Collection(event, 'PSWeight')
         if(self.addLHA):
             if len(self.LHAPDFs)>0:#For now only single-pdf implemented//
@@ -55,7 +55,7 @@ class MCweight_writer(Module):
                             self.h_LHAPDFweight[l].GetXaxis().SetBinLabel(i, 'pdf['+str(i)+']')
                             self.h_LHAPDFweight[l].AddBinContent(i, pdfw)          
 
-        if not len(LHEPdfWeight) == 0:
+        """if not len(LHEPdfWeight) == 0:
             self.h_PDFweight.SetNameTitle('h_PDFweight', 'h_PDFweight')
             self.h_PDFweight.SetBins(len(LHEPdfWeight), 0, len(LHEPdfWeight))
             for pdfw, i in zip(LHEPdfWeight, range(1, len(LHEPdfWeight)+1)):
@@ -69,7 +69,7 @@ class MCweight_writer(Module):
             self.h_q2weight.Fill('muR=1 muF=2', LHEScaleWeight[5].__getattr__(""))
             self.h_q2weight.Fill('muR=2 muF=0.5', LHEScaleWeight[6].__getattr__(""))
             self.h_q2weight.Fill('muR=2 muF=1', LHEScaleWeight[7].__getattr__(""))
-            self.h_q2weight.Fill('muR=2 muF=2', LHEScaleWeight[8].__getattr__(""))
+            self.h_q2weight.Fill('muR=2 muF=2', LHEScaleWeight[8].__getattr__(""))"""
         if len(PSWeight) > 1: #PS weights (w_var / w_nominal); [0] is ISR=0.5 FSR=1; [1] is ISR=1 FSR=0.5; [2] is ISR=2 FSR=1; [3] is ISR=1 FSR=2
             self.h_psweight.Fill('ISRdown', PSWeight[0].__getattr__(""))
             self.h_psweight.Fill('FSRdown', PSWeight[1].__getattr__(""))

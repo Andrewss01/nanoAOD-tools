@@ -116,11 +116,6 @@ class nanoTopevaluate(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         
-        listOfBranches = event.getListOfBranches()
-        if "Jet_matched" in listOfBranches: 
-            file_signal = True
-        else:
-            file_signal = False
         jets = Collection(event,"Jet")
         njets = len(jets)
         fatjets = Collection(event,"FatJet")
