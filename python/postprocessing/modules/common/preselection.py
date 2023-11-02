@@ -1,5 +1,6 @@
 import ROOT
 import math
+#from datetime import datetime
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -19,6 +20,7 @@ class preselection(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
+        #t0 = datetime.now()
         goodEvent = False
         """process event, return True (go to next module) or False (fail, go to next event)"""
         met = Object(event, "MET")
@@ -38,7 +40,8 @@ class preselection(Module):
             eventSum += j.p4()
             
         self.out.fillBranch("HT_eventHT", eventSum.Pt())
-     
+        # t1 = datetime.now()
+        # print("preselection module time :", t1-t0)
         return goodEvent
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed

@@ -2,6 +2,7 @@ import ROOT
 import math
 import numpy as np
 from array import array
+#from datetime import datetime
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 #from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -137,6 +138,7 @@ class nanoTopcand(Module):
         pass
 
     def analyze(self, event):
+        #t0 = datetime.now()
         """process event, return True (go to next module) or False (fail, go to next event)"""
         
         jets = Collection(event,"Jet")
@@ -270,5 +272,7 @@ class nanoTopcand(Module):
         self.out.fillBranch("TopHighPt_phi", tophigh_phi_)
         self.out.fillBranch("TopHighPt_mass", tophigh_mass_)
         self.out.fillBranch("TopHighPt_truth", tophigh_truth)
+        # t1 = datetime.now()
+        # print("TopCandidate module time :", t1-t0)  
         return True
 

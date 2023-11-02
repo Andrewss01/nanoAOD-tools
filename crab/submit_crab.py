@@ -2,6 +2,7 @@ from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 import os
 import optparse
 import sys
+import json
 
 usage = 'python submit_crab.py'
 parser = optparse.OptionParser(usage)
@@ -26,6 +27,7 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.section_('JobType')\n")
     f.write("config.JobType.pluginName = 'Analysis'\n")
     f.write("config.JobType.psetName = 'PSet.py'\n")
+    f.write("config.JobType.maxJobRuntimeMin = 2700\n")
     f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
     f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
@@ -35,19 +37,23 @@ def cfg_writer(sample, isMC, outdir):
     #f.write("config.Data.inputDBS = 'phys03'")
     f.write("config.Data.inputDBS = 'global'\n")
     if not isMC:
-        f.write("config.Data.splitting = 'LumiBased'\n")
-        if sample.year == '2016':
-            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt'\n")
-        elif sample.year == '2017':
-            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt'\n")
-        elif sample.year == '2018':
-            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
-        elif sample.year == '2022':
+        # f.write("config.Data.splitting = 'LumiBased'\n")
+        f.write("config.Data.splitting = 'FileBased'\n")
+        f.write("config.Data.unitsPerJob = 1\n")
+        if sample.year == 2016:
+            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt'\n")
+        elif sample.year == 2017:
+            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Legacy_2017/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt'\n")
+        elif sample.year == 2018:
+            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt'\n")
+        elif sample.year == 2022:
             f.write("config.Data.lumiMask = '/eos/user/c/cmsdqm/www/CAF/certification/Collisions22/Cert_Collisions2022_355100_362760_Golden.json'\n")
-        f.write("config.Data.unitsPerJob = 500\n")
+        f.write("config.Data.unitsPerJob = 100\n")
     else:
         f.write("config.Data.splitting = 'FileBased'\n")
         f.write("config.Data.unitsPerJob = 1\n")
+        # f.write("config.Data.splitting = 'Automatic'\n")
+        # f.write("config.Data.unitsPerJob = 2700\n")
     #config.Data.runRange = ''
     #f.write("config.Data.splitting = 'EventAwareLumiBased'")
     #f.write("config.Data.totalUnits = 10\n")
@@ -83,6 +89,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopevaluate import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.globalvar import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.SampleIdx import *\n")
 
     #f.write("infile = "+str(sample.files)+"\n")
     #f.write("outpath = '"+ outpath+"'\n")
@@ -154,6 +161,9 @@ kill = opt.kill
 resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
+with open('../python/postprocessing/samples/dictSample.json', 'r') as f:
+    dictSample = json.load(f)
+
 for sample in samples:
     print('Launching sample ' + sample.label)
     if submit:
@@ -192,10 +202,13 @@ for sample in samples:
             #if("WP" in sample.label):
             #    modules=modules.replace("MCweight_writer()","LHAPDFWeight_NNPDF(),LHAPDFWeight_NNPDFLO(),LHAPDFWeight_PDF4LHC15(),MCweight_writer(LHAPDFs=['LHANNPDF','LHAPDF4LHC15','LHANNPDFLO'])")
 
-            modules = "MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), nanoTopevaluate(), globalvar()"
+            #modules = "MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), nanoTopevaluate(), globalvar()"
+            modules = "MCweight_writer(), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate()"
         else:
             #modules = "HLT(), preselection(), metCorrector(), fatJetCorrector(), metCorrector_tot(), fatJetCorrector_tot()" # Put here all the modules you want to be runned by crab
-            modules = "preselection(),nanoTopcand(isMC=0), nanoTopevaluate(), globalvar()"
+            #modules = "preselection(),nanoTopcand(isMC=0), nanoTopevaluate(), globalvar()"
+            modules = "preselection(),nanoTopcand(isMC=0), SampleIdx("+ str(dictSample[sample.label]) +"), globalvar(), nanoTopevaluate()"
+
         # RIMOSSO topselection() dai modules perché fa una selezione che ho implementato allo step successivo
 
         print("Producing crab script")
@@ -204,7 +217,7 @@ for sample in samples:
         
         #Launching crab
         print("Submitting crab jobs...")
-        os.system("crab submit -c crab_cfg.py")
+        # os.system("crab submit -c crab_cfg.py")
 
     elif kill:
         print("Killing crab jobs...")
@@ -220,7 +233,9 @@ for sample in samples:
         os.system("crab status -d crab_" + sample.label)
 
     elif getout:
-        print("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
-        os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
+        print("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + "_.txt")
+        os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + "_.txt")
+        print("python3 Writer_outputFiles.py -d "+sample.label)
+        os.system("python3 Writer_outputFiles.py -d "+sample.label)
         #for i in xrange(1, 969):
         #os.system("crab getoutput -d crab_" + sample.label + " --outputpath=/eos/user/"+str(os.environ.get('USER')[0]) + "/"+str(os.environ.get('USER'))+"/Wprime/nosynch/" + sample.label + "/ --jobids="+str(i))

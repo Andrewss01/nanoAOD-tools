@@ -2,6 +2,7 @@ import ROOT
 import math
 import numpy as np
 from array import array
+#from datetime import datetime
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 #from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -77,6 +78,7 @@ class nanoprepro(Module):
 
 
     def analyze(self, event):
+        #t0 = datetime.now()
         """process event, return True (go to next module) or False (fail, go to next event)"""        
         jets       = Collection(event,"Jet")
         Njets      = len(jets)
@@ -317,5 +319,6 @@ class nanoprepro(Module):
 
                 #self.out.fillBranch("Top_indFatJet", ind_fatjets) 
                 #self.out.fillBranch("Top_indJet", ind_jets) 
-            
+                # t1 = datetime.now()
+                # print("nanprepro module time :", t1-t0) 
                 return True

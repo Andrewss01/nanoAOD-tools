@@ -23,4 +23,5 @@ mv python $CMSSW_BASE/python
 echo Found Proxy in: $X509_USER_PROXY
 which python3
 python3 crab_script.py $1
+hadd tree_hadd.root tree.root hist.root
 fi
