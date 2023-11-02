@@ -1,7 +1,7 @@
 import os
 from samples.samples import *
 import optparse
-import pickle as pkl
+import json
 import sys
 
 usage = 'python3 postselection_rdf.py'
@@ -14,7 +14,8 @@ def get_files_string(d):
     folder_files = "../../crab/macros/files/"
     infile_string = open(folder_files+d.label+".txt")
     strings = infile_string.readlines()
-    for s in strings: s.replace('\n', '')
+    #for s in strings: s.replace('\n', '')
+    # print(d.label, strings)
     return strings
 
 def samp_writer(dat, samples, opt, isMC):
@@ -33,7 +34,8 @@ def samp_writer(dat, samples, opt, isMC):
     for s in listOfSamples:
         strings = get_files_string(s)
         #print("strings : ", strings)
-        if "No files to retrieve." in strings[0] or not "root://cms-xrd-global.cern.ch//" in strings[0]:
+        #if "No files to retrieve." in strings[0] or not "root://cms-xrd-global.cern.ch//" in strings[0]:
+        if "No files to retrieve." in strings[0] :
             print("No files for: ", s.label) 
             strings = [""]
             nofiles = True
@@ -49,12 +51,15 @@ def samp_writer(dat, samples, opt, isMC):
             ntot = [None for f in strings]
                 
         samples[dat.label][s.label] = {'strings': strings, 'ntot': ntot}
+        samples[s.label] = {}
+        samples[s.label][s.label] = {'strings': strings, 'ntot': ntot}
         #print(samples[dat.label][s.label])
     return samples
 
 if not opt.dataset in sample_dict.keys():
-    datasets = [QCD_2018, ZJetsToNuNu_2018, TT_2018,TprimeToTZ_700_2018, TprimeToTZ_1000_2018,TprimeToTZ_1800_2018,
-                DataHTF_2022, QCD_2022, TT_2022]
+    datasets = [DataHT_2018, QCD_2018, ZJetsToNuNu_2018, TT_2018, WJets_2018, TprimeToTZ_700_2018, TprimeToTZ_1000_2018,TprimeToTZ_1800_2018,
+                # DataHT_2022, QCD_2022, TT_2022
+                ]
     opt = "recreate"
 else : 
     datasets = [sample_dict[opt.dataset]]
@@ -64,10 +69,10 @@ else :
 print([dat.label for dat in datasets])
 print("opt: ", opt)
 print("Uploading samples dict")
-pkl_string = "samples/dict_samples.pkl"
-if os.path.exists(pkl_string):
-    sample_file = open(pkl_string, "rb")
-    samples = pkl.load(sample_file)
+json_string = "samples/dict_samples.json"
+if os.path.exists(json_string):
+    sample_file = open(json_string, "rb")
+    samples = json.load(sample_file)
     sample_file.close()
 else:
     samples = {}
@@ -81,7 +86,10 @@ for dat in datasets:
     print("isMC flag is ", isMC)
     tmp_samples = samp_writer(dat, samples, opt, isMC)
     opt = "update"
-print(tmp_samples)
-sample_file = open("samples/dict_samples.pkl", "wb")
-pkl.dump(samples, sample_file)
-sample_file.close()    
+#print(tmp_samples)
+# sample_file = open("samples/dict_samples.pkl", "wb")
+# pkl.dump(samples, sample_file)
+# sample_file.close()    
+
+with open("samples/dict_samples.json", "w") as f:
+    json.dump(samples, f, indent = 2)
