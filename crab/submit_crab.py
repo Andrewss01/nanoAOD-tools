@@ -90,6 +90,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopevaluate import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.globalvar import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.SampleIdx import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.MET_HLT_Filter import *\n")
 
     #f.write("infile = "+str(sample.files)+"\n")
     #f.write("outpath = '"+ outpath+"'\n")
@@ -203,11 +204,11 @@ for sample in samples:
             #    modules=modules.replace("MCweight_writer()","LHAPDFWeight_NNPDF(),LHAPDFWeight_NNPDFLO(),LHAPDFWeight_PDF4LHC15(),MCweight_writer(LHAPDFs=['LHANNPDF','LHAPDF4LHC15','LHANNPDFLO'])")
 
             #modules = "MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), nanoTopevaluate(), globalvar()"
-            modules = "MCweight_writer(), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate()"
+            modules = "MCweight_writer(), MET_HLT_Filter(), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate()"
         else:
             #modules = "HLT(), preselection(), metCorrector(), fatJetCorrector(), metCorrector_tot(), fatJetCorrector_tot()" # Put here all the modules you want to be runned by crab
             #modules = "preselection(),nanoTopcand(isMC=0), nanoTopevaluate(), globalvar()"
-            modules = "preselection(),nanoTopcand(isMC=0), SampleIdx("+ str(dictSample[sample.label]) +"), globalvar(), nanoTopevaluate()"
+            modules = "MET_HLT_Filter(), preselection(),nanoTopcand(isMC=0), SampleIdx("+ str(dictSample[sample.label]) +"), globalvar(), nanoTopevaluate()"
 
         # RIMOSSO topselection() dai modules perché fa una selezione che ho implementato allo step successivo
 
