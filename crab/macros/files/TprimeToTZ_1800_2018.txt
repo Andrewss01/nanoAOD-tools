@@ -1,9 +1,1 @@
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_4.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_11.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_10.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_2.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_6.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_7.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_8.root
-root://cms-xrd-global.cern.ch//store/user/acagnott/DM_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230218_131628/0000/tree_hadd_5.root
+root://stormgf2.pi.infn.it//store/user/acagnott/DM_Run3_v0/TprimeBToTZ_M-1800_LH_TuneCP5_PSweights_13TeV-madgraph_pythia8/TprimeToTZ_1800_2018/230905_152425/0000/tree_hadd_1.root

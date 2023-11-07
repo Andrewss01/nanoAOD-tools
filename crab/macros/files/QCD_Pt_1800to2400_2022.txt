@@ -1,0 +1,1 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1800to2400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1800to2400_2022/230609_125746/0000/tree_hadd_1.root

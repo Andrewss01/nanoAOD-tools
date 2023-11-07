@@ -1,0 +1,3 @@
+Error while getting status information. Got:
+The task has not been submitted to the Grid scheduler yet. Not printing job information. 
+Cannot retrieve job list from the status command.

@@ -1,0 +1,2 @@
+root://stormgf2.pi.infn.it//store/user/acagnott/DM_Run3_v0/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2018/230627_154251/0000/tree_hadd_1.root
+root://stormgf2.pi.infn.it//store/user/acagnott/DM_Run3_v0/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2018/230627_154251/0000/tree_hadd_4.root

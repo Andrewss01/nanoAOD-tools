@@ -1,0 +1,7 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_14.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_13.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_10.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/QCD_PT-1000to1400_TuneCP5_13p6TeV_pythia8/QCD_Pt_1000to1400_2022/230609_125707/0000/tree_hadd_12.root

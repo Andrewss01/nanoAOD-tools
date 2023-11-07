@@ -1,0 +1,12 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_38.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_59.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_20.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_28.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_57.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_47.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_36.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_37.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTto4Q_TuneCP5CR2_13p6TeV_powheg-pythia8/TT_hadr_2022/230609_125436/0000/tree_hadd_8.root

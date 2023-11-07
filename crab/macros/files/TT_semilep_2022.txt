@@ -1,0 +1,15 @@
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_51.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_85.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_79.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_52.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_89.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_92.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_46.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_90.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_73.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_91.root
+root://cms-xrd-global.cern.ch//store/user/acagnott/DM_Run3_v0/TTtoLNu2Q_TuneCP5CR1_13p6TeV_powheg-pythia8/TT_semilep_2022/230609_125350/0000/tree_hadd_14.root
