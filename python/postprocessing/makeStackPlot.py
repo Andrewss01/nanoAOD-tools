@@ -4,26 +4,44 @@ from samples.samples import *
 from CMS_lumi import CMS_lumi
 from variables import *
 import copy
+import json
+import json
+import numpy as np
 #import math
 #import pickle as pkl
-#import numpy as np
 #from datetime import datetime
 ROOT.gROOT.SetBatch()
 
 ################## input parameters
 
 cut = requirements  ### defined in variables.py 
-lumi = 28.0 #59.7  #fb #RUN3 eraF
+lumi = 14.0#28.0
 run2 = True
 run3 = not run2
+# in_datasets = [
+#     DataHT_2018,
+#     TT_2018, ZJetsToNuNu_2018, QCD_2018, WJets_2018,   
+#     # TprimeToTZ_700_2018, TprimeToTZ_1000_2018, TprimeToTZ_1800_2018,
+#                ]
 in_datasets = [
-    DataHT_2018, 
-    QCD_2018, TT_2018, ZJetsToNuNu_2018, WJets_2018, 
-    TprimeToTZ_700_2018, TprimeToTZ_1000_2018, TprimeToTZ_1800_2018,
+    # DataHTA_2018,
+    DataSingleMuA_2018,
+    TT_hadr_2018, TT_semilep_2018, TT_Mtt1000toInf_2018, TT_Mtt700to1000_2018, 
+    QCDHT_100to200_2018, QCDHT_200to300_2018,QCDHT_300to500_2018, QCDHT_500to700_2018, QCDHT_700to1000_2018, QCDHT_1000to1500_2018, QCDHT_1500to2000_2018, QCDHT_2000toInf_2018, 
+    ZJetsToNuNu_HT100to200_2018, ZJetsToNuNu_HT200to400_2018, ZJetsToNuNu_HT400to600_2018, ZJetsToNuNu_HT600to800_2018, ZJetsToNuNu_HT800to1200_2018, ZJetsToNuNu_HT1200to2500_2018, ZJetsToNuNu_HT2500toInf_2018, 
+    WJetsHT100to200_2018, WJetsHT200to400_2018, WJetsHT400to600_2018, WJetsHT600to800_2018, WJetsHT800to1200_2018, WJetsHT1200to2500_2018, WJetsHT2500toInf_2018,   
+    # TprimeToTZ_700_2018, TprimeToTZ_1000_2018, TprimeToTZ_1800_2018,
                ]
-#[QCD_2022, TT_2022, DataHTF_2022,ZJetsToNuNu_2018, WJets_2018]#[QCD_2018, TT_2018, ZJetsToNuNu_2018, WJets_2018, DataHT_2022]#
-#in_datasets = [TT_2018, DataHTF_2022]
+
 blind = False#True#
+
+
+# Specify the path to the JSON file
+json_file = "samples/dict_samples.json"
+
+# Load the JSON file
+with open(json_file, "r") as file:
+    samples = json.load(file)
 
 print("Paremeters setted") 
 print("cut = ",cut)      
@@ -63,8 +81,8 @@ print("Producing the follow histos: ", [v._name for v in vars])
 
 print("Regions considered :", regions.keys())
 
-############### out folders
-folder = "/eos/home-a/acagnott/DarkMatter/nosynch/run2018_benchmark_v3/"
+############### out folders  
+folder = "/eos/home-a/acagnott/DarkMatter/nosynch/run2018_exo22014_v2_SingleMu/"
 if not os.path.exists(folder):
     os.mkdir(folder)
 repohisto = folder+"plots/"
@@ -93,15 +111,20 @@ cut_tag = cut_string(cut)
 
 for d in in_datasets:
     print(repohisto + d.label + ".root")
-    if 'Data' in d.label:
-        infile['Data'].append(ROOT.TFile.Open(repohisto + d.label + ".root"))
-        insample['Data'].append(d)         
-    elif 'tDM' in d.label or 'Tp' in d.label:
-        infile['signal'].append(ROOT.TFile.Open(repohisto + d.label + ".root"))
-        insample['signal'].append(d)
+    if hasattr(d, 'components'):
+        s_list = d.components
     else:
-        infile['bkg'].append(ROOT.TFile.Open(repohisto + d.label + ".root"))
-        insample['bkg'].append(d)
+        s_list = [d]
+    for s in s_list:
+        if 'Data' in s.label:
+            infile['Data'].append(ROOT.TFile.Open(repohisto + s.label + ".root"))
+            insample['Data'].append(s)         
+        elif 'tDM' in s.label or 'Tp' in s.label:
+            infile['signal'].append(ROOT.TFile.Open(repohisto + s.label + ".root"))
+            insample['signal'].append(s)
+        else:
+            infile['bkg'].append(ROOT.TFile.Open(repohisto + s.label + ".root"))
+            insample['bkg'].append(s)
 # print("Opened histos files")
 # print(infile)
 
@@ -109,7 +132,7 @@ for v in vars:
     for r in regions.keys():
         h_sign = []
         print("Creating ..")
-        print(v._name, r)
+        print(v._name+"_"+r+"_"+cut_tag)
         ROOT.gROOT.SetStyle('Plain')
         #ROOT.gStyle.SetPalette(1)
         ROOT.gStyle.SetOptStat(0)
@@ -129,7 +152,7 @@ for v in vars:
             print(v._name+"_"+r+"_"+cut_tag)
             tmp = copy.deepcopy(ROOT.TH1D(f.Get(v._name+"_"+r+"_"+cut_tag)))
             # print(tmp.GetBinContent(1))
-            tmp.Scale(lumi)
+            tmp.Scale(s.sigma*(10**3)*lumi/np.sum(samples[s.process][s.label]["ntot"]))
             # print("scaled lumi "+str(lumi)+" from ", f)
             tmp.GetXaxis().SetTitle(v._title)
             tmp.SetName(s.leglabel)
@@ -146,7 +169,7 @@ for v in vars:
             # print("Getting histo :", v._name+"_"+r+"_"+cut_tag)
             # print(" from:", f)
             tmp = copy.deepcopy(ROOT.TH1D(f.Get(v._name+"_"+r+"_"+cut_tag)))
-            tmp.Scale(lumi)
+            tmp.Scale(s.sigma*(10**3)*lumi/np.sum(samples[s.process][s.label]["ntot"]))
             tmp.GetXaxis().SetTitle(v._title)
             # tmp.SetLineColor(s.color)
             # tmp.SetFillColor(s.color)
@@ -211,7 +234,7 @@ for v in vars:
         if not blind:
           maximum = max(stack.GetMaximum(),h_data.GetMaximum())
         #   minimum = min(stack.GetMinimum(),h_data.GetMinimum())
-          if h_sign[-1].GetMinimum()!= 0:
+          if (len(h_sign) != 0 and h_sign[-1].GetMinimum()!= 0):
               minimum = h_sign[-1].GetMinimum()
           elif stack.GetMinimum()!= 0:
               minimum = stack.GetMinimum()*1e-1
@@ -219,7 +242,7 @@ for v in vars:
               minimum = 1e-1 #min(stack.GetMinimum(),1e-4)
         else:
           maximum = stack.GetMaximum()
-          if h_sign[-1].GetMinimum()!= 0:
+          if (len(h_sign) != 0 and h_sign[-1].GetMinimum()!= 0):
               minimum = h_sign[-1].GetMinimum()
           elif stack.GetMinimum()!= 0: 
               minimum = stack.GetMinimum()*1e-1
@@ -266,7 +289,8 @@ for v in vars:
              lumi_sqrtS = "%s fb^{-1}  (13.6 TeV)"%(lumi)
         iPeriod = 0
         iPos = 10
-        CMS_lumi(pad1, lumi_sqrtS, iPos, r+"_"+regions[r])
+        # CMS_lumi(pad1, lumi_sqrtS, iPos, r+"_"+regions[r]
+        CMS_lumi(pad1, lumi_sqrtS, iPos, r)
         #CMS_lumi(pad1, lumi_sqrtS, iPos, r)
         # pad1.Draw()
         pad1.Update()
@@ -291,7 +315,7 @@ for v in vars:
         if not blind:
             ratio = h_data.Clone("ratio")
             ratio.SetLineColor(ROOT.kBlack)
-            ratio.SetMaximum(2)
+            ratio.SetMaximum(10)
             ratio.SetMinimum(0)
             # ratio.Sumw2()
             ratio.SetStats(0)
@@ -315,7 +339,7 @@ for v in vars:
             ratio.GetYaxis().SetLabelSize(0.15)
             ratio.GetXaxis().SetTitleSize(0.16)
             ratio.GetYaxis().SetTitleSize(0.16)
-            ratio.GetYaxis().SetRangeUser(0.,2.0)
+            # ratio.GetYaxis().SetRangeUser(0.,2.0)
             ratio.GetXaxis().SetTitle(v._title)
             ratio.GetXaxis().SetLabelOffset(0.04)
             ratio.GetYaxis().SetLabelOffset(0.02)
@@ -386,7 +410,7 @@ for v in vars:
         ratio.GetYaxis().SetLabelSize(0.15)
         ratio.GetXaxis().SetTitleSize(0.16)
         ratio.GetYaxis().SetTitleSize(0.16)
-        ratio.GetYaxis().SetRangeUser(0.,2.0)
+        # ratio.GetYaxis().SetRangeUser(0.,2.0)
         ratio.GetXaxis().SetTitle(v._title)
         ratio.GetXaxis().SetLabelOffset(0.04)
         ratio.GetYaxis().SetLabelOffset(0.02)
