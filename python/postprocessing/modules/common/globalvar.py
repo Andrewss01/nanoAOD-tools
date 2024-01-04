@@ -6,6 +6,7 @@ import ROOT
 import numpy as np
 from array import array
 ROOT.PyConfig.IgnoreCommandLineOptions = True
+#from datetime import datetime
 
 class globalvar(Module):
     def __init__(self, isMC=1):
@@ -28,6 +29,7 @@ class globalvar(Module):
         pass
 
     def analyze(self, event):
+        #t0 = datetime.now()
         """process event, return True (go to next module) or False (fail, go to next event)"""
         jets = Collection(event, "Jet")
         fatjets = Collection(event, "FatJet")
@@ -45,5 +47,6 @@ class globalvar(Module):
         
         self.out.fillBranch("MinDelta_phi", mindphi)
         self.out.fillBranch("MaxEta_jet", maxetajet)
-        
+        # t1 = datetime.now()
+        # print("globalvar module time :", t1-t0)
         return True

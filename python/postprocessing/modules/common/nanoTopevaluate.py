@@ -11,6 +11,7 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import *
 import keras.models
 from itertools import combinations, chain
 import os
+#from datetime import datetime
 
 def fill_mass(mass_dnn, idx_top, j0, j1, j2, fj):
     if fj == None:#3j0fj
@@ -114,6 +115,7 @@ class nanoTopevaluate(Module):
         pass
 
     def analyze(self, event):
+        #t0 = datetime.now()
         """process event, return True (go to next module) or False (fail, go to next event)"""
         
         jets = Collection(event,"Jet")
@@ -127,55 +129,65 @@ class nanoTopevaluate(Module):
         
         tophighpt = Collection(event, "TopHighPt")
         toplowpt = Collection(event, "TopLowPt")
+        met = Object(event, "MET")
+        mindelta = Object(event, "MinDelta")
         
-        # loop su high pt e low pt candidate per valutare lo score con i modelli corrispondenti
-        fj_dnn = np.zeros((int(len(tophighpt)), 12)) 
-        jets_dnn = np.zeros((int(len(tophighpt)), 3, 8))        
-        mass_dnn = np.zeros((len(tophighpt), 2))
-        for i, top in enumerate(tophighpt):
-            if top.idxJet2==-1:
-                j0, j1 = goodjets[top.idxJet0],goodjets[top.idxJet1]
-                fj = goodfatjets[top.idxFatJet]
-                sumjet = j0.p4()+j1.p4()
-                jets_dnn = fill_jets(jets_dnn = jets_dnn, j0=j0, j1=j1, j2=0, sumjet = sumjet,  fj_phi= fj.phi, fj_eta=fj.eta, idx_top=i)
-                fj_dnn = fill_fj(fj_dnn, fj, i)
-                mass_dnn = fill_mass(mass_dnn=mass_dnn, idx_top=i, j0=j0, j1=j1, j2 =None, fj = fj)
-            elif top.idxFatJet==-1:
+        if met.pt > 200 and mindelta.phi >0.6:
+            # loop su high pt e low pt candidate per valutare lo score con i modelli corrispondenti
+            fj_dnn = np.zeros((int(len(tophighpt)), 12)) 
+            jets_dnn = np.zeros((int(len(tophighpt)), 3, 8))        
+            mass_dnn = np.zeros((len(tophighpt), 2))
+            for i, top in enumerate(tophighpt):
+                if top.idxJet2==-1:
+                    j0, j1 = goodjets[top.idxJet0],goodjets[top.idxJet1]
+                    fj = goodfatjets[top.idxFatJet]
+                    sumjet = j0.p4()+j1.p4()
+                    jets_dnn = fill_jets(jets_dnn = jets_dnn, j0=j0, j1=j1, j2=0, sumjet = sumjet,  fj_phi= fj.phi, fj_eta=fj.eta, idx_top=i)
+                    fj_dnn = fill_fj(fj_dnn, fj, i)
+                    mass_dnn = fill_mass(mass_dnn=mass_dnn, idx_top=i, j0=j0, j1=j1, j2 =None, fj = fj)
+                elif top.idxFatJet==-1:
+                    j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
+                    fj = ROOT.TLorentzVector()
+                    fj.SetPtEtaPhiM(0,0,0,0)
+                    sumjet = j0.p4()+j1.p4()+j2.p4()
+                    jets_dnn = fill_jets(jets_dnn, j0, j1, j2, sumjet, fj.Phi(), fj.Eta(), i)
+                    mass_dnn = fill_mass(mass_dnn=mass_dnn, idx_top=i, j0=j0, j1=j1, j2 =j2, fj = None)
+                else:
+                    j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
+                    fj = goodfatjets[top.idxFatJet]
+                    sumjet = j0.p4() + j1.p4() +j2.p4()
+                    jets_dnn = fill_jets(jets_dnn, j0, j1, j2, sumjet, fj.phi, fj.eta, i)
+                    fj_dnn = fill_fj(fj_dnn, fj, i)
+                    mass_dnn = fill_mass(mass_dnn=mass_dnn, idx_top=i, j0=j0, j1=j1, j2 =j2, fj = fj)
+            if len(tophighpt)!=0:
+                #top_score = model_highpt.predict({'fatjet':fj_dnn, 'jet': jets_dnn}).flatten().tolist()
+                top_score2 = model_highpt_p2.predict({'fatjet':fj_dnn, 'jet': jets_dnn,  'top_mass': mass_dnn}).flatten().tolist()
+            else:
+                #top_score = []
+                top_score2 = []
+            #self.out.fillBranch("TopHighPt_score", top_score)
+            self.out.fillBranch("TopHighPt_score2", top_score2)
+
+            jets_dnn = np.zeros((int(len(toplowpt)), 3, 8))        
+            for i, top in enumerate(toplowpt):
                 j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
                 fj = ROOT.TLorentzVector()
                 fj.SetPtEtaPhiM(0,0,0,0)
                 sumjet = j0.p4()+j1.p4()+j2.p4()
                 jets_dnn = fill_jets(jets_dnn, j0, j1, j2, sumjet, fj.Phi(), fj.Eta(), i)
-                mass_dnn = fill_mass(mass_dnn=mass_dnn, idx_top=i, j0=j0, j1=j1, j2 =j2, fj = None)
+            if len(toplowpt)!=0:
+                top_score_DNN = model_lowpt_DNN.predict({"jet0": jets_dnn[:,0,:-2], "jet1": jets_dnn[:,1,:-2], "jet2": jets_dnn[:,2,:-2]}).flatten().tolist()
+                #top_score_LSTM = model_lowpt_LSTM.predict({"jet": jets_dnn[:,:,:-2]})
             else:
-                j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
-                fj = goodfatjets[top.idxFatJet]
-                sumjet = j0.p4() + j1.p4() +j2.p4()
-                jets_dnn = fill_jets(jets_dnn, j0, j1, j2, sumjet, fj.phi, fj.eta, i)
-                fj_dnn = fill_fj(fj_dnn, fj, i)
-                mass_dnn = fill_mass(mass_dnn=mass_dnn, idx_top=i, j0=j0, j1=j1, j2 =j2, fj = fj)
-        if len(tophighpt)!=0:
-            #top_score = model_highpt.predict({'fatjet':fj_dnn, 'jet': jets_dnn}).flatten().tolist()
-            top_score2 = model_highpt_p2.predict({'fatjet':fj_dnn, 'jet': jets_dnn,  'top_mass': mass_dnn}).flatten().tolist()
+                top_score_DNN = []
+                #top_score_LSTM = []
+            self.out.fillBranch("TopLowPt_scoreDNN", top_score_DNN)
         else:
-            #top_score = []
-            top_score2 = []
-        #self.out.fillBranch("TopHighPt_score", top_score)
-        self.out.fillBranch("TopHighPt_score2", top_score2)
-
-        jets_dnn = np.zeros((int(len(toplowpt)), 3, 8))        
-        for i, top in enumerate(toplowpt):
-            j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
-            fj = ROOT.TLorentzVector()
-            fj.SetPtEtaPhiM(0,0,0,0)
-            sumjet = j0.p4()+j1.p4()+j2.p4()
-            jets_dnn = fill_jets(jets_dnn, j0, j1, j2, sumjet, fj.Phi(), fj.Eta(), i)
-        if len(toplowpt)!=0:
-            top_score_DNN = model_lowpt_DNN.predict({"jet0": jets_dnn[:,0,:-2], "jet1": jets_dnn[:,1,:-2], "jet2": jets_dnn[:,2,:-2]}).flatten().tolist()
-            #top_score_LSTM = model_lowpt_LSTM.predict({"jet": jets_dnn[:,:,:-2]})
-        else:
-            top_score_DNN = []
-            #top_score_LSTM = []
-        self.out.fillBranch("TopLowPt_scoreDNN", top_score_DNN)
+            top_score2 = np.tile(-10, len(tophighpt))
+            top_score_DNN = np.tile(-10, len(toplowpt))
+            self.out.fillBranch("TopLowPt_scoreDNN", top_score_DNN)
+            self.out.fillBranch("TopHighPt_score2", top_score2)
         #self.out.fillBranch("TopLowPt_scoreLSTM", top_score_LSTM)
+        # t1 = datetime.now()
+        # print("TopEvaluate module time :", t1-t0) 
         return True

@@ -3,6 +3,7 @@ from samples.samples import *
 import optparse
 import json
 import sys
+from tqdm import tqdm
 
 usage = 'python3 postselection_rdf.py'
 parser = optparse.OptionParser(usage)
@@ -42,7 +43,8 @@ def samp_writer(dat, samples, opt, isMC):
         ntot = []
         #print("looping on strings: ", len(strings))
         if isMC and not nofiles:
-            for f in strings: 
+            print("Opening files strings of ", s.label)
+            for f in tqdm(strings): 
                 ifile = ROOT.TFile.Open(f)
                 h_genweight = ROOT.TH1F(ifile.Get("plots/h_genweight"))
                 ntot.append(h_genweight.GetBinContent(1))

@@ -10,12 +10,33 @@ class variable(object):
         self._xarray = xarray
     def __str__(self):
         return  '\"'+str(self._name)+'\",\"'+str(self._title)+'\",\"'+str(self._taglio)+'\",'+str(self._nbins)+','+str(self._xmin)+','+str(self._xmax)
-
 #variable("Top_pt", "Top p_T [GeV]", nbins = 50, xmin = 0 , xmax = 1000)
+class variable2D(object):
+    def __init__(self, name, xname, yname, xtitle, ytitle, taglio=None, nxbins=None, xmin=None, xmax=None, xarray=None, 
+                    nybins=None, ymin=None, ymax=None, yarray=None):
+        self._name = name
+        self._xname = xname
+        self._yname = yname
+        self._xtitle = xtitle
+        self._ytitle = ytitle
+        self._taglio = taglio
+        self._nxbins = nxbins
+        self._xmin = xmin
+        self._xmax = xmax
+        self._xarray = xarray
+        self._nybins = nybins
+        self._ymin = ymin
+        self._ymax = ymax
+        self._yarray = yarray
+    def __str__(self):
+        return  '\"'+str(self._name)+'\",\"'+str(self._xtitle)+'\",\"'+str(self._ytitle)+'\",\"'+str(self._taglio)+'\",'+str(self._nxbins)+','+str(self._xmin)+','+str(self._xmax)+','+str(self._nybins)+','+str(self._ymin)+','+str(self._ymax)
+
 
 ### Definition of requeriments for plots (cut), variables and regions
 
 requirements = ""#"leptonveto" #"leptonveto && MET_pt>150 && MinDelta_phi>0.6"
+
+######## 1D variables for histos
 
 vars = []
 
@@ -52,58 +73,32 @@ vars.append(variable(name = "PV_npvsGood", title= "Number of PV", nbins = 51, xm
 # vars.append(variable(name = "Top_mass", title= "Top mass [GeV]", nbins = 30, xmin = 100, xmax=250))
 # vars.append(variable(name = "Top_pt", title= "Top p_{T} [GeV]", nbins = 30, xmin = 100, xmax=1000))
 
-nocut = ""
-hemveto = "(isMC || (year != 2018) || (HEMVeto || run<319077.))" 
-met_filters = "(Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_ecalBadCalibFilter && Flag_eeBadScFilter)"
-hlt_filters = "(HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60 || HLT_PFMETNoMu120_PFMHTNoMu120_IDTight || HLT_Ele32_WPTight_Gsf || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Photon200 || HLT_IsoMu24)"
-hlt2_filters = "(HLT_PFMET120_PFMHT120_IDTight || HLT_PFMETNoMu120_PFMHTNoMu120_IDTight)"
-hlt3_filters = "(HLT_PFMET140_PFMHT140_IDTight || HLT_PFMETNoMu140_PFMHTNoMu140_IDTight)"
-metcut = "(MET_pt>250)"
-hltmet_filters = "(HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60 || HLT_PFMETNoMu120_PFMHTNoMu120_IDTight)"
-hltmu_filters = "(HLT_IsoMu24)"
+######## 1D variables for histos
+vars2D = []
+
+# vars2D.append(variable2D(name = "MinDelta_phiVsHT_eventHT", xname = "MinDelta_phi", yname = "HT_eventHT", xtitle = " min #Delta #phi", ytitle = "event HT", nxbins = 18, xmin = 0, xmax = math.pi,
+#                             nybins = 20, ymin = 0, ymax = 2000))
+
+
+singleLep   = "((nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)||(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1))"
+singleMu    = "(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1)"
+singleE     = "(nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)"
 
 regions = {
-    "NoCut"                             : nocut,
+    # "NoCut"                             : nocut,
     # "HEMVeto"                         : hemveto,
     # "HEMVeto_MET_filters"             : hemveto +" && " + met_filters,
-    "HEMVeto_HLTmet"                 : hemveto +" && " + hltmet_filters,
-    "HEMVeto_HLTmu"                  : hemveto +" && " + hltmu_filters,
-    "HEMVeto_HLT"                    : hemveto +" && (" + hltmet_filters +" && " + hltmu_filters + ")",
-    "HEMVeto_HLTmet_METfilt"         : hemveto +" && " + met_filters +" && "+ hltmet_filters,
-    "HEMVeto_HLTmu_METfilt"          : hemveto +" && " + met_filters +" && "+ hltmu_filters,
-    "HEMVeto_HLT_METfilt"            : hemveto +" && " + met_filters +" && (" + hltmet_filters +" && " + hltmu_filters + ")",
-    "HEMVeto_HLTmet_METcut"          : hemveto +" && " + hltmet_filters +" && "+ metcut,
-    "HEMVeto_HLTmu_METcut"           : hemveto +" && " + hltmu_filters +" && "+ metcut,
-    "HEMVeto_HLT_METcut"             : hemveto +" && (" + hltmet_filters +" && " + hltmu_filters + ") && "+ metcut,
-    "AH_HLT"                         : hemveto +" && (" + hltmet_filters +" && " + hltmu_filters + ") && "+ metcut+" && "+"(nVetoMuon+nVetoElectron) == 0 && nJetBtag > 0 && nGoodJet>3",
-    "AH1lWRmu_HLT"                   : hemveto +" && (" + hltmet_filters +" && " + hltmu_filters + ") && "+ metcut + " && " + "(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1) && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
-    "SL_HLT"                         : hemveto +" && (" + hltmet_filters +" && " + hltmu_filters + ") && "+ metcut + " && " + "((nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)||(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1)) && nJetBtag > 0",
-    "AH_HLTmet"                      : hemveto +" && " + hltmet_filters +" && "+ metcut+" && "+"(nVetoMuon+nVetoElectron) == 0 && nJetBtag > 0 && nGoodJet>3",
-    "AH1lWRmu_HLTmet"                : hemveto +" && " + hltmet_filters +" && "+ metcut + " && " + "(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1) && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
-    "SL_HLTmet"                      : hemveto +" && " + hltmet_filters +" && "+ metcut + " && " + "((nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)||(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1)) && nJetBtag > 0",
-    "AH_HLTmu"                       : hemveto +" && " + hltmu_filters +" && "+ metcut+" && "+"(nVetoMuon+nVetoElectron) == 0 && nJetBtag > 0 && nGoodJet>3",
-    "AH1lWRmu_HLTmu"                 : hemveto +" && " + hltmu_filters +" && "+ metcut + " && " + "(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1) && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
-    "SL_HLTmu"                       : hemveto +" && " + hltmu_filters +" && "+ metcut + " && " + "((nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)||(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1)) && nJetBtag > 0",
+    "Presel"                         : "MET_pt>250",
+    "AH"                             : "MET_pt>250  && (nVetoMuon+nVetoElectron) == 0 && nJetBtag > 0 && nGoodJet>3",
 
-    # "HEMVeto_HLT_MET_filters"           : hemveto +" && " + met_filters +" && "+ hlt2_filters,
-    # "HEMVeto_HLT3_MET_filters"        : hemveto +" && " + met_filters +" && "+ hlt3_filters,
-    # "SMu"                               : hemveto +" && " + met_filters +" && "+ metcut+" && "+"(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1) && nJetBtag > 0",
-    # "SEl"                               : hemveto +" && " + met_filters +" && "+ metcut+" && "+"(nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0) && nJetBtag > 0",
-    # "AH1lWR"                       : hemveto +" && " + metcut+" && "+"((nTightElectron == 1 && nVetoElectron == 1 && nTightMuon == 0 && nVetoMuon == 0)||(nTightElectron == 0 && nVetoElectron == 0 && nTightMuon == 1 && nVetoMuon == 1)) && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
-    
-    # "all_regions" : "",  #### EventTopCategory!=0 fatto per fare selezione sui dati e comparare con MC18, da rimuovere il taglio qui",
+    "SL"                             : "MET_pt>250  && " + singleLep + " && nJetBtag > 0",
+    "SEl"                            : "MET_pt>250  && " + singleE   + " && nJetBtag > 0",
+    "SMu"                            : "MET_pt>250  && " + singleMu  + " && nJetBtag > 0",
 
-    # "rA": "MET_pt>200 && MinDelta_phi>0.6 && MinDelta_phi<2.5",
-    # "rB": "MET_pt>200 && MinDelta_phi>2.5",
-    # "rC": "MET_pt>200 && MinDelta_phi>0.6 && MinDelta_phi<2.5 && nJetBtag > 0 ",
-    # "rD": "MET_pt>200 && MinDelta_phi>2.5 && nJetBtag > 0",
-    # "rE": "MET_pt>200 && MinDelta_phi>0.6 && MinDelta_phi<2.5 && nJetBtag == 0 ",
-    # "rF": "MET_pt>200 && MinDelta_phi>2.5 && nJetBtag == 0",
-    
-    # "rA": "MET_pt>200 && MinDelta_phi>0.6 && MinDelta_phi<2.5 && nJet>3",
-    # "rB": "MET_pt>200 && MinDelta_phi>2.5 && nJet>3",
-    # "rC": "MET_pt>200 && MinDelta_phi>0.6 && MinDelta_phi<2.5 && nJet<4",
-    # "rD": "MET_pt>200 && MinDelta_phi>2.5 && nJet<4",
+    "AH1lWR"                         : "MET_pt>250  && " + singleLep + " && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
+    "AH1lWREl"                       : "MET_pt>250  && " + singleE   +" && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
+    "AH1lWRMu"                       : "MET_pt>250  && " + singleMu  +" && nGoodJet>=3 && MT<=140 && nJetBtag == 0",
+
     
     # "resolved_1fwjet": "EventTopCategory==3 && nForwardJet>0", 
     # "mixed_1fwjet": "EventTopCategory==2 && nForwardJet>0", 

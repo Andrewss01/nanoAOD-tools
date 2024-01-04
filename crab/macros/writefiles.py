@@ -3,7 +3,7 @@ from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 import os
 import optparse
 
-usage = 'python3 files_writer.py -d sample_name'
+usage = 'python files_writer.py -d sample_name'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 (opt, args) = parser.parse_args()
@@ -19,43 +19,43 @@ else:
     print("You are launching a single sample and not an entire bunch of samples")
     samples.append(dataset)
 
-path = ".."
-for_trigger = False # True #
+path = "."#".."
 
 for sample in samples:
-    if not os.path.exists("./files/"):
-        os.makedirs("./files/")
-    if for_trigger:
-        f = open("./files/"+str(sample.label)+"_for_trigger.txt", "w")
-        url = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '_for_trigger/').readlines()[0]
-    else:
-        f = open("./files/"+str(sample.label)+".txt", "w")
-        url = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '/').readlines()[0]
+    if not os.path.exists("./macros/files/"):
+        os.makedirs("./macros/files/")
+    f = open("./macros/files/"+str(sample.label)+".txt", "w")
+    lines = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '/').readlines()
+    if 'Rucio client' not in lines[3] : url = lines[3]
+    else : url = lines[-1]
     print(url)
     s1=url.split(str(os.environ.get('USER')))
-    print(s1[1])
-    s2=s1[1].split('0000')
-
-    path_xrd = 'root://cms-xrd-global.cern.ch//store/user/' + str(os.environ.get('USER')) + s2[0]
-    newurl = 'srm://stormfe1.pi.infn.it:8444/cms/store/user/' + str(os.environ.get('USER')) + s2[0] #:8444/srm/managerv2?SFN=
-    #path_xrd = 'root://cms-xrd-global.cern.ch//store/user/adeiorio/Trigger_v2/SinglePhoton/DataPhF_2017/210830_213641/'
-    #newurl = 'srm://stormfe1.pi.infn.it:8444/cms/store/user/adeiorio/Trigger_v2/SinglePhoton/DataPhF_2017/210830_213641/'
+    
+    s2=s1[1].split('/000')
+    
+    path_xrd = 'root://cms-xrd-global.cern.ch//store/user/' + str(os.environ.get('USER')) + s2[0]+"/"
+    newurl = 'srm://stormfe1.pi.infn.it:8444/srm/managerv2?SFN=/cms/store/user/' + str(os.environ.get('USER')) + s2[0]+"/"
+    #path_xrd = 'root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/JetHT/DataHTB_2016/200511_122826/'
+    #newurl = 'srm://stormfe1.pi.infn.it/cms/store/user/adeiorio/OutDir/JetHT/DataHTB_2016/200511_122826/'
 
     print(newurl)
-    
+    cont =True
     i=0
     print('\nChecking files in the folder '+newurl.strip('\n')+'\n')
-    while True:
-        folder = os.popen('eval `scram unsetenv -sh`; gfal-ls '+ newurl.strip('\n')+'000'+str(i)).readlines()
+    while cont:
+        folder = os.popen('eval `scram unsetenv -sh`; gfal-ls '+ newurl.strip('\n')+'000'+str(i)+"/").readlines()
         newpath_xrd = path_xrd.strip('\n')+'000'+str(i)
         if(len(folder)==0):
             print("The folder does not exist: "+ str(folder))
-            break
+            cont=False
+            continue
         print('sottocartella: '+'000'+str(i))
+        print(newpath_xrd)  
         for file in range(len(folder)):
             if(folder[file].strip('\n') == 'log'):
                 continue
-            f.write(newpath_xrd+'/'+folder[file]) 
+            f.write(newpath_xrd+'/'+folder[file])
+            
         i+=1
 
     f.close()

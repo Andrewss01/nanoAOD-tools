@@ -1,6 +1,7 @@
 import ROOT
 import math
 import numpy as np
+#from datetime import datetime
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 #from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -37,6 +38,7 @@ class GenPart_MomFirstCp(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
+        #t0 = datetime.now()
         """process event, return True (go to next module) or False (fail, go to next event)"""
         if self.isMC==0: return False
 
@@ -69,9 +71,9 @@ class GenPart_MomFirstCp(Module):
             else: momIdx2.append(-1)
 
 
-
         self.out.fillBranch("GenPart_genPartIdxMother_prompt", momIdx2 )
-
+        #t1 = datetime.now()  
+        #print("GenPart_momFirstCP module time :", t1-t0)
         return True
 
 

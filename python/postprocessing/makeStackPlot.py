@@ -24,8 +24,8 @@ run3 = not run2
 #     # TprimeToTZ_700_2018, TprimeToTZ_1000_2018, TprimeToTZ_1800_2018,
 #                ]
 in_datasets = [
-    # DataHTA_2018,
-    DataSingleMuA_2018,
+    DataHTA_2018,
+    # DataSingleMuA_2018,
     TT_hadr_2018, TT_semilep_2018, TT_Mtt1000toInf_2018, TT_Mtt700to1000_2018, 
     QCDHT_100to200_2018, QCDHT_200to300_2018,QCDHT_300to500_2018, QCDHT_500to700_2018, QCDHT_700to1000_2018, QCDHT_1000to1500_2018, QCDHT_1500to2000_2018, QCDHT_2000toInf_2018, 
     ZJetsToNuNu_HT100to200_2018, ZJetsToNuNu_HT200to400_2018, ZJetsToNuNu_HT400to600_2018, ZJetsToNuNu_HT600to800_2018, ZJetsToNuNu_HT800to1200_2018, ZJetsToNuNu_HT1200to2500_2018, ZJetsToNuNu_HT2500toInf_2018, 
@@ -82,7 +82,7 @@ print("Producing the follow histos: ", [v._name for v in vars])
 print("Regions considered :", regions.keys())
 
 ############### out folders  
-folder = "/eos/home-a/acagnott/DarkMatter/nosynch/run2018_exo22014_v2_SingleMu/"
+folder = "/eos/home-a/acagnott/DarkMatter/nosynch/run2018_exo22014_v2_MET/"
 if not os.path.exists(folder):
     os.mkdir(folder)
 repohisto = folder+"plots/"
@@ -315,7 +315,7 @@ for v in vars:
         if not blind:
             ratio = h_data.Clone("ratio")
             ratio.SetLineColor(ROOT.kBlack)
-            ratio.SetMaximum(10)
+            ratio.SetMaximum(2)
             ratio.SetMinimum(0)
             # ratio.Sumw2()
             ratio.SetStats(0)
@@ -339,7 +339,7 @@ for v in vars:
             ratio.GetYaxis().SetLabelSize(0.15)
             ratio.GetXaxis().SetTitleSize(0.16)
             ratio.GetYaxis().SetTitleSize(0.16)
-            # ratio.GetYaxis().SetRangeUser(0.,2.0)
+            ratio.GetYaxis().SetRangeUser(0.,2.0)
             ratio.GetXaxis().SetTitle(v._title)
             ratio.GetXaxis().SetLabelOffset(0.04)
             ratio.GetYaxis().SetLabelOffset(0.02)
