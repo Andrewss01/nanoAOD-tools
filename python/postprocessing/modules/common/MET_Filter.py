@@ -31,6 +31,6 @@ class MET_Filter(Module):
         
         return good_MET
 
-MET_HLT_Filter_2016 = lambda : MET_HLT_Filter(2016)
-MET_HLT_Filter_2017 = lambda : MET_HLT_Filter(2017)
-MET_HLT_Filter_2018 = lambda : MET_HLT_Filter(2018)
+MET_Filter_2016 = lambda : MET_Filter(2016)
+MET_Filter_2017 = lambda : MET_Filter(2017)
+MET_Filter_2018 = lambda : MET_Filter(2018)
