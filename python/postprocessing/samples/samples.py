@@ -413,7 +413,8 @@ QCD_2022.year                   = 2022
 QCD_2022.components             = [ 
                                     # QCD_HT40to70_2022, 
                                     QCD_HT70to100_2022, QCD_HT100to200_2022, QCD_HT200to400_2022,
-                                    QCD_HT400to600_2022, QCD_HT600to800_2022, QCD_HT800to1000_2022, QCD_HT1000to1200_2022,
+                                    QCD_HT400to600_2022, QCD_HT600to800_2022, QCD_HT800to1000_2022, 
+                                    QCD_HT1000to1200_2022, QCD_HT1200to1500_2022,
                                     QCD_HT1500to2000_2022, QCD_HT2000_2022
                                 ]
 
@@ -621,7 +622,8 @@ QCD_2022EE.year                   = 2022
 QCD_2022EE.components             = [ 
                                     # QCD_HT40to70_2022EE, 
                                     QCD_HT70to100_2022EE, QCD_HT100to200_2022EE, QCD_HT200to400_2022EE,
-                                    QCD_HT400to600_2022EE, QCD_HT600to800_2022EE, QCD_HT800to1000_2022EE, QCD_HT1000to1200_2022EE,
+                                    QCD_HT400to600_2022EE, QCD_HT600to800_2022EE, QCD_HT800to1000_2022EE, 
+                                    QCD_HT1000to1200_2022EE,QCD_HT1200to1500_2022EE,
                                     QCD_HT1500to2000_2022EE, QCD_HT2000_2022EE
                                 ]
 
