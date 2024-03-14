@@ -20,17 +20,14 @@ using rvec_f = const RVec<float> &;
 using rvec_i = const RVec<int> &;
 using rvec_b = const RVec<bool> &;
 
-const float TopRes_minpt=  0.;
-const float TopRes_maxpt=  300.;
-const float TopMix_minpt=  300.;
-const float TopMix_maxpt=  500.;
-const float TopMer_minpt=  500.;
-const float TopMer_maxpt=  10000.;
 const float TopRes_trs=  0.5411276;
-const float TopMix_trs=  0.39578277;
-const float TopMer_trs=  0.99;
+const float TopMix_trs=  0.7584613561630249;
+const float TopMer_trs=  0.94;
 const float dR=  0.8;
 const float btag_mediumWP = 0.2783;
+
+//  Top Resolved threshold {'fpr 10': 0.1334565, 'fpr 5': 0.24193972, 'fpr 1': 0.5411276, 'fpr 01': 0.77197933}
+//  Top Mixed threshold {'fpr 10': 0.13067308068275452, 'fpr 5': 0.2957885265350342, 'fpr 1': 0.7584613561630249, 'fpr 01': 0.9129540324211121}
 
 // ########################################################
 bool isMC(int SampleFlag){
@@ -375,12 +372,12 @@ Float_t LeadingFatJetPt(rvec_f FatJet_pt)
   return Max(fj_pt);
 }
 
-Int_t nForwardJet(rvec_i GoodJet_idx, rvec_f Jet_eta)
+Int_t nForwardJet(rvec_f Jet_pt, rvec_f Jet_jetId, rvec_f Jet_eta)
 {
   int nfwdjet = 0;
-  for(int i = 0; i < GoodJet_idx.size(); i++)
+  for(int i = 0; i < Jet_pt.size(); i++)
   {
-    if (Jet_eta[GoodJet_idx[i]]>2.5)
+    if (Jet_pt[i]>30 && Jet_jetId[i] && Jet_eta[i]>2.5)
     {
       nfwdjet += 1;
     }
@@ -405,185 +402,333 @@ Int_t njetbtag(rvec_i GoodJet_idx, rvec_f Jet_btagDeepFlavB)
 // ############## TopSelection ############################
 // ########################################################
 
-RVec<int> select_TopMer(rvec_f FatJet_deepTag_TvsQCD, rvec_f FatJet_pt, rvec_f FatJet_eta, rvec_f FatJet_phi)
+// Top Merged, FatJet over threshold of particleNet_TvsQCD
+RVec<int> select_TopMer(rvec_f FatJet_particleNet_TvsQCD)
 {
   RVec<int> ids;
-  for (int i = 0; i < FatJet_deepTag_TvsQCD.size(); i++)
+  for (int i = 0; i < FatJet_particleNet_TvsQCD.size(); i++)
   {
-  	if(FatJet_deepTag_TvsQCD[i]>TopMer_trs && FatJet_pt[i]>TopMer_minpt && FatJet_pt[i]<TopMer_maxpt){
+  	if(FatJet_particleNet_TvsQCD[i]>TopMer_trs){
       ids.emplace_back(i);
 	  }
   }
   return ids;
 }
 
-RVec<int> select_TopMix(rvec_f TopHighPt_score2, rvec_f TopHighPt_pt, rvec_f TopHighPt_eta, rvec_f TopHighPt_phi)
+bool check_same_top(int idx_fj_1, int idx_j0_1, int idx_j1_1, int idx_j2_1, int idx_fj_2, int idx_j0_2, int idx_j1_2, int idx_j2_2)
+{
+  std::vector<int> list_1 = {idx_j0_1, idx_j1_1, idx_j2_1};
+  std::vector<int> list_2 = {idx_j0_2, idx_j1_2, idx_j2_2};
+  
+  // Remove elements equal to -1
+  list_1.erase(std::remove(list_1.begin(), list_1.end(), -1), list_1.end());
+  list_2.erase(std::remove(list_2.begin(), list_2.end(), -1), list_2.end());
+  
+  std::set<int> set_1(list_1.begin(), list_1.end());
+  std::set<int> set_2(list_2.begin(), list_2.end());
+  
+  std::set<int> intersection;
+  std::set_intersection(set_1.begin(), set_1.end(), set_2.begin(), set_2.end(), std::inserter(intersection, intersection.begin()));
+  
+  bool check_jets = intersection.empty();
+  bool check_fj = (idx_fj_1 != idx_fj_2)||(idx_fj_1 == -1 || idx_fj_2 == -1);
+  
+  return check_jets && check_fj;
+}
+
+// Top Mixed, candidates over threshold of TopScore and candidates not overlapping (do not share any abject)
+RVec<int> select_TopMix(rvec_f TopMixed_TopScore, rvec_f TopMixed_idxFatJet, rvec_f TopMixed_idxJet0, rvec_f TopMixed_idxJet1, rvec_f TopMixed_idxJet2)
 {
   RVec<int> ids;
   RVec<float> scores;
-  for (int i = 0; i < TopHighPt_score2.size(); i++)
+  RVec<float> ids_selected;
+
+  for (int i = 0; i < TopMixed_TopScore.size(); i++)
   {
-  	if(TopHighPt_score2[i]>TopMix_trs && TopHighPt_pt[i]>TopMix_minpt && TopHighPt_pt[i]<TopMix_maxpt)
+  	if(TopMixed_TopScore[i]>TopMix_trs)
     {
       ids.emplace_back(i);
-	    scores.emplace_back(TopHighPt_score2[i]);
+	    scores.emplace_back(TopMixed_TopScore[i]);
 	  }
   }
-    
-  RVec<int> ids_ = ids;
-  RVec<int> ids_select;
-  RVec<float> scores_ = scores;
-  int n_notzero = 0;
-    
-  for(int j=0; j<scores_.size(); j++)
-  { 
-    if(scores_[j]!=0)
+  const RVec<int> scores_indices_ = Argsort(scores);
+  RVec<int> scores_indices = Reverse(scores_indices_);
+  RVec<int> ids_sorted = Take(ids, scores_indices);
+  RVec<float> scores_sorted = Take(scores, scores_indices);
+  
+  for(int i = 0; i < ids_sorted.size(); i++)
+  {
+    if(i==0)
     {
-	    n_notzero += 1;
+      ids_selected.emplace_back(ids_sorted[i]);
     }
     else 
     {
-	    n_notzero += 0;
+      bool same_top = false;
+      int bestTop_idx = 0;
+      while(!same_top and bestTop_idx < ids_selected.size())
+      {
+        same_top = check_same_top(TopMixed_idxFatJet[ids_sorted[i]], TopMixed_idxJet0[ids_sorted[i]], TopMixed_idxJet1[ids_sorted[i]], TopMixed_idxJet2[ids_sorted[i]], TopMixed_idxFatJet[ids_sorted[bestTop_idx]], TopMixed_idxJet0[ids_sorted[bestTop_idx]], TopMixed_idxJet1[ids_sorted[bestTop_idx]], TopMixed_idxJet2[ids_sorted[bestTop_idx]]);
+        bestTop_idx += 1;
+      }
+      if(!same_top)
+      {
+        ids_selected.emplace_back(ids_sorted[i]);
+      }
     }
-  }
 
-  while(n_notzero!=0)
-  {
-    RVec<float> deltaRs;
-    int bestTop_idx = ArgMax(scores_);
-      
-    for(int i = 0; i < ids_.size(); i++)
-    {
-	    if(i == bestTop_idx) continue;
-	    if(scores_[i]!=0 && deltaR(TopHighPt_eta[bestTop_idx], TopHighPt_phi[bestTop_idx], TopHighPt_eta[i], TopHighPt_phi[i])<dR)  scores_[i]=0;
-     
-    }
-    ids_select.emplace_back(bestTop_idx);
-    scores_[bestTop_idx]=0;
-    n_notzero =0;
-    for(int j=0; j<scores_.size(); j++)
-    { 
-	    if(scores_[j]!=0)
-      {
-	      n_notzero += 1;
-	    }
-	    else 
-      {
-	      n_notzero += 0;
-	    }
-    }
   }
-  return ids_select;
+  return ids_selected;
 }
 
-RVec<int> select_TopRes(rvec_f TopLowPt_scoreDNN, rvec_f TopLowPt_pt, rvec_f TopLowPt_eta, rvec_f TopLowPt_phi)
+RVec<int> select_TopRes(rvec_f TopResolved_TopScore, rvec_f TopResolved_idxJet0, rvec_f TopResolved_idxJet1, rvec_f TopResolved_idxJet2)
 {
   RVec<int> ids;
   RVec<float> scores;
-  for (int i = 0; i < TopLowPt_scoreDNN.size(); i++)
+  RVec<int> ids_selected;
+  for (int i = 0; i < TopResolved_TopScore.size(); i++)
   {
-	  if(TopLowPt_scoreDNN[i]>TopRes_trs && TopLowPt_pt[i]>TopRes_minpt && TopLowPt_pt[i]<TopRes_maxpt)
+	  if(TopResolved_TopScore[i]>TopRes_trs)
     {
 	    ids.emplace_back(i);
-	    scores.emplace_back(TopLowPt_scoreDNN[i]);
+	    scores.emplace_back(TopResolved_TopScore[i]);
 	  }
   }
-    
-  RVec<int> ids_ = ids;
-  RVec<float> ids_select;
-  RVec<float> scores_ = scores;
-  int n_notzero = 0;
-    
-  for(int j=0; j<scores_.size(); j++)
-  { 
-    if(scores_[j]!=0)
+  const RVec<int> scores_indices_ = Argsort(scores);
+  RVec<int> scores_indices = Reverse(scores_indices_);
+  RVec<int> ids_sorted = Take(ids, scores_indices);
+  RVec<float> scores_sorted = Take(scores, scores_indices);
+
+  for(int i = 0; i < ids_sorted.size(); i++)
+  {
+    if(i==0)
     {
-	    n_notzero += 1;
+      ids_selected.emplace_back(ids_sorted[i]);
     }
     else 
     {
-	    n_notzero += 0;
+      bool same_top = false;
+      int bestTop_idx = 0;
+      while(!same_top and bestTop_idx < ids_selected.size())
+      {
+        same_top = check_same_top(-1, TopResolved_idxJet0[ids_sorted[i]], TopResolved_idxJet1[ids_sorted[i]], TopResolved_idxJet2[ids_sorted[i]], -1, TopResolved_idxJet0[ids_sorted[bestTop_idx]], TopResolved_idxJet1[ids_sorted[bestTop_idx]], TopResolved_idxJet2[ids_sorted[bestTop_idx]]);
+        bestTop_idx += 1;
+      }
+      if(!same_top)
+      {
+        ids_selected.emplace_back(ids_sorted[i]);
+      }
     }
-  }
 
-  while(n_notzero!=0)
-  {
-    RVec<float> deltaRs;
-    int bestTop_idx = ArgMax(scores_);
-      
-    for(int i = 0; i < ids_.size(); i++)
-    {
-	    if(i == bestTop_idx) continue;
-	    if(scores_[i]!=0 && deltaR(TopLowPt_eta[bestTop_idx], TopLowPt_phi[bestTop_idx], TopLowPt_eta[i], TopLowPt_phi[i])<dR)  scores_[i]=0;
-    }
-    ids_select.emplace_back(bestTop_idx);
-    scores_[bestTop_idx]=0;
-    n_notzero =0;
-    for(int j=0; j<scores_.size(); j++)
-    { 
-      if(scores_[j]!=0)
-      {
-	      n_notzero += 1;
-	    }
-	    else 
-      {
-	      n_notzero += 0;
-	    }
-    }
   }
-  return ids_select;
+  return ids_selected;
 }
 
-Int_t select_TopCategory(rvec_i GoodTopMer_idx, rvec_i GoodTopMix_idx, rvec_i GoodTopRes_idx){
-  //return:  0- no top sel, 1- top merged, 2- top mix, 3- top resolved
+Int_t nTop(rvec_i ids)
+{
+  return ids.size();
+}
+
+Int_t select_TopCategory(rvec_i GoodTopMer_idx, rvec_i GoodTopMix_idx, rvec_i GoodTopRes_idx)
+{
+  //return:  1- Event Resolved, 2- Event Mixed, 3- Event Merged, 4- Event Nothing, ...
+
   int nRes = GoodTopRes_idx.size();
   int nMix = GoodTopMix_idx.size();
   int nMer = GoodTopMer_idx.size();
   
-  if (nRes>0 && nMix==0 && nMer==0){
-    return 3;
-  }
-  else if (nRes<2 && nMix>0 && nMer==0){
-    return 2;
-  }
-  else if (nRes==0 && nMix<2 && nMer>0){
+  if (nRes==1 && nMix==0 && nMer==0){
     return 1;
   }
-  else return 0;
+  else if (nRes<=1 && nMix==1 && nMer==0){
+    return 2;
+  }
+  else if (nRes==0 && nMix<=1 && nMer==1){
+    return 3;
+  }
+  else return 4;
 }
 
-Int_t select_bestTop(int EventTopCategory, rvec_i GoodTopMer_idx, rvec_i GoodTopMix_idx, rvec_i GoodTopRes_idx, rvec_f FatJet_deepTag_TvsQCD, rvec_f TopHighPt_score2, rvec_f TopLowPt_scoreDNN){
+Int_t select_bestTop(int EventTopCategory, rvec_f FatJet_particleNet_TvsQCD, rvec_f TopMixed_TopScore, rvec_f TopResolved_TopScore){
   //RVec<int> topselect ;
   //int bestTop_idx;
   RVec<float> scores;
-  if (EventTopCategory==1){ 
+  int idx;
+  if (EventTopCategory==3){ 
     //topselect = GoodTopMer_idx;
-    for(int i = 0; i < GoodTopMer_idx.size(); i++)
+    for(int i = 0; i < FatJet_particleNet_TvsQCD.size(); i++)
     {
-      scores.emplace_back(FatJet_deepTag_TvsQCD[i]);
+      scores.emplace_back(FatJet_particleNet_TvsQCD[i]);
     }
+    idx = ArgMax(scores);
   }
   else if (EventTopCategory==2){
-    for(int i = 0; i < GoodTopMix_idx.size(); i++)
+    for(int i = 0; i < TopMixed_TopScore.size(); i++)
     {
-      scores.emplace_back(TopHighPt_score2[i]);
-    } 
+      scores.emplace_back(TopMixed_TopScore[i]);
+    }
+    idx = ArgMax(scores); 
   }
-  else if (EventTopCategory==3){ 
-    for(int i = 0; i < GoodTopRes_idx.size(); i++)
+  else if (EventTopCategory==1){ 
+    for(int i = 0; i < TopResolved_TopScore.size(); i++)
     {
-      scores.emplace_back(TopLowPt_scoreDNN[i]);
+      scores.emplace_back(TopResolved_TopScore[i]);
     } 
+    idx = ArgMax(scores);
   }
-  else return -1;
+  else idx = -1;
 
-  return ArgMax(scores);
+  return idx;
 }
 
-Float_t select_TopVar(Int_t EventTopCategory, Int_t Top_idx, rvec_f FatJet_pt, rvec_f TopHighPt_pt, rvec_f TopLowPt_pt){
-  if (EventTopCategory==1) return FatJet_pt[Top_idx];
-  else if (EventTopCategory==2) return TopHighPt_pt[Top_idx];
-  else if (EventTopCategory==3) return TopLowPt_pt[Top_idx];
+Float_t select_TopVar(Int_t EventTopCategory, Int_t Top_idx, rvec_f FatJet_pt, rvec_f TopMixed_pt, rvec_f TopResolved_pt)
+{
+  if (EventTopCategory==1) return TopResolved_pt[Top_idx];
+  else if (EventTopCategory==2) return TopMixed_pt[Top_idx];
+  else if (EventTopCategory==3) return FatJet_pt[Top_idx];
   else return -1000;
 }
 
+Int_t select_TopCategoryWithTruth(int EventTopCategory, rvec_i FatJet_matched, rvec_i GoodTopMer_idx, rvec_i TopMixed_truth, rvec_i GoodTopMix_idx, rvec_i TopResolved_truth, rvec_i GoodTopRes_idx)
+{
+  int category;
+  if(EventTopCategory==1)
+  {
+    for(int i = 0; i < GoodTopRes_idx.size(); i++)
+    {
+      if (TopResolved_truth[GoodTopRes_idx[i]]==1) 
+      {
+        category = 1;
+      }
+    }
+  }
+  else if(EventTopCategory==2)
+  {
+    for(int i = 0; i < GoodTopMix_idx.size(); i++)
+    {
+      if (TopMixed_truth[GoodTopMix_idx[i]]==1)
+      {
+        category = 2;
+      } 
+    }
+  }
+  else if(EventTopCategory==3)
+  {
+    for(int i = 0; i < GoodTopMer_idx.size(); i++)
+    {
+      if (FatJet_matched[GoodTopMer_idx[i]]==3)
+      {
+        category = 3;
+      } 
+    }
+  }
+  else if (EventTopCategory==4) 
+  {
+    for(int i = 0; i < GoodTopRes_idx.size(); i++)
+    {
+      if (TopResolved_truth[GoodTopRes_idx[i]]==1)
+      {
+        category = 4;
+      } 
+    }
+    for(int i = 0; i < GoodTopMix_idx.size(); i++)
+    {
+      if (TopMixed_truth[GoodTopMix_idx[i]]==1)
+      {
+        category = 4;
+      } 
+    }
+    for(int i = 0; i < GoodTopMer_idx.size(); i++)
+    {
+      if (FatJet_matched[GoodTopMer_idx[i]]==3)
+      {
+        category = 4;
+      } 
+    }
+  }
+  else
+  {
+    category = -1;
+  }
+  return category;
+}
+
+Float_t TopIsolation_NJets( int EventTopCategory, int Top_idx, rvec_i TopMixed_idxFatJet, rvec_i TopMixed_idxJet0, rvec_i TopMixed_idxJet1, rvec_i TopMixed_idxJet2, rvec_f TopMixed_pt, rvec_f TopMixed_phi, rvec_f TopMixed_eta, rvec_i TopResolved_idxJet0, rvec_i TopResolved_idxJet1, rvec_i TopResolved_idxJet2, rvec_f TopResolved_pt,  rvec_f TopResolved_phi, rvec_f TopResolved_eta, rvec_f FatJet_pt, rvec_f FatJet_eta, rvec_f FatJet_phi, rvec_i FatJet_jetId, rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_phi, rvec_f Jet_jetId, float valR, int b)
+{
+  Float_t njet_near = 0;
+  Float_t pt_near = 0;
+  Float_t pt_isolation = 0;
+
+  if(EventTopCategory == 1) //resolved
+  {
+    for(int i = 0; i<Jet_pt.size(); i++)
+    {
+      if((Jet_pt[i]>30 && Jet_jetId[i]) && deltaR(Jet_eta[i], Jet_phi[i], TopResolved_eta[Top_idx], TopResolved_phi[Top_idx])<valR)
+      {
+        if(i!=TopResolved_idxJet0[Top_idx] && i!=TopResolved_idxJet1[Top_idx] && i!=TopResolved_idxJet2[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += Jet_pt[i];
+        }
+      }
+    }
+    pt_isolation = static_cast<Float_t>(pt_near)/static_cast<Float_t>(TopResolved_pt[Top_idx]);
+  }
+  else if(EventTopCategory == 2) //mixed
+  {
+    for(int i = 0; i<Jet_pt.size(); i++)
+    {
+      if((Jet_pt[i]>30 && Jet_jetId[i]) && deltaR(Jet_eta[i], Jet_phi[i], TopMixed_eta[Top_idx], TopMixed_phi[Top_idx])<valR)
+      {
+        if(i!=TopMixed_idxJet0[Top_idx] && i!=TopMixed_idxJet1[Top_idx] && i!=TopMixed_idxJet2[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += Jet_pt[i];
+        }
+      }
+    }
+    for(int i = 0; i<FatJet_pt.size(); i++)
+    {
+      if((FatJet_pt[i]>30 && FatJet_jetId[i]) && deltaR(FatJet_eta[i], FatJet_phi[i], TopMixed_eta[Top_idx], TopMixed_phi[Top_idx])<valR)
+      {
+        if(i!=TopMixed_idxFatJet[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += FatJet_pt[i];
+        }
+      }
+    }
+    pt_isolation = static_cast<Float_t>(pt_near)/static_cast<Float_t>(TopMixed_pt[Top_idx]);
+  }
+  else if(EventTopCategory == 3) //merged
+  {
+    for(int i = 0; i<FatJet_pt.size(); i++)
+    {
+      if((FatJet_pt[i]>30 && FatJet_jetId[i]) && deltaR(FatJet_eta[i], FatJet_phi[i], FatJet_eta[Top_idx], FatJet_phi[Top_idx])<valR)
+      {
+        if(i!=TopMixed_idxFatJet[Top_idx])
+        {
+          njet_near += 1;
+          pt_near += FatJet_pt[i];
+        }
+      }
+    }
+    pt_isolation = static_cast<Float_t>(pt_near)/static_cast<Float_t>(FatJet_pt[Top_idx]);
+  }
+  else
+  {
+    pt_isolation = -1.;
+    njet_near = -1.;
+  }
+
+  Float_t var_to_return;
+  if( b == 1)
+  {
+    var_to_return = static_cast<Float_t>(pt_isolation);
+  } 
+  else if( b== 0)
+  { 
+    var_to_return = njet_near;
+  }
+  return var_to_return;
+}
