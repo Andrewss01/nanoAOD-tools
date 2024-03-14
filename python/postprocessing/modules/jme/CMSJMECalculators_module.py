@@ -170,7 +170,7 @@ def getFatJetArgsPostProcessor(fatjets, subjets, genjets, subgenjets, rho, run, 
                   toRVecFloat([]), toRVecFloat([]), toRVecFloat([]), toRVecFloat([]) ]
     return args
 
-class CMSJMECalculatorsJet(Module):
+class CMSJMECalculators(Module):
     def __init__(self, jetvarcalc, jetType="AK4Puppi", isMC=True, forMET=False, PuppiMET=False, addHEM2018Issue=False, NanoAODv=12):
         self.config = jetvarcalc
         self.jetType = jetType
@@ -191,7 +191,6 @@ class CMSJMECalculatorsJet(Module):
         self.out = wrappedOutputTree
         if "AK4" in self.jetType:
             for corr in self.config.available():
-                print(corr)
                 if self.forMET:
                     metbranchname = "MET"
                     if self.PuppiMET: metbranchname = "PuppiMET"
@@ -221,7 +220,9 @@ class CMSJMECalculatorsJet(Module):
         _event           = event.event
         if "AK4" in self.jetType:
             jets      = Collection(event, "Jet")
-            genjets   = Collection(event, "GenJet")
+            if self.isMC :genjets   = Collection(event, "GenJet")
+            else: genjets = None
+
             if self.forMET:
                 CorrT1METJet = Collection(event, "CorrT1METJet")
                 if self.PuppiMET:
@@ -240,17 +241,20 @@ class CMSJMECalculatorsJet(Module):
         elif "AK8" in self.jetType:
             fatjets         =  Collection(event, "FatJet")
             subjets         =  Collection(event, "SubJet")
-            genjets         =  Collection(event, "GenJetAK8")
-            subgenjets      =  Collection(event, "SubGenJetAK8")
+            if self.isMC:
+                genjets         =  Collection(event, "GenJetAK8")
+                subgenjets      =  Collection(event, "SubGenJetAK8")
+            else: 
+                genjets, subgenjets = None, None
             var = getFatJetArgsPostProcessor(fatjets, subjets, genjets, subgenjets, rho, run, luminosityBlock, _event, isMC=self.isMC, addHEM2018Issue=self.addHEM2018Issue, NanoAODv=self.NanoAODv)
         else:
             print("Jet type not recognized")
 
         res = self.config.produce(*var)
 
-        print(self.config.available())
-        for i in range(self.config.available().size()):
-            print(res.pt(i))
+        # print(self.config.available())
+        # for i in range(self.config.available().size()):
+        #     print(res.pt(i))
         if "AK4" in self.jetType:
             for i, corr in enumerate(self.config.available()):
                 if self.forMET:
@@ -259,11 +263,10 @@ class CMSJMECalculatorsJet(Module):
                     self.out.fillBranch("%s_T1_pt_%s" % (metbranchname,corr), res.pt(i))
                     self.out.fillBranch("%s_T1_phi_%s" % (metbranchname,corr), res.phi(i))
                 else:
-                    print(corr, res.pt(i))
                     self.out.fillBranch("Jet_pt_%s" %(corr), res.pt(i))
                     self.out.fillBranch("Jet_mass_%s" %(corr), res.mass(i))
         elif "AK8" in self.jetType:
-            for corr in self.config.available():
+            for i, corr in enumerate(self.config.available()):
                 self.out.fillBranch("FatJet_pt_%s" %(corr), res.pt(i))
                 self.out.fillBranch("FatJet_mass_%s" %(corr), res.mass(i))
                 self.out.fillBranch("FatJet_msoftdrop_%s" %(corr), res.msoftdrop(i))
