@@ -26,7 +26,7 @@ for sample in samples:
         os.makedirs("./macros/files/")
     f = open("./macros/files/"+str(sample.label)+".txt", "w")
     lines = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '/').readlines()
-    if 'Rucio client' not in lines[3] : url = lines[3]
+    if 'Rucio client' not in lines[2] : url = lines[2]
     else : url = lines[-1]
     print(url)
     s1=url.split(str(os.environ.get('USER')))

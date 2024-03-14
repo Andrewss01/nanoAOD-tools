@@ -54,7 +54,7 @@ for d in sample_dict.keys():
         data[sample_dict[d].label] = sample_dict[d].unix_code
     if opt.stringSample:
         string[sample_dict[d].label] = get_files_string(sample_dict[d])
-    print(sample_dict[d].label, sample_dict[d].unix_code)
+    # print(sample_dict[d].label, sample_dict[d].unix_code)
 if opt.xsec: 
     map_xsec.write("});")
     map_xsec.close()
@@ -62,11 +62,11 @@ if opt.nevents:
     map_nevents.write("});")
     map_nevents.close()
 if opt.dictSample:
-    json_data = json.dumps(data)
+    json_data = json.dumps(data, indent = 1)
     # write JSON data to file
     with open("dictSample.json", "w") as f:
         f.write(json_data)
 if opt.stringSample:
-    json_string = json.dumps(string)
+    json_string = json.dumps(string, indent = 1)
     with open("stringSample.json", "w") as f:
         f.write(json_string)
