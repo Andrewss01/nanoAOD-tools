@@ -29,7 +29,7 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.psetName = 'PSet.py'\n")
     f.write("config.JobType.maxJobRuntimeMin = 2700\n")
     f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
-    f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
+    f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt', './Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt', './Cert_Collisions2022_355100_362760_Golden.json', './Cert_Collisions2023_366442_370790_Golden.json']\n") #hadd nano will not be needed once nano tools are in cmssw
     # f.write("config.JobType.sendPythonFolder = True\n")
     f.write("config.section_('Data')\n")
     
@@ -42,14 +42,15 @@ def cfg_writer(sample, isMC, outdir):
     if not isMC:
         # f.write("config.Data.splitting = 'LumiBased'\n")
         f.write("config.Data.splitting = 'FileBased'\n")
-        if sample.year == 2016:
-            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt'\n")
-        elif sample.year == 2017:
-            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Legacy_2017/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt'\n")
-        elif sample.year == 2018:
-            f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt'\n")       
-        elif sample.year == 2022:
-            f.write("config.Data.lumiMask = '/eos/user/c/cmsdqm/www/CAF/certification/Collisions22/Cert_Collisions2022_355100_362760_Golden.json'\n")
+        # if sample.year == 2016:
+        #     f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt'\n")
+        # elif sample.year == 2017:
+        #     f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Legacy_2017/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt'\n")
+        # elif sample.year == 2018:
+        #     f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt'\n")       
+        # elif sample.year == 2022:
+        #     f.write("config.Data.lumiMask = '/eos/user/c/cmsdqm/www/CAF/certification/Collisions22/Cert_Collisions2022_355100_362760_Golden.json'\n")
+        f.write("config.Data.lumiMask = ''\n")
         f.write("config.Data.unitsPerJob = 1\n")
         # f.write("config.Data.unitsPerJob = 80\n")
     else:
@@ -75,42 +76,51 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("#!/usr/bin/env python3\n")
     f.write("import os\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.JetVetoMaps_run3 import *\n")
+    # f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.MCweight_writer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.MET_Filter import *\n")
-    # f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.HLT_Filter import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.JetVetoMaps_run3 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.preselection import *\n")
-    #f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.trigger_preselection import *\n")
-    #f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *\n")
-    #f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *\n")
-    #f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *\n")
-    #f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *\n") 
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.BTagSF import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PUreweight import *\n") 
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.GenPart_MomFirstCp import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoprepro_v2 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2 import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopEvaluate_MultiScore import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopEvaluate_MultiScore_v2 import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.globalvar import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.SampleIdx import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lumiMask import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.CMSJMECalculators_module import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.CMSJMECalculatorsHelper import *\n")
+    f.write("from CMSJMECalculators import loadJMESystematicsCalculators\n")
+    f.write("from CMSJMECalculators.utils import (\n")
+    f.write("    toRVecFloat,\n")
+    f.write("    toRVecInt,\n")
+    f.write("    getJetMETArgs,\n")
+    f.write("    getFatJetArgs,\n")
+    f.write(")\n")
+    f.write("from CMSJMECalculators import config as calcConfigs\n")
+    f.write("loadJMESystematicsCalculators()\n")
     # f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.MET_HLT_Filter import *\n")
 
     #f.write("infile = "+str(sample.files)+"\n")
     #f.write("outpath = '"+ outpath+"'\n")
     #Deafult PostProcessor(outputDir,inputFiles,cut=None,branchsel=None,modules=[],compression='LZMA:9',friend=False,postfix=None, jsonInput=None,noOut=False,justcount=False,provenance=False,haddFileName=None,fwkJobReport=False,histFileName=None,histDirName=None, outputbranchsel=None,maxEntries=None,firstEntry=0, prefetch=False,longTermCache=False)\n")
+    year = str(sample.year)
+    if sample.year==2022:
+        if "EE" in sample.label:
+            year_tag = "\""+year+"EE\""
+        else:
+            year_tag = "\""+year+"\""
+    else:
+        year_tag = year
     if isMC:
-        #f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True)\n")
-        #f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
-        #f.write("metCorrector_tot = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='Total', redojec=True)\n")
-        #f.write("fatJetCorrector_tot = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='Total', redojec=True, jetType = 'AK8PFchs')\n")
         f.write("p=PostProcessor('.', inputFiles(), '', modules=["+modules+"], provenance=True, fwkJobReport=True, histFileName='hist.root', histDirName='plots', outputbranchsel='keep_and_drop.txt')\n")# haddFileName='"+sample.label+".root'
     else: 
-        #f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True)\n")
-        #f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
-        #f.write("metCorrector_tot = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='Total', redojec=True)\n")
-        #f.write("fatJetCorrector_tot = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='Total', redojec=True, jetType = 'AK8PFchs')\n")
         #f.write("HLT = HLT_fun('"+str(sample.year)+"', '"+str(sample.runP)+"')\n")
-        f.write("p=PostProcessor('.', inputFiles(), '"+presel+"', modules=["+modules+"], provenance=True, fwkJobReport=True, haddFileName='tree_hadd.root', outputbranchsel='keep_and_drop.txt')\n")#
+        f.write("p=PostProcessor('.', inputFiles(), '"+presel+"', modules=["+modules+"],  provenance=True, fwkJobReport=True, haddFileName='tree_hadd.root', outputbranchsel='keep_and_drop.txt')\n")#
         #jsonInput=runsAndLumis()
     f.write("p.run()\n")
     f.write("print('DONE')\n")
@@ -141,6 +151,8 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
 
     f_sh.write("echo Found Proxy in: $X509_USER_PROXY\n")
     f_sh.write("which python3\n")
+    f_sh.write("pip3 install --user $CMSSW_BASE/src/PhysicsTools/NanoAODTools/python/postprocessing/CMSJMECalculators/CMSJMECalculators\n")
+    f_sh.write("ls $CMSSW_BASE/src/PhysicsTools/NanoAODTools/python/postprocessing/. \n")
     f_sh.write("python3 crab_script.py $1\n")
     if isMC:
         f_sh.write("hadd tree_hadd.root tree.root hist.root\n")
@@ -192,8 +204,11 @@ for sample in samples:
         else:
             isMC = True
             presel = ""
-                
         print('The flag isMC is: ' + str(isMC))
+        eratag = ""
+        if sample.year==2022:
+            if sample.EE: eratag = "2022_Summer22EE"
+            else: eratag = "2022_Summer22"
 
         print("Producing crab configuration file")
         cfg_writer(sample, isMC, "DM_Run3_v0")
@@ -207,16 +222,21 @@ for sample in samples:
             #    modules=modules.replace("MCweight_writer()","LHAPDFWeight_NNPDF(),LHAPDFWeight_NNPDFLO(),LHAPDFWeight_PDF4LHC15(),MCweight_writer(LHAPDFs=['LHANNPDF','LHAPDF4LHC15','LHANNPDFLO'])")
 
             # modules = "MCweight_writer(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate()"
-            modules = "MCweight_writer(), MET_Filter(year = "+year+"), preselection(), "+pu_mod+", SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate_MultiScore()"
-            # modules = "MCweight_writer(), MET_HLT_Filter(), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate()"
-
+            # modules = "MCweight_writer(), MET_Filter(year = "+year+"), preselection(), "+pu_mod+", SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate_MultiScore()"
+            if sample.year==2018:
+                modules = "MCweight_writer(), MET_HLT_Filter(), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'), nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate_MultiScore(year = "+str(sample.year)+")"
+            # if sample.year >=2022:
+            #     modules = "JetVetoMaps_run3("+str(sample.year)+", '"+eratag+"'), metCorrector(), metCorrector_tot(), fatJetCorrector(), fatJetCorrector_tot(), preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'), nanoprepro(),nanoTopcand(isMC=1), globalvar(), nanoTopevaluate()" 
+            #     # modules = "preselection(), GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'), nanoprepro(), nanoTopcand(isMC=1)" # to create dataset for training  
+            # modules = "MET_HLT_Filter(), preselection(),nanoTopcand(isMC=0), SampleIdx("+ str(dictSample[sample.label]) +"), globalvar(), nanoTopevaluate()"
+            if sample.year==2022:
+                modules = "MCweight_writer(),MET_Filter(year = "+year+"),JetVetoMaps_run3(year="+str(sample.year)+",EE="+str(sample.EE)+"),preselection(),PUreweight(year="+str(sample.year)+",EE="+str(sample.EE)+"),BTagSF(year="+str(sample.year)+",EE="+str(sample.EE)+"),CMSJMECalculators(configcreate(isMC=True,year="+str(sample.year)+",EE="+str(sample.EE)+",runPeriod='.',jetType='AK4PFPuppi',forMET=False,doJer=True),jetType='AK4PFPuppi',isMC=True,forMET=False,PuppiMET=False,addHEM2018Issue=False,NanoAODv=12),CMSJMECalculators(configcreate(isMC=True,year="+str(sample.year)+",EE="+str(sample.EE)+",runPeriod='.',jetType='AK8PFPuppi',forMET=False,doJer=True),jetType='AK8PFPuppi',isMC=True,forMET=False,PuppiMET=False,addHEM2018Issue=False,NanoAODv=12),CMSJMECalculators(configcreate(isMC=True,year="+str(sample.year)+",EE="+str(sample.EE)+",runPeriod='.',jetType='AK4PFPuppi',forMET=True,doJer=True),jetType='AK4PFPuppi',isMC=True,forMET=True,PuppiMET=True,addHEM2018Issue=False,NanoAODv=12),GenPart_MomFirstCp(flavour='-5,-4,-3,-2,-1,1,2,3,4,5,6,-6,24,-24'),nanoprepro(),nanoTopcand(isMC=True),globalvar(), nanoTopevaluate_MultiScore(year = "+str(sample.year)+")" 
         else:
             #modules = "HLT(), preselection(), metCorrector(), fatJetCorrector(), metCorrector_tot(), fatJetCorrector_tot()" # Put here all the modules you want to be runned by crab
-
-            modules = "MET_Filter(year = "+year+"), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), nanoTopcand(isMC=0), globalvar(), nanoTopevaluate_MultiScore()"
-
-            # modules = "MET_HLT_Filter(), preselection(),nanoTopcand(isMC=0), SampleIdx("+ str(dictSample[sample.label]) +"), globalvar(), nanoTopevaluate()"
-
+            if sample.year==2018:
+                modules = "lumiMask(year = "+year+"), MET_Filter(year = "+year+"), preselection(), SampleIdx("+ str(dictSample[sample.label]) +"), nanoTopcand(isMC=0), globalvar(), nanoTopevaluate_MultiScore(year = "+str(sample.year)+")"
+            if sample.year==2022:
+                modules = "lumiMask(year = "+year+"),MET_Filter(year = "+year+"),JetVetoMaps_run3(year="+str(sample.year)+",EE="+str(sample.EE)+"),preselection(),CMSJMECalculators(configcreate(isMC=False,year="+str(sample.year)+",EE="+str(sample.EE)+",runPeriod='"+sample.runP+"',jetType='AK4PFPuppi',forMET=False,doJer=True),jetType='AK4PFPuppi',isMC=False,forMET=False,PuppiMET=False,addHEM2018Issue=False,NanoAODv=12),CMSJMECalculators(configcreate(isMC=False,year="+str(sample.year)+",EE="+str(sample.EE)+",runPeriod='"+sample.runP+"',jetType='AK8PFPuppi',forMET=False,doJer=True),jetType='AK8PFPuppi',isMC=False,forMET=False,PuppiMET=False,addHEM2018Issue=False,NanoAODv=12),CMSJMECalculators(configcreate(isMC=False,year="+str(sample.year)+",EE="+str(sample.EE)+",runPeriod='"+sample.runP+"',jetType='AK4PFPuppi',forMET=True,doJer=True),jetType='AK4PFPuppi',isMC=False,forMET=True,PuppiMET=True,addHEM2018Issue=False,NanoAODv=12),nanoTopcand(isMC=False),globalvar(), nanoTopevaluate_MultiScore(year = "+str(sample.year)+")" 
         # RIMOSSO topselection() dai modules perché fa una selezione che ho implementato allo step successivo
 
         print("Producing crab script")
@@ -225,7 +245,7 @@ for sample in samples:
         
         #Launching crab
         print("Submitting crab jobs...")
-        os.system("crab submit -c crab_cfg.py")
+        os.system("crab submit -c crab_cfg.py") 
 
     elif kill:
         print("Killing crab jobs...")

@@ -7,7 +7,11 @@ from correctionlib import _core
 
 
 class PUreweight(Module):
-    def __init__(self, year, eratag = "2022_Summer22"): # eratag from https://gitlab.cern.ch/cms-nanoAOD/jsonpog-integration/-/tree/master/POG/BTV/
+    def __init__(self, year, EE): # eratag from https://gitlab.cern.ch/cms-nanoAOD/jsonpog-integration/-/tree/master/POG/BTV/
+        if year == 2022 and not EE:
+            eratag = "2022_Summer22"
+        elif EE:
+            eratag = "2022_Summer22EE"
         self.jsonfile = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/LUM/"+eratag+"/puWeights.json.gz"
         self.evaluator = _core.CorrectionSet.from_file(self.jsonfile)
         if eratag == "2022_Summer22":

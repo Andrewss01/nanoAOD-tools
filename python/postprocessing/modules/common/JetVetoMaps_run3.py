@@ -7,12 +7,16 @@ from correctionlib import _core
 
 
 class JetVetoMaps_run3(Module):
-    def __init__(self, year, eratag = "2022_Summer22"): # eratag from https://gitlab.cern.ch/cms-nanoAOD/jsonpog-integration/-/tree/master/POG/JME?ref_type=heads
+    def __init__(self, year, EE): # eratag from https://gitlab.cern.ch/cms-nanoAOD/jsonpog-integration/-/tree/master/POG/JME?ref_type=heads
+        if year == 2022 and not EE:
+            eratag = "2022_Summer22"
+        elif EE:
+            eratag = "2022_Summer22EE"
         self.jsonfile = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/"+eratag+"/jetvetomaps.json.gz"
         self.evaluator = _core.CorrectionSet.from_file(self.jsonfile)
-        if(year == 2022 and "22EE" in eratag):
+        if(year == 2022 and EE):
             self.map_name = "Summer22EE_23Sep2023_RunEFG_V1"
-        elif(year == 2022 and not "EE" in eratag):
+        elif(year == 2022 and not EE):
             self.map_name = "Summer22_23Sep2023_RunCD_V1"
         self.vetomap = self.evaluator[self.map_name]
         pass

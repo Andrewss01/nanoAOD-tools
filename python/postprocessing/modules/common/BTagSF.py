@@ -26,16 +26,20 @@ def getFlavorBTV(flavor, verbose=False):
     return flavor_btv
 def eta_jet(input_eta):
     epsilon = 1.e-3
-    max_abs_eta = 2.4
+    max_abs_eta = 2.5
     if(input_eta <= -max_abs_eta):
         eta = -max_abs_eta + epsilon
     elif(input_eta >= +max_abs_eta):
         eta = +max_abs_eta - epsilon
-    else: eta = abs(input_eta)
-    return eta
+    else: eta = input_eta
+    return abs(eta)
 
 class BTagSF(Module):
-    def __init__(self, year, eratag = "2022_Summer22"): # eratag from https://gitlab.cern.ch/cms-nanoAOD/jsonpog-integration/-/tree/master/POG/BTV/
+    def __init__(self, year, EE): # eratag from https://gitlab.cern.ch/cms-nanoAOD/jsonpog-integration/-/tree/master/POG/BTV/
+        if year == 2022 and not EE:
+            eratag = "2022_Summer22"
+        elif EE:
+            eratag = "2022_Summer22EE"
         self.jsonfile = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/BTV/"+eratag+"/btagging.json.gz"
         self.evaluator = _core.CorrectionSet.from_file(self.jsonfile)
         self.tagger = 'particleNet_shape'
@@ -48,10 +52,11 @@ class BTagSF(Module):
 
     def beginJob(self):
         pass
-
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+        self.out = wrappedOutputTree
+        self.out.branch("SFbtag_nominal","F")
         pass
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -62,7 +67,9 @@ class BTagSF(Module):
         jetSel = list(filter(lambda x: x.pt > 30 and x.jetId>=2 and x.btagPNetB>=0, jets))
         # muons  = Collection(event, "Muon")
         for j in jetSel:
-            print("central", getFlavorBTV(j.hadronFlavour, verbose=True), eta_jet(j.eta), j.pt, j.btagPNetB)
+            # print("central", getFlavorBTV(j.hadronFlavour, verbose=True), eta_jet(j.eta), j.pt, j.btagPNetB)
             w *=self.btagsf.evaluate("central", getFlavorBTV(j.hadronFlavour, verbose=True), eta_jet(j.eta), j.pt, j.btagPNetB)
-        print(w)
+        # print(w)
+        self.out.fillBranch("SFbtag_nominal", w)
+
         return True

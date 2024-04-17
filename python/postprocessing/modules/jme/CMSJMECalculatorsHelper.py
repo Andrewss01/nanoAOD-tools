@@ -56,14 +56,14 @@ jertag = {
     "MC":{
         'AK8PFPuppi':{
             '2018'      : 'Summer19UL18_JRV2_MC',
-            '2022'      : '.', # place holder still not available
-            '2022EE'    : '.', # place holder still not available
+            '2022'      : 'Summer22_22Sep2023_JRV1_MC', # place holder still not available 
+            '2022EE'    : 'Summer22EE_22Sep2023_JRV1_MC', # place holder still not available
             '2023'      : '.', # place holder still not available 
         },
         'AK4PFPuppi':{
             '2018'      : 'Summer19UL18_JRV2_MC',
-            '2022'      : '.', # place holder still not available
-            '2022EE'    : '.', # place holder still not available
+            '2022'      : 'Summer22_22Sep2023_JRV1_MC', # place holder still not available
+            '2022EE'    : 'Summer22EE_22Sep2023_JRV1_MC', # place holder still not available
             '2023'      : '.', # place holder still not available 
         }
     }
@@ -94,10 +94,10 @@ def configcreate(isMC=True, year=2022, EE=False, runPeriod="C", jetType="AK4PFPu
 
     config = configCls(jsonFile, jetType)
     config.jecTag = jestag["MC" if isMC else "DATA"][jetType][year_]
-    if isMC: config.jesUncertainties = ["Total"]
+    if isMC: config.jesUncertainties = ["Total", "AbsoluteMPFBias", "AbsoluteScale", "AbsoluteStat","Fragmentation", "PileUpDataMC", "PileUpPtRef", "RelativeFSR", "RelativeStatFSR", "SinglePionECAL", "SinglePionHCAL", "TimePtEta"]
     # print("config.jesUncertainties ", config.jesUncertainties)
     config.jecLevel = "L1L2L3Res"
-    if doJer and not isMC:
+    if doJer and isMC:
         print("JER :", jertag["MC" if isMC else "DATA"][jetType][year_])
         config.jerTag = jertag["MC"][jetType][year_]
         config.splitJER = False
@@ -107,3 +107,8 @@ def configcreate(isMC=True, year=2022, EE=False, runPeriod="C", jetType="AK4PFPu
         config.jecTagSubjet = jestag["MC" if isMC else "DATA"]["AK4PFPuppi" if year_ !="2018" else "AK4PFchs"][year_]
         config.jecLevelSubjet = "L1L2L3Res"
     return config.create()
+
+#  "FlavorQCD",  
+#  "PileUpPtBB", "PileUpPtEC1", "PileUpPtEC2", "PileUpPtHF", 
+#  "RelativeJEREC1", "RelativeJEREC2", "RelativeJERHF", "RelativePtBB", "RelativePtEC1", "RelativePtEC2", "RelativePtHF", "RelativeBal", "RelativeSample", "RelativeStatEC",  
+#  "RelativeStatHF"
