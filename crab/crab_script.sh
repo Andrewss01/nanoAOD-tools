@@ -22,8 +22,6 @@ mv module $CMSSW_BASE/module
 mv python $CMSSW_BASE/python
 echo Found Proxy in: $X509_USER_PROXY
 which python3
-pip3 install --user $CMSSW_BASE/src/PhysicsTools/NanoAODTools/python/postprocessing/CMSJMECalculators/CMSJMECalculators
-ls $CMSSW_BASE/src/PhysicsTools/NanoAODTools/python/postprocessing/. 
 python3 crab_script.py $1
 hadd tree_hadd.root tree.root hist.root
 fi
