@@ -29,7 +29,7 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.psetName = 'PSet.py'\n")
     f.write("config.JobType.maxJobRuntimeMin = 2700\n")
     f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
-    f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt', './Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt', './Cert_Collisions2022_355100_362760_Golden.json', './Cert_Collisions2023_366442_370790_Golden.json']\n") #hadd nano will not be needed once nano tools are in cmssw
+    f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt', './Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt', './Cert_Collisions2022_355100_362760_Golden.json', './Cert_Collisions2023_366442_370790_Golden.json', '../../../install_cmssw.sh']\n") #hadd nano will not be needed once nano tools are in cmssw
     # f.write("config.JobType.sendPythonFolder = True\n")
     f.write("config.section_('Data')\n")
     
@@ -140,19 +140,44 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f_sh.write("echo $CMSSW_BASE\n")
     f_sh.write("echo $PYTHON_PATH\n")
     f_sh.write("echo $PWD\n")
+
+    # f_sh.write("ls \n")
+
     f_sh.write("rm -rf $CMSSW_BASE/lib/\n")
     f_sh.write("rm -rf $CMSSW_BASE/src/\n")
+    f_sh.write("rm -rf $CMSSW_BASE/external/\n")
+    # f_sh.write("echo \"ls $CMSSW_Base/install dir \"\n")
+    f_sh.write("ls $CMSSW_BASE/install/\n")
+    f_sh.write("rm -rf $CMSSW_BASE/install/\n")
     f_sh.write("rm -rf $CMSSW_BASE/module/\n")
     f_sh.write("rm -rf $CMSSW_BASE/python/\n")
+    f_sh.write("mv external $CMSSW_BASE/external\n")
     f_sh.write("mv lib $CMSSW_BASE/lib\n")
     f_sh.write("mv src $CMSSW_BASE/src\n")
+
+    # f_sh.write("ls $CMSSW_BASE/src\n")
+    # f_sh.write("pwd $CMSSW_BASE/src\n")
+
+    f_sh.write("mv install $CMSSW_BASE/install\n")
     f_sh.write("mv module $CMSSW_BASE/module\n")
     f_sh.write("mv python $CMSSW_BASE/python\n")
+    f_sh.write("mv install_cmssw.sh $CMSSW_BASE/src/\n")
+    f_sh.write("cd $CMSSW_BASE/src\n")
+    f_sh.write("rm -r CMSJMECalculators\n")
+    f_sh.write("git clone https://gitlab.cern.ch/cms-analysis/general/CMSJMECalculators.git\n")
+    f_sh.write("cd CMSJMECalculators/\n")
+    f_sh.write("git fetch \"https://:@gitlab.cern.ch:8443/aguzel/CMSJMECalculators.git\" 'CMSJMECalculators-correctionlib'\n")
+    f_sh.write("git checkout -b 'CMSJMECalculators-CMSJMECalculators-correctionlib' FETCH_HEAD\n")
+    f_sh.write("cd ..\n")
+    f_sh.write("source $CMSSW_BASE/src/install_cmssw.sh\n")
+    
+    # f_sh.write("scram b\n")
+    # f_sh.write("cmsenv\n")
+    f_sh.write("cd /srv\n")
+
 
     f_sh.write("echo Found Proxy in: $X509_USER_PROXY\n")
     f_sh.write("which python3\n")
-    f_sh.write("pip3 install --user $CMSSW_BASE/src/PhysicsTools/NanoAODTools/python/postprocessing/CMSJMECalculators/CMSJMECalculators\n")
-    f_sh.write("ls $CMSSW_BASE/src/PhysicsTools/NanoAODTools/python/postprocessing/. \n")
     f_sh.write("python3 crab_script.py $1\n")
     if isMC:
         f_sh.write("hadd tree_hadd.root tree.root hist.root\n")

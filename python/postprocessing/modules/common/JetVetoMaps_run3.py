@@ -38,6 +38,14 @@ class JetVetoMaps_run3(Module):
         # print("vetomap, ", jets[0].pt)
         flag = 0
         for j in jetSel:
-            flag += self.vetomap.evaluate("jetvetomap", j.eta, j.phi)
+            if j.phi>3.141592653589793 or j.phi<-3.141592653589793:
+                phi = 3.141592653589790
+            else:
+                phi = j.phi
+            if j.eta>5.191 or j.eta<-5.191:
+                eta = 5.190
+            else:
+                eta = j.eta
+            flag += self.vetomap.evaluate("jetvetomap", eta, phi)
         # print("vetomap ",not flag)
         return not flag
