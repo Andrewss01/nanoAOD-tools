@@ -28,6 +28,7 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.pluginName = 'Analysis'\n")
     f.write("config.JobType.psetName = 'PSet.py'\n")
     f.write("config.JobType.maxJobRuntimeMin = 2700\n")
+    f.write("config.JobType.maxMemoryMB = 4000\n")
     f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
     f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt', './Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt', './Cert_Collisions2022_355100_362760_Golden.json', './Cert_Collisions2023_366442_370790_Golden.json', '../../../install_cmssw.sh']\n") #hadd nano will not be needed once nano tools are in cmssw
     # f.write("config.JobType.sendPythonFolder = True\n")
@@ -172,7 +173,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f_sh.write("source $CMSSW_BASE/src/install_cmssw.sh\n")
     
     # f_sh.write("scram b\n")
-    # f_sh.write("cmsenv\n")
+    f_sh.write("cmsenv\n")
     f_sh.write("cd /srv\n")
 
 

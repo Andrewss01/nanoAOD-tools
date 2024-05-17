@@ -8,6 +8,7 @@ from CMSJMECalculators.utils import (
     getFatJetArgs,
 )
 from CMSJMECalculators import config as calcConfigs
+
 loadJMESystematicsCalculators()
 
 cvmfsPOGpath = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/"

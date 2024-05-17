@@ -1,5 +1,5 @@
 # this is a comment
-drop fixedGridRho*
+# drop fixedGridRho*
 drop GenDressedLepton*
 drop GenIsolatedPhoton*
 drop GenVisTau*

@@ -2,7 +2,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
-# from CMSJMECalculators import loadJMESystematicsCalculators
+from CMSJMECalculators import loadJMESystematicsCalculators
 from CMSJMECalculators.utils import (
     toRVecFloat,
     toRVecInt,
@@ -10,7 +10,9 @@ from CMSJMECalculators.utils import (
     getFatJetArgs,
     getMETUnclDeltaXY,
 )
-# from CMSJMECalculators import config as calcConfigs
+
+
+from CMSJMECalculators import config as calcConfigs
 
 def getJetMETArgsPostProcessor(jets , genjets, rho ,RawMET , CorrT1METJet, MET, lumiblock ,run ,_event, isMC=True, forMET=False, addHEM2018Issue=False, NanoAODv=12):
     """ Get the input values for the jet/met variations calculator from a tree (PyROOT-style) 

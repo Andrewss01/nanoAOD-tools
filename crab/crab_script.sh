@@ -34,6 +34,7 @@ git fetch "https://:@gitlab.cern.ch:8443/aguzel/CMSJMECalculators.git" 'CMSJMECa
 git checkout -b 'CMSJMECalculators-CMSJMECalculators-correctionlib' FETCH_HEAD
 cd ..
 source $CMSSW_BASE/src/install_cmssw.sh
+cmsenv
 cd /srv
 echo Found Proxy in: $X509_USER_PROXY
 which python3
