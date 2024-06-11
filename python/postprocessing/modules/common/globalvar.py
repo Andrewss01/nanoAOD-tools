@@ -39,7 +39,7 @@ class globalvar(Module):
         mindphi=1000
         maxetajet=0
         for j in goodjets:
-            if j.pt<30 and j.jetId<2: continue
+            if j.pt<30 and j.jetId<2: continue 
             dphi = abs(deltaPhi(j.phi,met.phi))
             if dphi<mindphi: mindphi = dphi
             if j.pt<50:continue

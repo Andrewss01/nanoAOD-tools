@@ -11,8 +11,8 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.BTagSF import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PUreweight import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.GenPart_MomFirstCp import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoprepro_v2 import *
-from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2 import *
-from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopEvaluate_MultiScore_v2 import *
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2_syst import *
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopEvaluate_MultiScore_v2_syst import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.globalvar import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.SampleIdx import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.lumiMask import *

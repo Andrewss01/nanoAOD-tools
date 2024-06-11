@@ -99,6 +99,7 @@ class nanoprepro(Module):
         fatjets_pdgId     = np.zeros(Nfatjets)
         fatjets_matched   = np.zeros(Nfatjets)
         fatjets_topMother = np.zeros(Nfatjets)
+        fatjets_truth = np.zeros(Nfatjets)
         if self.isMC==1:
             #if (len(looseMu)>0 or len(looseEle)>0):# and met.pt>25:
             if False:#abs(LHE[1].pdgId)>6 and abs(LHE[2].pdgId)>6:
@@ -215,7 +216,7 @@ class nanoprepro(Module):
                                 #print "   ubar matched"
                                 ubar_matched = True
                                 tosave = True
-                            elif (not d_matched and gen.pdgId%2 != 0 and gen.pdgId/abs(gen.pdgId)==(-1)*sgn_top):
+                            elif (not d_matched and gen.pdgId%2 != 0 and abs(gen.pdgId)!=5 and gen.pdgId/abs(gen.pdgId)==(-1)*sgn_top):
                                 #print "   d matched"
                                 d_matched = True
                                 tosave = True
@@ -240,7 +241,7 @@ class nanoprepro(Module):
                             match,j = matching(genpart, gen, fatjets, -1, dR=0.8)
                             sgn_top = -1
                     else: match = False
-                            
+
                     if (match and ntop ==1 and 
                         not (bquarkFJ_matched*uquarkFJ_matched*dquarkFJ_matched)):
                         
@@ -272,7 +273,7 @@ class nanoprepro(Module):
                                 #print "   u matched"
                                 uFJ_matched = True
                                 tosave = True
-                            elif (not dbarFJ_matched and gen.pdgId%2 != 0 and gen.pdgId/abs(gen.pdgId)==(-1)*sgn_top):
+                            elif (not dbarFJ_matched and gen.pdgId%2 != 0 and abs(gen.pdgId)!=5 and gen.pdgId/abs(gen.pdgId)==(-1)*sgn_top):
                                 #print "   dbar matched"
                                 dbarFJ_matched = True
                                 tosave = True

@@ -67,6 +67,9 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.Data.outputDatasetTag = '"+sample.label+"'\n")
     f.write("config.section_('Site')\n")
     f.write("config.Site.storageSite = 'T2_IT_Pisa'\n")
+    # f.write("config.Site.whitelist = ['T2_FR_IPHC', 'T2_US_Nebraska', 'T2_HU_Budapest', 'T2_US_MIT', 'T2_US_UCSD', 'T2_US_Florida', 'T2_US_Vanderbilt', 'T2_DE_DESY', 'T2_US_Wisconsin']\n") # gira solo su siti dove sono riusciti i job
+    # f.write("config.Site.blacklist = ['T2_FR_IPHC']\n")
+
     #f.write("config.Site.storageSite = "T2_CH_CERN"
     #f.write("config.section_("User")
     #f.write("config.User.voGroup = 'dcms'
@@ -88,8 +91,8 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PUreweight import *\n") 
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.GenPart_MomFirstCp import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoprepro_v2 import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2 import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopEvaluate_MultiScore_v2 import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopcandidate_v2_syst import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.nanoTopEvaluate_MultiScore_v2_syst import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.globalvar import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.SampleIdx import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lumiMask import *\n")
