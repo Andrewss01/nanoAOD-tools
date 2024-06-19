@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+import os, ROOT
 from CMSJMECalculators import loadJMESystematicsCalculators
 from CMSJMECalculators.utils import (
     toRVecFloat,
@@ -95,21 +95,33 @@ def configcreate(isMC=True, year=2022, EE=False, runPeriod="C", jetType="AK4PFPu
 
     config = configCls(jsonFile, jetType)
     config.jecTag = jestag["MC" if isMC else "DATA"][jetType][year_]
+    config.jecLevel = "L1L2L3Res"
     if isMC: config.jesUncertainties = ["Total", "AbsoluteMPFBias", "AbsoluteScale", "AbsoluteStat","Fragmentation", "PileUpDataMC", "PileUpPtRef", "RelativeFSR", "RelativeStatFSR", "SinglePionECAL", "SinglePionHCAL", "TimePtEta"]
     # print("config.jesUncertainties ", config.jesUncertainties)
-    config.jecLevel = "L1L2L3Res"
     if doJer and isMC:
         print("JER :", jertag["MC" if isMC else "DATA"][jetType][year_])
         config.jerTag = jertag["MC"][jetType][year_]
         config.splitJER = False
+        config.jsonFileSmearingTool = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/jer_smear.json.gz" #path to your json file with jer smearing tool
+        config.smearingToolName = "JERSmear"
+
     if "AK8" in jetType:
         config.jsonFileSubjet = cvmfsPOGpath + tagver + "/jet_jerc.json.gz"
         config.jetAlgoSubjet = "AK4PFPuppi" if year_ !="2018" else "AK4PFchs"
         config.jecTagSubjet = jestag["MC" if isMC else "DATA"]["AK4PFPuppi" if year_ !="2018" else "AK4PFchs"][year_]
         config.jecLevelSubjet = "L1L2L3Res"
-    return config.create()
+        config.jsonFileSmearingTool = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/JME/jer_smear.json.gz" #path to your json file with jer smearing tool
+        config.smearingToolName = "JERSmear"
+    if "AK4" in jetType:
+        calc = ROOT.JetVariationsCalculator(config.create())
+    elif forMET:
+        calc = ROOT.Type1METVariationsCalculator(config.create())
+    elif "AK8" in jetType:
+        calc = ROOT.FatJetVariationsCalculator(config.create()) 
+    # return config.create()
+    return calc
 
 #  "FlavorQCD",  
 #  "PileUpPtBB", "PileUpPtEC1", "PileUpPtEC2", "PileUpPtHF", 
 #  "RelativeJEREC1", "RelativeJEREC2", "RelativeJERHF", "RelativePtBB", "RelativePtEC1", "RelativePtEC2", "RelativePtHF", "RelativeBal", "RelativeSample", "RelativeStatEC",  
-#  "RelativeStatHF"
+#  "RelativeStatHF" 
