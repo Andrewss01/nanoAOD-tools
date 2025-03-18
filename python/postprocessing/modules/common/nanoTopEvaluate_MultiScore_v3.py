@@ -48,10 +48,10 @@ def fill_fj(fj_dnn, fj, idx_top):
      
     fj_dnn[idx_top, 0] = fj.area
     fj_dnn[idx_top, 1] = fj.btagDeepB
-    fj_dnn[idx_top, 2] = fj.particleNetWithMass_TvsQCD #WithMass
-    fj_dnn[idx_top, 3] = fj.particleNetWithMass_WvsQCD  #WithMass
+    fj_dnn[idx_top, 2] = fj.particleNetWithMass_TvsQCD 
+    fj_dnn[idx_top, 3] = fj.particleNetWithMass_WvsQCD
     fj_dnn[idx_top, 4] = fj.particleNet_QCD
-    fj_dnn[idx_top, 5] = fj.particleNetWithMass_QCD   #WithMass
+    fj_dnn[idx_top, 5] = fj.particleNetWithMass_QCD
     fj_dnn[idx_top, 6] = fj.particleNet_XbbVsQCD
     fj_dnn[idx_top, 7] = fj.particleNet_XqqVsQCD
     fj_dnn[idx_top, 8] = fj.eta
@@ -158,8 +158,8 @@ models['Multiclass'] = tf.keras.models.load_model(path_to_model + Multiscore_mod
 
 
 
-class nanoTopevaluate_MultiScore(Module):
-    def __init__(self, isMC=1, model='TT', resolved = False):
+class nanoTopevaluate_MultiClass(Module):
+    def __init__(self, isMC=1, model='MC', resolved = False):
         self.isMC = isMC
         self.model = model
         self.resolved = resolved
@@ -177,10 +177,12 @@ class nanoTopevaluate_MultiScore(Module):
         "Branch scores to tree"
         # High Pt
         # self.out.branch("TopMixed_score2", "F", lenVar="nTopMixed")
-        self.out.branch(f"TopMixed_TopScore", "F", lenVar = "nTopMixed"*3)
-
+        self.out.branch(f"TopMixed_ZJScore", "F", lenVar = 'nTopMixed')
+        self.out.branch(f"TopMixed_TTScore", "F", lenVar = 'nTopMixed')
+        self.out.branch(f"Topmixed_FTScore", "F", lenVar = 'nTopMixed')
         # Low Pt
-        self.out.branch("TopResolved_TopScore", "F", lenVar="nTopResolved")
+        #self.out.branch("TopResolved_TopScore", "F", lenVar="nTopResolved")
+
 
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -240,49 +242,50 @@ class nanoTopevaluate_MultiScore(Module):
         scores = []
         if len(tophighpt)!=0:
             # top_score2      = models["score2"].predict({"fatjet":fj_dnn, "jet": jets_dnn,  "top_mass": mass_dnn[:,:2]}).flatten().tolist()
-            if self.model == 'TT':
-                model = models["TopMixed_TT"]
-            elif self.model == 'ZJ':
-                #model = models["TopMixed_2022"]
-                model = models["TopMixed_TTvsZJ_noTTbkg"]
-            elif self.model == 'MC':
+            if self.model== 'MC':
                 model = models['Multiclass']
-            
-                 
-            # if self.model == 'Multiclass':
-                # model = models['Multiclass']
-            # print(fj_dnn.shape, jets_dnn.shape, mass_dnn.shape)
-            scores = model({"fatjet": fj_dnn, "jet": jets_dnn, "top": mass_dnn}).numpy().flatten().tolist()
+                scores = model({"fatjet": fj_dnn, "jet": jets_dnn, "top": mass_dnn}).numpy()
+                #print('SIZE degli score', np.size(scores))
+                #print(scores)
+                prob_true_tt = (scores[:,0]).flatten().tolist()
+                prob_false_tt = (scores[:,1]).flatten().tolist()
+                prob_zj = (scores[:,2]).flatten().tolist()
+                #score_ZJ = (prob_true_tt/(prob_true_tt + prob_zj)).flatten().tolist()
+                #score_tt = (prob_true_tt/(prob_true_tt + prob_false_tt)).flatten().tolist()
+
             #print(scores)
             #scores = scores.flatten().tolist()
         else:
             # top_score2  = []
-            scores = []
-
+            score_ZJ = []
+            score_tt = []
+            prob_false_tt, prob_true_tt, prob_zj = [], [], []
+        
         # Branch the scores calculated #
         # self.out.fillBranch("TopHighPt_score2", top_score2)
-        self.out.fillBranch(f"TopMixed_TopScore", scores)
-
+        self.out.fillBranch(f"TopMixed_ZJScore", prob_zj)
+        self.out.fillBranch(f"TopMixed_TTScore", prob_true_tt)
+        self.out.fillBranch(f'Topmixed_FTScore', prob_false_tt)
 
         # loop su Low Pt candidates per valutare lo score con i modelli corrispondenti
-        if self.resolved: 
-            jets_dnn = np.zeros((int(len(toplowpt)), 3, 8))        
-            for i, top in enumerate(toplowpt):
-                j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
-                fj = ROOT.TLorentzVector()
-                fj.SetPtEtaPhiM(0,0,0,0)
-                sumjet = j0.p4()+j1.p4()+j2.p4()
-                jets_dnn = fill_jets( jets_dnn, j0, j1, j2, sumjet, fj.Phi(), fj.Eta(), i)
-            if len(toplowpt)!=0:
-                #if self.year == 2018:
-                  #  modelRes = models["TopResolved_2018"]
-                #lif self.year == 2022 or self.year == 2023:
-                    #modelRes = models["TopResolved_2022"]
-                modelRes = models['TopMixed_TTvsZJ']
-                    #print(modelRes)
-                top_score_DNN = modelRes({"jet0": jets_dnn[:,0,:-2], "jet1": jets_dnn[:,1,:-2], "jet2": jets_dnn[:,2,:-2]}).numpy().flatten().tolist()
-            else:
-                top_score_DNN = []
+        # if self.resolved: 
+        #     jets_dnn = np.zeros((int(len(toplowpt)), 3, 8))        
+        #     for i, top in enumerate(toplowpt):
+        #         j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
+        #         fj = ROOT.TLorentzVector()
+        #         fj.SetPtEtaPhiM(0,0,0,0)
+        #         sumjet = j0.p4()+j1.p4()+j2.p4()
+        #         jets_dnn = fill_jets( jets_dnn, j0, j1, j2, sumjet, fj.Phi(), fj.Eta(), i)
+        #     if len(toplowpt)!=0:
+        #         #if self.year == 2018:
+        #           #  modelRes = models["TopResolved_2018"]
+        #         #lif self.year == 2022 or self.year == 2023:
+        #             #modelRes = models["TopResolved_2022"]
+        #         modelRes = models['TopMixed_TTvsZJ']
+        #             #print(modelRes)
+        #         top_score_DNN = modelRes({"jet0": jets_dnn[:,0,:-2], "jet1": jets_dnn[:,1,:-2], "jet2": jets_dnn[:,2,:-2]}).numpy().flatten().tolist()
+        #     else:
+        #         top_score_DNN = []
 
-            self.out.fillBranch("TopResolved_TopScore", top_score_DNN)
+        #     self.out.fillBranch("TopResolved_TopScore", top_score_DNN)
         return True

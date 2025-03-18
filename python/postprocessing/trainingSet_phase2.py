@@ -19,16 +19,12 @@ hep.style.use(hep.style.CMS)
 select_trs= True#False#
 select_best_top= False#True#
 
-folderIn= "/eos/home-a/acagnott/DarkMatter/topcandidate_file/"
+folderIn= "/eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/"
 
-datasets = ['tDM_mPhi1000_mChi1', 'QCD_HT1000to1500','QCD_HT1500to2000', 'QCD_HT2000toInf', 'TT_Mtt_700to1000', 'TT_Mtt_1000toInf']
-infile = {datasets[0]: "tDM_mPhi1000_mChi1_Skim_Skim_Skim.root", 
-          datasets[1]: "QCD_HT1000_Skim_Skim.root", 
-          datasets[2]: "QCD-HT1500to2000_2018_Skim_Skim.root",
-          datasets[3]: "QCD-HT2000toInf_2018_Skim_Skim.root",
-          datasets[4]: "TT_Mtt-700to1000_2018_Skim_Skim_Skim.root",
-          datasets[5]: "TT_Mtt-1000toInf_2018_Skim_Skim_Skim.root"
-}
+datasets = ['nano_mcRun3_ttsl1_topcand_PF_semilelp_Skim.root', 'ZJ_1', 'ZJ_2']
+infile = {datasets[0]: "nano_mcRun3_ttsl1_topcand_PF_semilelp_Skim.root",
+          datasets[1]: "ZJ_1_Skim.root", 
+          datasets[2]: "ZJ_2_Skim.root"}
 
 categories = ['3j0fj', '3j1fj', '2j1fj']
 
@@ -59,12 +55,12 @@ def fill_mass(mass_dnn, idx_top, j0, j1, j2, fj, variables_cluster):
 def fill_fj(fj_dnn, fj, idx_top): 
     fj_dnn[idx_top, 0] = fj.area
     fj_dnn[idx_top, 1] = fj.btagDeepB
-    fj_dnn[idx_top, 2] = fj.deepTagMD_TvsQCD
-    fj_dnn[idx_top, 3] = fj.deepTagMD_WvsQCD
-    fj_dnn[idx_top, 4] = fj.deepTag_QCD
-    fj_dnn[idx_top, 5] = fj.deepTag_QCDothers
-    fj_dnn[idx_top, 6] = fj.deepTag_TvsQCD
-    fj_dnn[idx_top, 7] = fj.deepTag_WvsQCD
+    fj_dnn[idx_top, 2] = fj.particleNetWithMass_TvsQCD 
+    fj_dnn[idx_top, 3] = fj.particleNetWithMass_WvsQCD
+    fj_dnn[idx_top, 4] = fj.particleNet_QCD
+    fj_dnn[idx_top, 5] = fj.particleNetWithMass_QCD
+    fj_dnn[idx_top, 6] = fj.particleNet_XbbVsQCD
+    fj_dnn[idx_top, 7] = fj.particleNet_XqqVsQCD
     fj_dnn[idx_top, 8] = fj.eta
     fj_dnn[idx_top, 9] = fj.mass
     fj_dnn[idx_top, 10] = fj.phi
@@ -74,7 +70,7 @@ def fill_fj(fj_dnn, fj, idx_top):
 def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top): 
 
     jets_dnn[idx_top, 0, 0] = j0.area
-    jets_dnn[idx_top, 0, 1] = j0.btagDeepB
+    jets_dnn[idx_top, 0, 1] = j0.btagDeepFlavB #prima era btagDeepB ho cambiato perchè non c'era il branch
     jets_dnn[idx_top, 0, 2] = deltaEta(j0.eta, sumjet.Eta())#j0.#delta eta 3jets-jet
     jets_dnn[idx_top, 0, 3] = j0.mass
     jets_dnn[idx_top, 0, 4] = deltaPhi(j0.phi, sumjet.Phi())#j0.#delta phi 3jets-jet
@@ -83,7 +79,7 @@ def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top):
     jets_dnn[idx_top, 0, 7] = deltaEta(j0.eta, fj_eta)#j0.#deltaeta fj-jet
     
     jets_dnn[idx_top, 1, 0] = j1.area
-    jets_dnn[idx_top, 1, 1] = j1.btagDeepB
+    jets_dnn[idx_top, 1, 1] = j1.btagDeepFlavB
     jets_dnn[idx_top, 1, 2] = deltaEta(j1.eta, sumjet.Eta())
     jets_dnn[idx_top, 1, 3] = j1.mass
     jets_dnn[idx_top, 1, 4] = deltaPhi(j1.phi, sumjet.Phi())
@@ -92,7 +88,7 @@ def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top):
     jets_dnn[idx_top, 1, 7] = deltaEta(j1.eta, fj_eta)
     if hasattr(j2,"pt"):
         jets_dnn[idx_top, 2, 0] = j2.area
-        jets_dnn[idx_top, 2, 1] = j2.btagDeepB
+        jets_dnn[idx_top, 2, 1] = j2.btagDeepFlavB
         jets_dnn[idx_top, 2, 2] = deltaEta(j2.eta, sumjet.Eta())#j2.#delta eta fj-jet
         jets_dnn[idx_top, 2, 3] = j2.mass
         jets_dnn[idx_top, 2, 4] = deltaPhi(j2.phi, sumjet.Phi())#j2.#delta phi fatjet-jet
@@ -110,7 +106,7 @@ ntoptrue= []
 ntopcand3j1fj, ntopcand3j0fj, ntopcand2j1fj = [], [], []
 ntoptrue3j1fj, ntoptrue3j0fj, ntoptrue2j1fj = [], [], []
 
-trs_file = open("/eos/home-a/acagnott/SWAN_projects/DM/DNNmodel/DNN_phase1_test_highpt/tresholds.pkl", "rb")
+trs_file = open("/eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/data/dict_tresholds/tresholds.pkl", "rb")
 trs = pkl.load(trs_file)
 trs10 = trs['fpr 10']
 trs5 = trs['fpr 5']
@@ -134,7 +130,7 @@ for d in datasets:
         event = Event(tree, i)
         jets = Collection(event, "Jet")
         fatjets = Collection(event, "FatJet")
-        tops = Collection(event, "TopHighPt")
+        tops = Collection(event, "TopMixed")
         ntops = len(tops)
         goodjets, goodfatjets = presel(jets, fatjets)
         ntopcand.append(ntops)
@@ -163,18 +159,19 @@ for d in datasets:
             ntoptrue.append(tr)
         if ntops==0: continue
  
-        best_top = []
-        if select_trs:
-            best_top = get_top_over_trs(tops, trs_toselect, 'highpt')
-            variables_cluster = None
+        best_top = tops
+        variables_cluster = None   #qui ho messo none perchè ho visto che lui aveva select_trs = ture e select_best_top = False
+#        if select_trs:
+#            best_top = get_top_over_trs(tops, trs_toselect, 'highpt')
+#            variables_cluster = None
             #for t in best_top:
-        if select_best_top:
-            t__ = get_best_top(tops)
-            if t__.score>trs_toselect:
-                best_top.append(get_best_top(tops))
-                top_over_trs = get_top_over_trs(tops, trs_toselect)
-                out = top_cluster_excl(tops, trs_cluster)
-                variables_cluster = [out['n_cluster'][0], out['n_cluster_over_trs'][0]/out['n_cluster'][0], out['best_score'][0]]
+#        if select_best_top:
+#            t__ = get_best_top(tops)
+#            if t__.score>trs_toselect:
+#                best_top.append(get_best_top(tops))
+#                top_over_trs = get_top_over_trs(tops, trs_toselect)
+#                out = top_cluster_excl(tops, trs_cluster)
+#                variables_cluster = [out['n_cluster'][0], out['n_cluster_over_trs'][0]/out['n_cluster'][0], out['best_score'][0]]
             #print(variables_cluster)
         #print(best_top)
         if(i%1000==0): print("dataset ",d," event ",i) 
@@ -194,7 +191,8 @@ for d in datasets:
                 fatjet_toappend = fill_fj(fj_dnn= fatjet_toappend, fj=fj, idx_top=0)
                 jet_toappend = fill_jets(jets_dnn= jet_toappend, j0= j0, j1= j1, j2= j2, sumjet= (j0.p4()+j1.p4()+j2.p4()), 
                                          fj_phi= fj.phi, fj_eta= fj.eta, idx_top= 0)
-                mass_toappend = fill_mass(mass_dnn= mass_toappend, idx_top= 0, j0= j0, j1= j1, j2= j2, fj= fj, variables_cluster=variables_cluster)
+                mass_toappend = fill_mass(mass_dnn= mass_toappend, idx_top= 0, j0= j0, j1= j1, j2= j2, fj= fj,
+                                          variables_cluster=variables_cluster)
                 if not 'QCD' in d: label_toappend[0] = truth(fj=fj, j0=j0, j1=j1, j2=j2) 
                 event_category_toappend[0] = best_top_category
                 
@@ -204,7 +202,8 @@ for d in datasets:
                 j0, j1, j2 = goodjets[t.idxJet0], goodjets[t.idxJet1], goodjets[t.idxJet2]
                 jet_toappend = fill_jets(jets_dnn= jet_toappend, j0= j0, j1= j1, j2= j2, sumjet= (j0.p4()+j1.p4()+j2.p4()), 
                                          fj_phi= fj.Phi(), fj_eta= fj.Eta(), idx_top= 0)
-                mass_toappend = fill_mass(mass_dnn= mass_toappend, idx_top= 0, j0= j0, j1= j1, j2= j2, fj= None, variables_cluster=variables_cluster)
+                mass_toappend = fill_mass(mass_dnn= mass_toappend, idx_top= 0, j0= j0, j1= j1, j2= j2, fj= None,
+                                          variables_cluster=variables_cluster)
                 if not 'QCD' in d: label_toappend[0] = truth(j0=j0, j1=j1, j2=j2) 
                 event_category_toappend[0] = best_top_category
             else:
@@ -213,7 +212,8 @@ for d in datasets:
                 fatjet_toappend = fill_fj(fj_dnn= fatjet_toappend, fj=fj, idx_top=0)
                 jet_toappend = fill_jets(jets_dnn= jet_toappend, j0= j0, j1= j1, j2=0, sumjet= (j0.p4()+j1.p4()), 
                                          fj_phi= fj.phi, fj_eta= fj.eta, idx_top= 0)
-                mass_toappend = fill_mass(mass_dnn= mass_toappend, idx_top= 0, j0= j0, j1= j1, j2= None, fj= fj, variables_cluster=variables_cluster)
+                mass_toappend = fill_mass(mass_dnn= mass_toappend, idx_top= 0, j0= j0, j1= j1, j2= None, fj= fj,
+                                          variables_cluster=variables_cluster)
                 if not 'QCD' in d: label_toappend[0] = truth(fj=fj, j0=j0, j1=j1) 
                 event_category_toappend[0] = best_top_category
             
@@ -243,7 +243,7 @@ for d in datasets:
             n = 0
         output[d][c] = [data_jets[event_category == n], data_fatjets[event_category == n], data_mass[event_category == n], data_label[event_category == n]]
 
-outfile = open("/eos/home-a/acagnott/DarkMatter/trainingSet/trainingset_phase2.pkl", "wb")
+outfile = open("/eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/trainingset_phase2.pkl", "wb")
 pkl.dump(output, outfile)
 outfile.close()
 
@@ -253,7 +253,7 @@ ax.hist(ntoptrue, range = [-0.5,100.5], bins = 101, histtype='step', label= 'top
 ax.legend()
 ax.set_title("#top per event")
 ax.set_xlabel("# top per event")
-plt.savefig("/eos/home-a/acagnott/DarkMatter/Ntopperevent.png")
+plt.savefig("/eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/Ntopperevent.png")
 fig, ax = plt.subplots()
 ax.hist([ntopcand3j1fj, ntopcand3j0fj, ntopcand2j1fj], 
         range = [-0.5, 100.5], bins =101, 
@@ -264,4 +264,4 @@ ax.hist([ntoptrue3j1fj, ntoptrue3j0fj, ntoptrue2j1fj],
 ax.set_title("#top per event for different categories")
 ax.set_xlabel("# top per event")
 ax.legend()
-plt.savefig("/eos/home-a/acagnott/DarkMatter/Ntopcategoryperevent.png")
+plt.savefig("/eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/Ntopcategoryperevent.png")

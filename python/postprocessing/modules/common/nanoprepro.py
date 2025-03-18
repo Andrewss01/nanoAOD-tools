@@ -12,28 +12,28 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import *
 
 def matching (genpart, gen, p_jet, sgn_top, dR = 0.4):
     
-    b = sgn_top*5
+    b = sgn_top*5        
     w = sgn_top*24
-    sgn_u = sgn_top
-    sgn_d = -sgn_top
+    sgn_u = sgn_top  
+    sgn_d = -sgn_top    #credo che sia perchè lei è d barra ma non sono sicura       
 
     match = False
     p_gen = ROOT.TLorentzVector()
-    p_gen.SetPtEtaPhiM(gen.pt, gen.eta, gen.phi, gen.mass)
+    p_gen.SetPtEtaPhiM(gen.pt, gen.eta, gen.phi, gen.mass)   #ci sotruiamo il 4-impulso del generatore
     
-    if( gen.pdgId==b and gen.genPartIdxMother_prompt>-1 
-        and genpart[gen.genPartIdxMother_prompt].pdgId==sgn_top*6):
-        if (deltaR(p_jet.Eta(), p_jet.Phi(),p_gen.Eta(), p_gen.Phi())<dR):
-            match = True
+    if( gen.pdgId==b and gen.genPartIdxMother_prompt>-1   
+        and genpart[gen.genPartIdxMother_prompt].pdgId==sgn_top*6):  #Se è un bottom e il suo generatore è un top 
+        if (deltaR(p_jet.Eta(), p_jet.Phi(),p_gen.Eta(), p_gen.Phi())<dR): #allora se Dr è minore del Dr scelto (0.4 o 0.8)
+            match = True        #allora matcha
 
-    elif( gen.pdgId%2 == 0 and gen.pdgId/abs(gen.pdgId)==sgn_u and gen.genPartIdxMother_prompt>-1 
-          and genpart[gen.genPartIdxMother_prompt].pdgId==w ):
-        if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId==sgn_top*6):
-            if deltaR(p_jet.Eta(), p_jet.Phi(),p_gen.Eta(), p_gen.Phi())<dR :
+    elif( gen.pdgId%2 == 0 and gen.pdgId/abs(gen.pdgId)==sgn_u and gen.genPartIdxMother_prompt>-1  
+          and genpart[gen.genPartIdxMother_prompt].pdgId==w ):    #se invece hai un up che ha come generatore la W 
+        if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId==sgn_top*6):   #e il generatore della W è un top 
+            if deltaR(p_jet.Eta(), p_jet.Phi(),p_gen.Eta(), p_gen.Phi())<dR :  #allora matcha se il Dr calcolato è minore della soglia scelta
                 match = True
 
     elif( gen.pdgId%2 != 0 and gen.pdgId/abs(gen.pdgId)==sgn_d and gen.genPartIdxMother_prompt>-1
-          and genpart[gen.genPartIdxMother_prompt].pdgId==w ):
+          and genpart[gen.genPartIdxMother_prompt].pdgId==w ):   #stessa cosa di prima ma con il quark down 
         if (genpart[genpart[gen.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId==sgn_top*6):
             if deltaR(p_jet.Eta(), p_jet.Phi(),p_gen.Eta(), p_gen.Phi())<dR :
                 match = True
@@ -79,14 +79,16 @@ class nanoprepro(Module):
         jets = Collection(event,"Jet")
         Njets = len(jets)
         fatjets = Collection(event,"FatJet")
-        Nfatjets = len(fatjets)
+        Nfatjets = len(fatjets)  
         muons = Collection(event, "Muon")
         electrons = Collection(event, "Electron")
-
+        
+        #Prende la collezione di Jet, fatJets, Muoni ed elettroni 
         if self.isMC==1:
             LHE = Collection(event, "LHEPart")
             genpart = Collection(event, "GenPart")
         
+        #se è un monte carlo prende anche il generatore e LHE 
 
         '''init variables to branch'''
         jets_deltar = []
@@ -126,6 +128,8 @@ class nanoprepro(Module):
                     if (gen.genPartIdxMother == 0 and abs(gen.pdgId)==6):
                         ntop +=1
                         sgn_top = gen.pdgId/abs(gen.pdgId)
+                        
+                        #Prende tutti i top imponendo il loro Id e che non abbiano la particella madre
                         
                 
                 if ntop ==1 :
