@@ -220,3 +220,706 @@ Traceback (most recent call last):
     raise ConfigurationException(msg)
 CRABClient.ClientExceptions.ConfigurationException: [91mError[0m: crab_DataHTF_2022 is not a valid CRAB project directory.
 INFO 2023-05-30 07:43:26.057 UTC: 	 Log file is /afs/cern.ch/work/a/acagnott/CMSSW_12_4_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-12 11:18:10.419 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:18:10.420 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:18:10.420 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:18:10.420 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:18:10.420 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:18:10.420 UTC: 	 Could not find CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3; creating a new one.
+DEBUG 2025-03-12 11:18:26.893 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:18:26.893 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:18:26.893 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:18:26.893 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:18:26.893 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:18:26.894 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-03-12 11:18:26.894 UTC: 	 Checking credentials
+DEBUG 2025-03-12 11:18:26.894 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:18:26.894 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-12 11:18:26.894 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:18:27.413 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:18:27.413 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-12 11:18:27.413 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:18:27.853 UTC: 	 output : 687189
+687188
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:18:27.854 UTC: 	 Proxy valid for 190:53:08 hours
+DEBUG 2025-03-12 11:18:27.854 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:18:27.854 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:18:28.528 UTC: 	 username is apuglia
+INFO 2025-03-12 11:18:29.273 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-03-12 11:18:29.274 UTC: 	 Command use: checkwrite
+DEBUG 2025-03-12 11:18:29.274 UTC: 	 Options use: ['--site', 'T2_IT_Pisa']
+DEBUG 2025-03-12 11:18:29.274 UTC: 	 Instance is None
+DEBUG 2025-03-12 11:18:29.274 UTC: 	 Server base url is None
+DEBUG 2025-03-12 11:18:29.274 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:18:29.274 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:18:30.037 UTC: 	 username is apuglia
+INFO 2025-03-12 11:18:30.037 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-03-12 11:18:30.037 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-03-12 11:18:30.037 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-03-12 11:18:30.052 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-03-12 11:18:30.053 UTC: 	 Will check write permission in /store/user/apuglia on site T2_IT_Pisa
+INFO 2025-03-12 11:18:30.077 UTC: 	 Will use PFN: davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/d88362ea-adab-44a2-a3b8-30958ba282b5.tmp
+INFO 2025-03-12 11:18:30.077 UTC: 	 
+Attempting to create (dummy) directory crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5 and copy (dummy) file d88362ea-adab-44a2-a3b8-30958ba282b5.tmp to /store/user/apuglia
+
+INFO 2025-03-12 11:18:30.081 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-copy -p -v -t 180 file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/d88362ea-adab-44a2-a3b8-30958ba282b5.tmp 'davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/d88362ea-adab-44a2-a3b8-30958ba282b5.tmp'
+INFO 2025-03-12 11:18:30.082 UTC: 	 Please wait...
+INFO 2025-03-12 11:18:31.438 UTC: 	 
+Successfully created directory crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5 and copied file d88362ea-adab-44a2-a3b8-30958ba282b5.tmp to /store/user/apuglia
+INFO 2025-03-12 11:18:31.438 UTC: 	 
+Attempting to delete file davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/d88362ea-adab-44a2-a3b8-30958ba282b5.tmp
+
+INFO 2025-03-12 11:18:31.439 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -v -t 180 'davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/d88362ea-adab-44a2-a3b8-30958ba282b5.tmp'
+INFO 2025-03-12 11:18:31.439 UTC: 	 Please wait...
+INFO 2025-03-12 11:18:32.435 UTC: 	 
+Successfully deleted file davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/d88362ea-adab-44a2-a3b8-30958ba282b5.tmp
+INFO 2025-03-12 11:18:32.435 UTC: 	 
+Attempting to delete directory davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/
+
+INFO 2025-03-12 11:18:32.435 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -r -v -t 180 'davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/'
+INFO 2025-03-12 11:18:32.436 UTC: 	 Please wait...
+INFO 2025-03-12 11:18:33.489 UTC: 	 
+Successfully deleted directory davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_121830_d88362ea-adab-44a2-a3b8-30958ba282b5/
+INFO 2025-03-12 11:18:33.494 UTC: 	 
+Checkwrite Result:
+INFO 2025-03-12 11:18:33.495 UTC: 	 Success: Able to write in /store/user/apuglia on site T2_IT_Pisa
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Checking credentials
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-12 11:22:27.327 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:22:27.713 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:22:27.713 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-12 11:22:27.713 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:22:28.098 UTC: 	 output : 686948
+686947
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:22:28.098 UTC: 	 Proxy valid for 190:49:07 hours
+DEBUG 2025-03-12 11:22:28.098 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:22:28.098 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:22:28.848 UTC: 	 username is apuglia
+INFO 2025-03-12 11:22:29.354 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-03-12 11:22:29.355 UTC: 	 Command use: checkwrite
+DEBUG 2025-03-12 11:22:29.355 UTC: 	 Options use: ['--site', 'T2_IT_Bari']
+DEBUG 2025-03-12 11:22:29.355 UTC: 	 Instance is None
+DEBUG 2025-03-12 11:22:29.355 UTC: 	 Server base url is None
+DEBUG 2025-03-12 11:22:29.355 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:22:29.355 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:22:30.003 UTC: 	 username is apuglia
+INFO 2025-03-12 11:22:30.004 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-03-12 11:22:30.004 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-03-12 11:22:30.004 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-03-12 11:22:30.019 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-03-12 11:22:30.019 UTC: 	 Will check write permission in /store/user/apuglia on site T2_IT_Bari
+INFO 2025-03-12 11:22:30.044 UTC: 	 Will use PFN: davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/daf85388-182e-4093-b08d-e80b86d2e608.tmp
+INFO 2025-03-12 11:22:30.044 UTC: 	 
+Attempting to create (dummy) directory crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608 and copy (dummy) file daf85388-182e-4093-b08d-e80b86d2e608.tmp to /store/user/apuglia
+
+INFO 2025-03-12 11:22:30.050 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-copy -p -v -t 180 file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/daf85388-182e-4093-b08d-e80b86d2e608.tmp 'davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/daf85388-182e-4093-b08d-e80b86d2e608.tmp'
+INFO 2025-03-12 11:22:30.050 UTC: 	 Please wait...
+INFO 2025-03-12 11:22:31.369 UTC: 	 
+Successfully created directory crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608 and copied file daf85388-182e-4093-b08d-e80b86d2e608.tmp to /store/user/apuglia
+INFO 2025-03-12 11:22:31.370 UTC: 	 
+Attempting to delete file davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/daf85388-182e-4093-b08d-e80b86d2e608.tmp
+
+INFO 2025-03-12 11:22:31.370 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -v -t 180 'davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/daf85388-182e-4093-b08d-e80b86d2e608.tmp'
+INFO 2025-03-12 11:22:31.370 UTC: 	 Please wait...
+INFO 2025-03-12 11:22:32.369 UTC: 	 
+Successfully deleted file davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/daf85388-182e-4093-b08d-e80b86d2e608.tmp
+INFO 2025-03-12 11:22:32.369 UTC: 	 
+Attempting to delete directory davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/
+
+INFO 2025-03-12 11:22:32.369 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -r -v -t 180 'davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/'
+INFO 2025-03-12 11:22:32.369 UTC: 	 Please wait...
+INFO 2025-03-12 11:22:33.397 UTC: 	 
+Successfully deleted directory davs://webdav.recas.ba.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250312_122230_daf85388-182e-4093-b08d-e80b86d2e608/
+INFO 2025-03-12 11:22:33.398 UTC: 	 
+Checkwrite Result:
+INFO 2025-03-12 11:22:33.398 UTC: 	 Success: Able to write in /store/user/apuglia on site T2_IT_Bari
+DEBUG 2025-03-12 11:23:04.650 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:23:04.650 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:23:04.650 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:23:04.650 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:23:04.650 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:23:04.650 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-03-12 11:23:04.651 UTC: 	 Checking credentials
+DEBUG 2025-03-12 11:23:04.651 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:23:04.651 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-12 11:23:04.651 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:23:05.007 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:23:05.007 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-12 11:23:05.007 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:23:05.365 UTC: 	 output : 686911
+686910
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:23:05.366 UTC: 	 Proxy valid for 190:48:30 hours
+DEBUG 2025-03-12 11:23:05.366 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:23:05.366 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:23:06.059 UTC: 	 username is apuglia
+INFO 2025-03-12 11:23:06.604 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-03-12 11:23:06.605 UTC: 	 Command use: checkwrite
+DEBUG 2025-03-12 11:23:06.605 UTC: 	 Options use: ['--site', 'T2_CH_PSI']
+DEBUG 2025-03-12 11:23:06.605 UTC: 	 Instance is None
+DEBUG 2025-03-12 11:23:06.605 UTC: 	 Server base url is None
+DEBUG 2025-03-12 11:23:06.605 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:23:06.605 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:23:07.224 UTC: 	 username is apuglia
+INFO 2025-03-12 11:23:07.224 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-03-12 11:23:07.224 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-03-12 11:23:07.225 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-03-12 11:23:07.235 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-03-12 11:23:07.236 UTC: 	 Will check write permission in /store/user/apuglia on site T2_CH_PSI
+ERROR 2025-03-12 11:23:07.300 UTC: 	 RSE does not exist.
+Details: RSE 'T2_CH_PSI' cannot be found in vo 'def'
+WARNING 2025-03-12 11:23:07.300 UTC: 	 Command checkwrite failed
+ERROR 2025-03-12 11:23:07.300 UTC: 	 Caught CommandFailedException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.241125.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.241125.00/bin/crab.py", line 144, in __call__
+    raise CommandFailedException("Command %s failed" % str(args[0]))
+CRABClient.ClientExceptions.CommandFailedException: Command checkwrite failed
+DEBUG 2025-03-12 11:23:15.788 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:23:15.788 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:23:15.788 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:23:15.788 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:23:15.788 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:23:15.788 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-03-12 11:23:15.789 UTC: 	 Checking credentials
+DEBUG 2025-03-12 11:23:15.789 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:23:15.789 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-12 11:23:15.789 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:23:16.200 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:23:16.200 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-12 11:23:16.200 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:23:16.576 UTC: 	 output : 686900
+686899
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:23:16.576 UTC: 	 Proxy valid for 190:48:19 hours
+DEBUG 2025-03-12 11:23:16.576 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:23:16.576 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:23:17.174 UTC: 	 username is apuglia
+INFO 2025-03-12 11:23:17.781 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-03-12 11:23:17.781 UTC: 	 Command use: checkwrite
+DEBUG 2025-03-12 11:23:17.781 UTC: 	 Options use: ['--site', 'T2_CH_CSCS']
+DEBUG 2025-03-12 11:23:17.781 UTC: 	 Instance is None
+DEBUG 2025-03-12 11:23:17.781 UTC: 	 Server base url is None
+DEBUG 2025-03-12 11:23:17.781 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:23:17.781 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:23:18.449 UTC: 	 username is apuglia
+INFO 2025-03-12 11:23:18.449 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-03-12 11:23:18.450 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-03-12 11:23:18.450 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-03-12 11:23:18.463 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-03-12 11:23:18.463 UTC: 	 Will check write permission in /store/user/apuglia on site T2_CH_CSCS
+INFO 2025-03-12 11:23:18.491 UTC: 	 Will use PFN: davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp
+INFO 2025-03-12 11:23:18.491 UTC: 	 
+Attempting to create (dummy) directory crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f and copy (dummy) file 3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp to /store/user/apuglia
+
+INFO 2025-03-12 11:23:18.497 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-copy -p -v -t 180 file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp 'davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp'
+INFO 2025-03-12 11:23:18.497 UTC: 	 Please wait...
+INFO 2025-03-12 11:23:20.112 UTC: 	 
+Successfully created directory crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f and copied file 3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp to /store/user/apuglia
+INFO 2025-03-12 11:23:20.112 UTC: 	 
+Attempting to delete file davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp
+
+INFO 2025-03-12 11:23:20.112 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -v -t 180 'davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp'
+INFO 2025-03-12 11:23:20.112 UTC: 	 Please wait...
+INFO 2025-03-12 11:23:20.983 UTC: 	 
+Successfully deleted file davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/3be5068f-2c86-4e1a-8361-0cd1ecb27b9f.tmp
+INFO 2025-03-12 11:23:20.983 UTC: 	 
+Attempting to delete directory davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/
+
+INFO 2025-03-12 11:23:20.983 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -r -v -t 180 'davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/'
+INFO 2025-03-12 11:23:20.983 UTC: 	 Please wait...
+INFO 2025-03-12 11:23:21.818 UTC: 	 
+Successfully deleted directory davs://storage01.lcg.cscs.ch:2880/pnfs/lcg.cscs.ch/cms/trivcat/store/user/apuglia/crab3checkwrite_20250312_122318_3be5068f-2c86-4e1a-8361-0cd1ecb27b9f/
+INFO 2025-03-12 11:23:21.820 UTC: 	 
+Checkwrite Result:
+INFO 2025-03-12 11:23:21.820 UTC: 	 Success: Able to write in /store/user/apuglia on site T2_CH_CSCS
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Checking credentials
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:24:02.652 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-12 11:24:02.653 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:24:03.110 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:24:03.110 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-12 11:24:03.110 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:24:03.515 UTC: 	 output : 686853
+686852
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:24:03.515 UTC: 	 Proxy valid for 190:47:32 hours
+DEBUG 2025-03-12 11:24:03.515 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:24:03.515 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:24:04.293 UTC: 	 username is apuglia
+INFO 2025-03-12 11:24:05.195 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-03-12 11:24:05.195 UTC: 	 Command use: checkwrite
+DEBUG 2025-03-12 11:24:05.195 UTC: 	 Options use: ['--site', 'T2_US_Winsconsin']
+DEBUG 2025-03-12 11:24:05.195 UTC: 	 Instance is None
+DEBUG 2025-03-12 11:24:05.195 UTC: 	 Server base url is None
+DEBUG 2025-03-12 11:24:05.195 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:24:05.195 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:24:05.814 UTC: 	 username is apuglia
+INFO 2025-03-12 11:24:05.815 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-03-12 11:24:05.815 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-03-12 11:24:05.815 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-03-12 11:24:05.830 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-03-12 11:24:05.830 UTC: 	 Will check write permission in /store/user/apuglia on site T2_US_Winsconsin
+ERROR 2025-03-12 11:24:05.849 UTC: 	 RSE does not exist.
+Details: RSE 'T2_US_Winsconsin' cannot be found in vo 'def'
+WARNING 2025-03-12 11:24:05.849 UTC: 	 Command checkwrite failed
+ERROR 2025-03-12 11:24:05.849 UTC: 	 Caught CommandFailedException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.241125.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.241125.00/bin/crab.py", line 144, in __call__
+    raise CommandFailedException("Command %s failed" % str(args[0]))
+CRABClient.ClientExceptions.CommandFailedException: Command checkwrite failed
+DEBUG 2025-03-12 11:24:29.210 UTC: 	 CRAB Client version: v3.241125
+DEBUG 2025-03-12 11:24:29.210 UTC: 	 Running on: Linux lxplus976.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-12 11:24:29.210 UTC: 	 Not using Singularity
+DEBUG 2025-03-12 11:24:29.210 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-12 11:24:29.210 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-03-12 11:24:29.210 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-03-12 11:24:29.211 UTC: 	 Checking credentials
+DEBUG 2025-03-12 11:24:29.211 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:24:29.211 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-12 11:24:29.211 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:24:29.604 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:24:29.604 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-12 11:24:29.604 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-12 11:24:29.976 UTC: 	 output : 686827
+686826
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-12 11:24:29.976 UTC: 	 Proxy valid for 190:47:06 hours
+DEBUG 2025-03-12 11:24:29.976 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:24:29.976 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:24:30.696 UTC: 	 username is apuglia
+INFO 2025-03-12 11:24:31.137 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-03-12 11:24:31.137 UTC: 	 Command use: checkwrite
+DEBUG 2025-03-12 11:24:31.137 UTC: 	 Options use: ['--site', 'T2_US_Wisconsin']
+DEBUG 2025-03-12 11:24:31.137 UTC: 	 Instance is None
+DEBUG 2025-03-12 11:24:31.137 UTC: 	 Server base url is None
+DEBUG 2025-03-12 11:24:31.137 UTC: 	 Retrieving username ...
+DEBUG 2025-03-12 11:24:31.137 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-03-12 11:24:31.760 UTC: 	 username is apuglia
+INFO 2025-03-12 11:24:31.760 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-03-12 11:24:31.760 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-03-12 11:24:31.760 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-03-12 11:24:31.772 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-03-12 11:24:31.772 UTC: 	 Will check write permission in /store/user/apuglia on site T2_US_Wisconsin
+INFO 2025-03-12 11:24:31.805 UTC: 	 Will use PFN: davs://cmsxrootd.hep.wisc.edu:1094/store/user/apuglia/crab3checkwrite_20250312_122431_a261d4cd-aaf9-46b9-8509-24734d536325/a261d4cd-aaf9-46b9-8509-24734d536325.tmp
+INFO 2025-03-12 11:24:31.805 UTC: 	 
+Attempting to create (dummy) directory crab3checkwrite_20250312_122431_a261d4cd-aaf9-46b9-8509-24734d536325 and copy (dummy) file a261d4cd-aaf9-46b9-8509-24734d536325.tmp to /store/user/apuglia
+
+INFO 2025-03-12 11:24:31.812 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-copy -p -v -t 180 file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/a261d4cd-aaf9-46b9-8509-24734d536325.tmp 'davs://cmsxrootd.hep.wisc.edu:1094/store/user/apuglia/crab3checkwrite_20250312_122431_a261d4cd-aaf9-46b9-8509-24734d536325/a261d4cd-aaf9-46b9-8509-24734d536325.tmp'
+INFO 2025-03-12 11:24:31.812 UTC: 	 Please wait...
+INFO 2025-03-12 11:24:36.696 UTC: 	 Failed running copy command
+INFO 2025-03-12 11:24:36.696 UTC: 	   Stdout:
+    Copying 85 bytes file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/a261d4cd-aaf9-46b9-8509-24734d536325.tmp => davs://cmsxrootd.hep.wisc.edu:1094/store/user/apuglia/crab3checkwrite_20250312_122431_a261d4cd-aaf9-46b9-8509-24734d536325/a261d4cd-aaf9-46b9-8509-24734d536325.tmp
+    event: [1741778674138] BOTH   GFAL2:CORE:COPY	LIST:ENTER	
+    event: [1741778674139] BOTH   GFAL2:CORE:COPY	LIST:ITEM	file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/a261d4cd-aaf9-46b9-8509-24734d536325.tmp => davs://cmsxrootd.hep.wisc.edu:1094/store/user/apuglia/crab3checkwrite_20250312_122431_a261d4cd-aaf9-46b9-8509-24734d536325/a261d4cd-aaf9-46b9-8509-24734d536325.tmp
+    event: [1741778674139] BOTH   GFAL2:CORE:COPY	LIST:EXIT	
+    event: [1741778674139] BOTH   http_plugin	PREPARE:ENTER	file:///eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/a261d4cd-aaf9-46b9-8509-24734d536325.tmp => davs://cmsxrootd.hep.wisc.edu:1094/store/user/apuglia/crab3checkwrite_20250312_122431_a261d4cd-aaf9-46b9-8509-24734d536325/a261d4cd-aaf9-46b9-8509-24734d536325.tmp
+    
+INFO 2025-03-12 11:24:36.696 UTC: 	   Stderr:
+    gfal-copy error: 1 (Operation not permitted) - DESTINATION MAKE_PARENT HTTP 403 : Permission refused 
+    
+INFO 2025-03-12 11:24:36.697 UTC: 	 
+Checkwrite Result:
+INFO 2025-03-12 11:24:36.697 UTC: 	 Unable to check write permission in /store/user/apuglia on site T2_US_Wisconsin
+Please try again later or contact the site administrators sending them the 'crab checkwrite' output as printed above.
+INFO 2025-03-12 11:24:36.697 UTC: 	 Note: You cannot write to a site if you did not ask permission.
+WARNING 2025-03-12 11:24:36.697 UTC: 	 Command checkwrite failed
+ERROR 2025-03-12 11:24:36.697 UTC: 	 Caught CommandFailedException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.241125.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.241125.00/bin/crab.py", line 144, in __call__
+    raise CommandFailedException("Command %s failed" % str(args[0]))
+CRABClient.ClientExceptions.CommandFailedException: Command checkwrite failed
+DEBUG 2025-03-13 22:30:33.873 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:30:33.873 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:30:33.873 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:30:33.873 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:30:33.873 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-13 22:30:33.874 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-13 22:30:33.892 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-13 22:30:33.892 UTC: 	 Loading CRAB configuration file.
+ERROR 2025-03-13 22:30:34.005 UTC: 	 Error while loading CRAB configuration:
+not enough arguments for format string
+Please refer to https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3FAQ
+See the ./crab.log file for more details.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+ERROR 2025-03-13 22:30:34.006 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/WMCore/Configuration.py", line 339, in loadConfigurationFile
+    modRef = load_module(cfgBaseName, modPath)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/__init__.py", line 38, in load_module
+    return imp.load_module(moduleName, moduleObj[0],
+  File "/cvmfs/cms.cern.ch/el9_amd64_gcc12/external/python3/3.9.14-b98669a1dd7ad6f9a9402f3cf1f9d11c/lib/python3.9/imp.py", line 234, in load_module
+    return load_source(name, filename, file)
+  File "/cvmfs/cms.cern.ch/el9_amd64_gcc12/external/python3/3.9.14-b98669a1dd7ad6f9a9402f3cf1f9d11c/lib/python3.9/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 711, in _load
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_cfg.py", line 20, in <module>
+    config.Data.outLFNDirBase = '/store/user/%s/%s' % ('apuglia')
+TypeError: not enough arguments for format string
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 56, in loadConfig
+    self.configuration = loadConfigurationFile(os.path.abspath(configname))
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/WMCore/Configuration.py", line 346, in loadConfigurationFile
+    raise RuntimeError(msg)
+RuntimeError: Unable to load Configuration File:
+/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_cfg.py
+Due to error:
+not enough arguments for format stringTraceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/WMCore/Configuration.py", line 339, in loadConfigurationFile
+    modRef = load_module(cfgBaseName, modPath)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/__init__.py", line 38, in load_module
+    return imp.load_module(moduleName, moduleObj[0],
+  File "/cvmfs/cms.cern.ch/el9_amd64_gcc12/external/python3/3.9.14-b98669a1dd7ad6f9a9402f3cf1f9d11c/lib/python3.9/imp.py", line 234, in load_module
+    return load_source(name, filename, file)
+  File "/cvmfs/cms.cern.ch/el9_amd64_gcc12/external/python3/3.9.14-b98669a1dd7ad6f9a9402f3cf1f9d11c/lib/python3.9/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 711, in _load
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_cfg.py", line 20, in <module>
+    config.Data.outLFNDirBase = '/store/user/%s/%s' % ('apuglia')
+TypeError: not enough arguments for format string
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 326, in __init__
+    self.loadConfig(self.options.config, self.args)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 90, in loadConfig
+    raise ConfigurationException(configmsg)
+CRABClient.ClientExceptions.ConfigurationException: Error while loading CRAB configuration:
+not enough arguments for format string
+Please refer to https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3FAQ
+See the ./crab.log file for more details.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+INFO 2025-03-13 22:30:34.015 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-13 22:37:16.248 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:37:16.248 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:37:16.248 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:37:16.248 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:37:16.248 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-13 22:37:16.248 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-13 22:37:16.249 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-13 22:37:16.249 UTC: 	 Loading CRAB configuration file.
+DEBUG 2025-03-13 22:37:16.271 UTC: 	 Will use CRAB plugin ANALYSIS (i.e. will run an analysis job type).
+ERROR 2025-03-13 22:37:16.272 UTC: 	 Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+ERROR 2025-03-13 22:37:16.272 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 328, in __init__
+    self.requestarea, self.requestname, self.logfile = createWorkArea(
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/ClientUtilities.py", line 392, in createWorkArea
+    raise ConfigException("Working area '%s' already exists \nPlease change the requestName in the config file" % fullpath)
+CRABClient.ClientExceptions.ConfigException: Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+INFO 2025-03-13 22:37:16.276 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-13 22:39:00.879 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:39:00.879 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:39:00.879 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:39:00.879 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:39:00.879 UTC: 	 Executing command: 'resubmit'
+DEBUG 2025-03-13 22:39:00.879 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+ERROR 2025-03-13 22:39:00.880 UTC: 	 Cannot find .requestcache file in CRAB project directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu
+ERROR 2025-03-13 22:39:00.880 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/resubmit.py", line 30, in __init__
+    SubCommand.__init__(self, logger, cmdargs)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 281, in __init__
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 695, in validateOptions
+    self.loadLocalCache()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 537, in loadLocalCache
+    raise ex
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 531, in loadLocalCache
+    self.cachedinfo, self.logfile = loadCache(self.requestarea, self.logger)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/ClientUtilities.py", line 445, in loadCache
+    raise CachefileNotFoundException(msg)
+CRABClient.ClientExceptions.CachefileNotFoundException: Cannot find .requestcache file in CRAB project directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu
+INFO 2025-03-13 22:39:00.884 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-13 22:39:21.653 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:39:21.653 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:39:21.653 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:39:21.653 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:39:21.653 UTC: 	 Executing command: 'resubmit'
+DEBUG 2025-03-13 22:39:21.653 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+ERROR 2025-03-13 22:39:21.654 UTC: 	 Cannot find .requestcache file in CRAB project directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu
+ERROR 2025-03-13 22:39:21.654 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/resubmit.py", line 30, in __init__
+    SubCommand.__init__(self, logger, cmdargs)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 281, in __init__
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 695, in validateOptions
+    self.loadLocalCache()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 537, in loadLocalCache
+    raise ex
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 531, in loadLocalCache
+    self.cachedinfo, self.logfile = loadCache(self.requestarea, self.logger)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/ClientUtilities.py", line 445, in loadCache
+    raise CachefileNotFoundException(msg)
+CRABClient.ClientExceptions.CachefileNotFoundException: Cannot find .requestcache file in CRAB project directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu
+INFO 2025-03-13 22:39:21.658 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-13 22:39:41.219 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:39:41.219 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:39:41.219 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:39:41.219 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:39:41.219 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-13 22:39:41.219 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-13 22:39:41.220 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-13 22:39:41.220 UTC: 	 Loading CRAB configuration file.
+DEBUG 2025-03-13 22:39:41.226 UTC: 	 Will use CRAB plugin ANALYSIS (i.e. will run an analysis job type).
+ERROR 2025-03-13 22:39:41.227 UTC: 	 Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+ERROR 2025-03-13 22:39:41.227 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 328, in __init__
+    self.requestarea, self.requestname, self.logfile = createWorkArea(
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/ClientUtilities.py", line 392, in createWorkArea
+    raise ConfigException("Working area '%s' already exists \nPlease change the requestName in the config file" % fullpath)
+CRABClient.ClientExceptions.ConfigException: Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+INFO 2025-03-13 22:39:41.230 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-13 22:50:50.576 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:50:50.577 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:50:50.577 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:50:50.577 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:50:50.577 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-13 22:50:50.577 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-13 22:50:50.579 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-13 22:50:50.579 UTC: 	 Loading CRAB configuration file.
+DEBUG 2025-03-13 22:50:50.671 UTC: 	 Will use CRAB plugin ANALYSIS (i.e. will run an analysis job type).
+ERROR 2025-03-13 22:50:50.671 UTC: 	 Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+ERROR 2025-03-13 22:50:50.671 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 328, in __init__
+    self.requestarea, self.requestname, self.logfile = createWorkArea(
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/ClientUtilities.py", line 392, in createWorkArea
+    raise ConfigException("Working area '%s' already exists \nPlease change the requestName in the config file" % fullpath)
+CRABClient.ClientExceptions.ConfigException: Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+INFO 2025-03-13 22:50:50.675 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-13 22:51:37.501 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-13 22:51:37.501 UTC: 	 Running on: Linux lxplus905.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-13 22:51:37.501 UTC: 	 Not using Singularity
+DEBUG 2025-03-13 22:51:37.501 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-13 22:51:37.501 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-13 22:51:37.501 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-13 22:51:37.504 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-13 22:51:37.504 UTC: 	 Loading CRAB configuration file.
+DEBUG 2025-03-13 22:51:37.572 UTC: 	 Will use CRAB plugin ANALYSIS (i.e. will run an analysis job type).
+ERROR 2025-03-13 22:51:37.572 UTC: 	 Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+ERROR 2025-03-13 22:51:37.572 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 328, in __init__
+    self.requestarea, self.requestname, self.logfile = createWorkArea(
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/ClientUtilities.py", line 392, in createWorkArea
+    raise ConfigException("Working area '%s' already exists \nPlease change the requestName in the config file" % fullpath)
+CRABClient.ClientExceptions.ConfigException: Working area '/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu' already exists 
+Please change the requestName in the config file
+INFO 2025-03-13 22:51:37.576 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-14 10:11:47.140 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-14 10:11:47.141 UTC: 	 Running on: Linux lxplus985.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-14 10:11:47.141 UTC: 	 Not using Singularity
+DEBUG 2025-03-14 10:11:47.141 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-14 10:11:47.141 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-14 10:11:47.141 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-14 10:11:47.142 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-14 10:11:47.142 UTC: 	 Loading CRAB configuration file.
+ERROR 2025-03-14 10:11:47.217 UTC: 	 The 'maxJobRuntimeMin' parameter is not compatible with the 'Automatic' splitting mode (default).
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+ERROR 2025-03-14 10:11:47.217 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 326, in __init__
+    self.loadConfig(self.options.config, self.args)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 95, in loadConfig
+    raise ConfigurationException(configmsg)
+CRABClient.ClientExceptions.ConfigurationException: The 'maxJobRuntimeMin' parameter is not compatible with the 'Automatic' splitting mode (default).
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+INFO 2025-03-14 10:11:47.220 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-14 10:54:19.119 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-14 10:54:19.119 UTC: 	 Running on: Linux lxplus920.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-14 10:54:19.119 UTC: 	 Not using Singularity
+DEBUG 2025-03-14 10:54:19.119 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-14 10:54:19.119 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-14 10:54:19.119 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-14 10:54:19.120 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-14 10:54:19.120 UTC: 	 Loading CRAB configuration file.
+ERROR 2025-03-14 10:54:19.192 UTC: 	 The 'maxJobRuntimeMin' parameter is not compatible with the 'Automatic' splitting mode (default).
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+ERROR 2025-03-14 10:54:19.192 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 326, in __init__
+    self.loadConfig(self.options.config, self.args)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 95, in loadConfig
+    raise ConfigurationException(configmsg)
+CRABClient.ClientExceptions.ConfigurationException: The 'maxJobRuntimeMin' parameter is not compatible with the 'Automatic' splitting mode (default).
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+INFO 2025-03-14 10:54:19.196 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-14 10:54:31.410 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-14 10:54:31.410 UTC: 	 Running on: Linux lxplus920.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-14 10:54:31.410 UTC: 	 Not using Singularity
+DEBUG 2025-03-14 10:54:31.410 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-14 10:54:31.410 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-14 10:54:31.410 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-14 10:54:31.412 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-14 10:54:31.412 UTC: 	 Loading CRAB configuration file.
+ERROR 2025-03-14 10:54:31.451 UTC: 	 Invalid CRAB configuration: In case of Automatic splitting, the Data.unitsPerJob parameter must be in the [180, 2700] minutes range. You asked for 1 minutes.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+ERROR 2025-03-14 10:54:31.451 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/submit.py", line 37, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 326, in __init__
+    self.loadConfig(self.options.config, self.args)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 95, in loadConfig
+    raise ConfigurationException(configmsg)
+CRABClient.ClientExceptions.ConfigurationException: Invalid CRAB configuration: In case of Automatic splitting, the Data.unitsPerJob parameter must be in the [180, 2700] minutes range. You asked for 1 minutes.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+INFO 2025-03-14 10:54:31.454 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-03-14 11:47:45.160 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-14 11:47:45.160 UTC: 	 Running on: Linux lxplus920.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-14 11:47:45.160 UTC: 	 Not using Singularity
+DEBUG 2025-03-14 11:47:45.160 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-14 11:47:45.160 UTC: 	 Executing command: 'status'
+DEBUG 2025-03-14 11:47:45.160 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+ERROR 2025-03-14 11:47:45.161 UTC: 	 Error: ./crab_TTTo2J1L1nu is not a valid CRAB project directory.
+ERROR 2025-03-14 11:47:45.161 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])  # the crab command to be executed
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/status.py", line 48, in __init__
+    SubCommand.__init__(self, logger, cmdargs)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 281, in __init__
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250217.00/lib/CRABClient/Commands/SubCommand.py", line 691, in validateOptions
+    raise ConfigurationException(msg)
+CRABClient.ClientExceptions.ConfigurationException: [91mError[0m: ./crab_TTTo2J1L1nu is not a valid CRAB project directory.
+INFO 2025-03-14 11:47:45.164 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log

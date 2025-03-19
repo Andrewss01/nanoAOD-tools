@@ -22,11 +22,10 @@ mv lib $CMSSW_BASE/lib
 mv src $CMSSW_BASE/src
 mv module $CMSSW_BASE/module
 mv python $CMSSW_BASE/python
-cmsenv
-scram-venv
-cmsenv
 echo Found Proxy in: $X509_USER_PROXY
 which python3
-python3 -c 'from CMSJMECalculators import loadJMESystematicsCalculators;print('ok')'
+echo $PYTHON_PATH
+python3 crab_script_copy.py
+#python3 -c 'from CMSJMECalculators import loadJMESystematicsCalculators;print('ok')'
 hadd tree_hadd.root tree.root hist.root
 fi
