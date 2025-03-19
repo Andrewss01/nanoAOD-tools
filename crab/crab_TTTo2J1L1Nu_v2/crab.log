@@ -1,0 +1,187 @@
+DEBUG 2025-03-14 14:06:36.778 UTC: 	 CRAB Client version: v3.250217
+DEBUG 2025-03-14 14:06:36.779 UTC: 	 Running on: Linux lxplus981.cern.ch 5.14.0-503.26.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Feb 10 05:23:56 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-03-14 14:06:36.779 UTC: 	 Not using Singularity
+DEBUG 2025-03-14 14:06:36.779 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-03-14 14:06:36.779 UTC: 	 Executing command: 'submit'
+DEBUG 2025-03-14 14:06:36.779 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+INFO 2025-03-14 14:06:36.780 UTC: 	 Will use CRAB configuration file crab_cfg.py
+DEBUG 2025-03-14 14:06:36.780 UTC: 	 Loading CRAB configuration file.
+DEBUG 2025-03-14 14:06:36.958 UTC: 	 Will use CRAB plugin ANALYSIS (i.e. will run an analysis job type).
+DEBUG 2025-03-14 14:06:37.492 UTC: 	 Checking credentials
+DEBUG 2025-03-14 14:06:37.492 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-03-14 14:06:37.492 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-03-14 14:06:37.492 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-03-14 14:06:37.858 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-14 14:06:37.858 UTC: 	 Getting proxy life time left
+DEBUG 2025-03-14 14:06:37.858 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-03-14 14:06:38.290 UTC: 	 output : 688707
+688706
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-14 14:06:38.290 UTC: 	 Proxy valid for 191:18:26 hours
+DEBUG 2025-03-14 14:06:38.290 UTC: 	 Encoded data for curl request: subresource=delegatedn
+DEBUG 2025-03-14 14:06:38.339 UTC: 	 Registering user credentials on myproxy for /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+DEBUG 2025-03-14 14:06:38.339 UTC: 	 Executing command :
+ voms-proxy-info --identity --file /tmp/x509up_u180940
+DEBUG 2025-03-14 14:06:38.789 UTC: 	 output : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=apuglia/CN=885270/CN=Andrea Camilla Puglia
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-14 14:06:38.789 UTC: 	 Getting myproxy life time left for bbb60dc5a44802d56653e3a555244abd1d126f21
+DEBUG 2025-03-14 14:06:38.789 UTC: 	 Executing command :
+ myproxy-info -s myproxy.cern.ch -l bbb60dc5a44802d56653e3a555244abd1d126f21
+DEBUG 2025-03-14 14:06:39.074 UTC: 	 output : username: bbb60dc5a44802d56653e3a555244abd1d126f21
+owner: /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=apuglia/CN=885270/CN=Andrea Camilla Puglia
+  renewal policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  trusted retrieval policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  timeleft: 704:27:28  (29.4 days)
+
+ error: 
+ retcode : 0
+DEBUG 2025-03-14 14:06:39.074 UTC: 	 Myproxy is valid: 2536020
+DEBUG 2025-03-14 14:06:39.074 UTC: 	 Result of myproxy credential check:
+  Credential exists on myproxy: username: bbb60dc5a44802d56653e3a555244abd1d126f21  - validity: 29 days, 8:27:00
+DEBUG 2025-03-14 14:06:39.074 UTC: 	 Command use: submit
+DEBUG 2025-03-14 14:06:39.074 UTC: 	 Options use: ['crab_cfg.py']
+DEBUG 2025-03-14 14:06:39.074 UTC: 	 Encoded data for curl request: subresource=version
+DEBUG 2025-03-14 14:06:39.126 UTC: 	 CRABClient version: v3.250217
+DEBUG 2025-03-14 14:06:39.126 UTC: 	 Instance is prod
+DEBUG 2025-03-14 14:06:39.126 UTC: 	 Server base url is cmsweb.cern.ch
+DEBUG 2025-03-14 14:06:39.126 UTC: 	 Command api workflow
+DEBUG 2025-03-14 14:06:39.127 UTC: 	 Started submission
+DEBUG 2025-03-14 14:06:39.127 UTC: 	 Working on /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2
+DEBUG 2025-03-14 14:06:39.127 UTC: 	 Encoded data for curl request: subresource=backendurls
+DEBUG 2025-03-14 14:06:40.539 UTC: 	 Loading required information from the environment
+DEBUG 2025-03-14 14:06:40.539 UTC: 	 Found CMSSW_14_1_7 for el9_amd64_gcc12 with base /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7
+DEBUG 2025-03-14 14:06:40.539 UTC: 	 Loading required information from the environment
+DEBUG 2025-03-14 14:06:40.539 UTC: 	 Found CMSSW_14_1_7 for el9_amd64_gcc12 with base /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7
+DEBUG 2025-03-14 14:06:40.539 UTC: 	 UNIQUE NAME: tarUUID 496f8638-f3ec-422b-903e-dd9a9c41bdc4 
+DEBUG 2025-03-14 14:06:40.540 UTC: 	 self.config: from WMCore.Configuration import Configuration
+config = Configuration()
+config.section_('General')
+config.General.requestName = 'TTTo2J1L1Nu_v2'
+config.General.transferLogs = True
+config.section_('JobType')
+config.JobType.psetName = 'PSet.py'
+config.JobType.inputFiles = ['crab_script_copy.py', '../scripts/keep_and_drop.txt']
+config.JobType.sendVenvFolder = False
+config.JobType.pluginName = 'Analysis'
+config.JobType.scriptExe = 'crab_script.sh'
+config.JobType.maxJobRuntimeMin = 2700
+config.section_('Data')
+config.Data.publication = False
+config.Data.inputDBS = 'global'
+config.Data.outLFNDirBase = '/store/user/apuglia'
+config.Data.allowNonValidInputDataset = True
+config.Data.inputDataset = '/TTTo2J1L1Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM'
+config.Data.unitsPerJob = 1
+config.Data.outputDatasetTag = 'TTTo2J1L1Nu'
+config.Data.splitting = 'FileBased'
+config.section_('Site')
+config.Site.storageSite = 'T2_IT_Pisa'
+
+DEBUG 2025-03-14 14:06:40.540 UTC: 	 self.config.JobType.psetName: PSet.py
+INFO 2025-03-14 14:06:40.540 UTC: 	 Importing CMSSW configuration PSet.py
+INFO 2025-03-14 14:06:41.090 UTC: 	 Finished importing CMSSW configuration PSet.py
+DEBUG 2025-03-14 14:06:41.091 UTC: 	 Writing CMSSW configuration to /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/PSet.py
+DEBUG 2025-03-14 14:06:41.181 UTC: 	 The following EDM output files will be collected: ['tree_hadd.root']
+DEBUG 2025-03-14 14:06:41.181 UTC: 	 The following TFile output files will be collected: []
+DEBUG 2025-03-14 14:06:41.181 UTC: 	 The following user output files (not listed as PoolOuputModule or TFileService in the CMSSW PSet) will be collected: 
+DEBUG 2025-03-14 14:06:41.181 UTC: 	 Loading required information from the environment
+DEBUG 2025-03-14 14:06:41.181 UTC: 	 Found CMSSW_14_1_7 for el9_amd64_gcc12 with base /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7
+DEBUG 2025-03-14 14:06:41.181 UTC: 	 Making tarball in /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/496f8638-f3ec-422b-903e-dd9a9c41bdc4default.tgz
+DEBUG 2025-03-14 14:06:41.186 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/bin
+DEBUG 2025-03-14 14:06:41.186 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/bin to tarball
+DEBUG 2025-03-14 14:06:41.258 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/python
+DEBUG 2025-03-14 14:06:41.259 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/python to tarball
+DEBUG 2025-03-14 14:06:41.462 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/cfipython
+DEBUG 2025-03-14 14:06:41.463 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/cfipython to tarball
+DEBUG 2025-03-14 14:06:41.470 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/lib
+DEBUG 2025-03-14 14:06:41.470 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/lib to tarball
+DEBUG 2025-03-14 14:06:42.533 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/biglib
+DEBUG 2025-03-14 14:06:42.533 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/biglib to tarball
+DEBUG 2025-03-14 14:06:42.539 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/module
+DEBUG 2025-03-14 14:06:42.539 UTC: 	 Checking directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/config/SCRAM/hooks
+DEBUG 2025-03-14 14:06:42.562 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/config/SCRAM/hooks to tarball
+DEBUG 2025-03-14 14:06:43.003 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/data to tarball
+DEBUG 2025-03-14 14:07:02.490 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/interface to tarball
+DEBUG 2025-03-14 14:07:03.122 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python to tarball
+DEBUG 2025-03-14 14:07:28.311 UTC: 	 Adding directory /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/data to tarball
+DEBUG 2025-03-14 14:07:29.897 UTC: 	 Adding file crab_script_copy.py to tarball
+DEBUG 2025-03-14 14:07:29.918 UTC: 	 Adding file ../scripts/keep_and_drop.txt to tarball
+DEBUG 2025-03-14 14:07:29.986 UTC: 	 Uploading archive /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/496f8638-f3ec-422b-903e-dd9a9c41bdc4default.tgz (83 MB) to the CRAB cache. Using URI https://cmsweb.cern.ch/S3/crabcache_prod
+DEBUG 2025-03-14 14:07:41.046 UTC: 	 Encoded data for curl request: subresource=upload&objecttype=sandbox&tarballname=d39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz
+DEBUG 2025-03-14 14:07:41.156 UTC: 	 Will execute:
+curl -f -v -X POST  -H "User-Agent: CRAB" -F "key=apuglia/sandboxes/d39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz" -F "AWSAccessKeyId=715203df6482458ba839e73e6dab634b" -F "policy=eyJleHBpcmF0aW9uIjogIjIwMjUtMDMtMTRUMTU6MDc6NDFaIiwgImNvbmRpdGlvbnMiOiBbeyJidWNrZXQiOiAiY3JhYmNhY2hlX3Byb2QifSwgeyJrZXkiOiAiYXB1Z2xpYS9zYW5kYm94ZXMvZDM5YTkyY2FiM2E3MmRhMDViZDEyMTIxNGJjMDhkN2I4ZjZhNDI4Y2Q1ZTJkYTA1Mjg4MjU3OGEzZTNkNjE2ZC50YXIuZ3oifV19" -F "signature=HY/aQsS+gIKO1Jg/1Ht3Z2YhLpU=" -F "file=@/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/496f8638-f3ec-422b-903e-dd9a9c41bdc4default.tgz" "https://s3.cern.ch/crabcache_prod"
+DEBUG 2025-03-14 14:07:43.155 UTC: 	 exitcode: 0
+stdout: b''
+DEBUG 2025-03-14 14:07:43.156 UTC: 	 upload to S3 of sandbox /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/496f8638-f3ec-422b-903e-dd9a9c41bdc4default.tgz completed
+DEBUG 2025-03-14 14:07:43.156 UTC: 	 make sure that object is ready for retrieve
+DEBUG 2025-03-14 14:07:44.157 UTC: 	 Encoded data for curl request: subresource=download&objecttype=sandbox&tarballname=d39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz&clientmethod=head_object
+DEBUG 2025-03-14 14:07:44.211 UTC: 	 PreSignedUrl to download sandbox received OK
+DEBUG 2025-03-14 14:07:44.213 UTC: 	 Will execute:
+ curl -v -s -f -o /dev/null --head  "https://s3.cern.ch/crabcache_prod/apuglia/sandboxes/d39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz?AWSAccessKeyId=715203df6482458ba839e73e6dab634b&Signature=z%2BdLgL%2B%2BS8321%2BEO5H%2F7W1WzoEE%3D&Expires=1741964864"
+DEBUG 2025-03-14 14:07:44.241 UTC: 	 exitcode: 0
+stdout: b''
+DEBUG 2025-03-14 14:07:44.242 UTC: 	 sandbox /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/496f8638-f3ec-422b-903e-dd9a9c41bdc4default.tgz successfully uploaded to S3
+DEBUG 2025-03-14 14:07:44.242 UTC: 	 Loading required information from the environment
+DEBUG 2025-03-14 14:07:44.242 UTC: 	 Found CMSSW_14_1_7 for el9_amd64_gcc12 with base /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7
+DEBUG 2025-03-14 14:07:44.242 UTC: 	 Making tarball in /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/debugFiles.tgz
+DEBUG 2025-03-14 14:07:44.251 UTC: 	 Uploading archive /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/debugFiles.tgz (1 KB) to the CRAB cache. Using URI https://cmsweb.cern.ch/S3/crabcache_prod
+DEBUG 2025-03-14 14:07:44.256 UTC: 	 Encoded data for curl request: subresource=upload&objecttype=sandbox&tarballname=32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz
+DEBUG 2025-03-14 14:07:49.344 UTC: 	 Will execute:
+curl -f -v -X POST  -H "User-Agent: CRAB" -F "key=apuglia/sandboxes/32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz" -F "AWSAccessKeyId=715203df6482458ba839e73e6dab634b" -F "policy=eyJleHBpcmF0aW9uIjogIjIwMjUtMDMtMTRUMTU6MDc6NDlaIiwgImNvbmRpdGlvbnMiOiBbeyJidWNrZXQiOiAiY3JhYmNhY2hlX3Byb2QifSwgeyJrZXkiOiAiYXB1Z2xpYS9zYW5kYm94ZXMvMzI2NTliNjgxMmY5NDkzZTI0YmVhNmFlYTEyNjY5ZDZhYmQxMmYwMDc4YzVkNzUyZjJkN2ZiNjE5MzY1MDYwYy50YXIuZ3oifV19" -F "signature=6zy1i6cTV8LY3rXu/4VOqKLlvKE=" -F "file=@/eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/debugFiles.tgz" "https://s3.cern.ch/crabcache_prod"
+DEBUG 2025-03-14 14:07:49.381 UTC: 	 exitcode: 0
+stdout: b''
+DEBUG 2025-03-14 14:07:49.381 UTC: 	 upload to S3 of sandbox /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/debugFiles.tgz completed
+DEBUG 2025-03-14 14:07:49.381 UTC: 	 make sure that object is ready for retrieve
+DEBUG 2025-03-14 14:07:50.383 UTC: 	 Encoded data for curl request: subresource=download&objecttype=sandbox&tarballname=32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz&clientmethod=head_object
+DEBUG 2025-03-14 14:07:50.429 UTC: 	 PreSignedUrl to download sandbox received OK
+DEBUG 2025-03-14 14:07:50.432 UTC: 	 Will execute:
+ curl -v -s -f -o /dev/null --head  "https://s3.cern.ch/crabcache_prod/apuglia/sandboxes/32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz?AWSAccessKeyId=715203df6482458ba839e73e6dab634b&Signature=kfEC%2F851a6mWSY138fX3YwXlSUQ%3D&Expires=1741964870"
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 exitcode: 0
+stdout: b''
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 sandbox /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/inputs/debugFiles.tgz successfully uploaded to S3
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 Result uploading input files: d39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz 
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 submit() - self.configuration from WMCore.Configuration import Configuration
+config = Configuration()
+config.section_('General')
+config.General.requestName = 'TTTo2J1L1Nu_v2'
+config.General.transferLogs = True
+config.section_('JobType')
+config.JobType.psetName = 'PSet.py'
+config.JobType.inputFiles = ['crab_script_copy.py', '../scripts/keep_and_drop.txt']
+config.JobType.sendVenvFolder = False
+config.JobType.pluginName = 'Analysis'
+config.JobType.scriptExe = 'crab_script.sh'
+config.JobType.maxJobRuntimeMin = 2700
+config.section_('Data')
+config.Data.publication = False
+config.Data.inputDBS = 'global'
+config.Data.outLFNDirBase = '/store/user/apuglia'
+config.Data.allowNonValidInputDataset = True
+config.Data.inputDataset = '/TTTo2J1L1Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM'
+config.Data.unitsPerJob = 1
+config.Data.outputDatasetTag = 'TTTo2J1L1Nu'
+config.Data.splitting = 'FileBased'
+config.section_('Site')
+config.Site.storageSite = 'T2_IT_Pisa'
+
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 submit() - self.configreq {'dryrun': 0, 'workflow': 'crab_TTTo2J1L1Nu_v2', 'saveoutput': 1, 'savelogsflag': 1, 'inputdata': '/TTTo2J1L1Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM', 'nonvaliddata': 1, 'userfiles': [], 'dbsurl': 'https://cmsweb.cern.ch/dbs/prod/global/DBSReader', 'useparent': 0, 'ignorelocality': 0, 'splitalgo': 'FileBased', 'algoargs': 1, 'totalunits': 0, 'lfn': '/store/user/apuglia', 'publication': 0, 'publishdbsurl': 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter', 'publishname2': 'TTTo2J1L1Nu', 'jobtype': 'Analysis', 'generator': 'pythia', 'addoutputfiles': [], 'maxjobruntime': 2700, 'numcores': 1, 'maxmemory': 2000, 'priority': 10, 'nonprodsw': 0, 'scriptexe': 'crab_script.sh', 'asyncdest': 'T2_IT_Pisa', 'requireaccelerator': 0, 'oneEventMode': 0, 'extrajdl': [], 'ignoreglobalblacklist': 0, 'partialdataset': 0, 'inputblocks': []}
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 submit() - jobconfig {'addoutputfiles': [], 'tfileoutfiles': [], 'edmoutfiles': ['tree_hadd.root'], 'jobarch': 'el9_amd64_gcc12', 'jobminuarch': 'any', 'jobsw': 'CMSSW_14_1_7', 'inputdata': '/TTTo2J1L1Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM', 'cacheurl': 'https://cmsweb.cern.ch/S3/crabcache_prod', 'cachefilename': 'd39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz', 'debugfilename': '32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz', 'jobtype': 'Analysis'}
+INFO 2025-03-14 14:07:50.466 UTC: 	 Sending the request to the server at cmsweb.cern.ch
+DEBUG 2025-03-14 14:07:50.466 UTC: 	 Submitting {'dryrun': 0, 'workflow': 'crab_TTTo2J1L1Nu_v2', 'saveoutput': 1, 'savelogsflag': 1, 'inputdata': '/TTTo2J1L1Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM', 'nonvaliddata': 1, 'userfiles': [], 'dbsurl': 'https://cmsweb.cern.ch/dbs/prod/global/DBSReader', 'useparent': 0, 'ignorelocality': 0, 'splitalgo': 'FileBased', 'algoargs': 1, 'totalunits': 0, 'lfn': '/store/user/apuglia', 'publication': 0, 'publishdbsurl': 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter', 'publishname2': 'TTTo2J1L1Nu', 'jobtype': 'Analysis', 'generator': 'pythia', 'addoutputfiles': [], 'maxjobruntime': 2700, 'numcores': 1, 'maxmemory': 2000, 'priority': 10, 'nonprodsw': 0, 'scriptexe': 'crab_script.sh', 'asyncdest': 'T2_IT_Pisa', 'requireaccelerator': 0, 'oneEventMode': 0, 'extrajdl': [], 'ignoreglobalblacklist': 0, 'partialdataset': 0, 'inputblocks': [], 'tfileoutfiles': [], 'edmoutfiles': ['tree_hadd.root'], 'jobarch': 'el9_amd64_gcc12', 'jobminuarch': 'any', 'jobsw': 'CMSSW_14_1_7', 'cacheurl': 'https://cmsweb.cern.ch/S3/crabcache_prod', 'cachefilename': 'd39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz', 'debugfilename': '32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz'} 
+DEBUG 2025-03-14 14:07:50.467 UTC: 	 Encoded data for curl request: dryrun=0&workflow=crab_TTTo2J1L1Nu_v2&saveoutput=1&savelogsflag=1&inputdata=%2FTTTo2J1L1Nu_CP5_13p6TeV_powheg-pythia8%2FRun3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1%2FNANOAODSIM&nonvaliddata=1&dbsurl=https%3A%2F%2Fcmsweb.cern.ch%2Fdbs%2Fprod%2Fglobal%2FDBSReader&useparent=0&ignorelocality=0&splitalgo=FileBased&algoargs=1&totalunits=0&lfn=%2Fstore%2Fuser%2Fapuglia&publication=0&publishdbsurl=https%3A%2F%2Fcmsweb.cern.ch%2Fdbs%2Fprod%2Fphys03%2FDBSWriter&publishname2=TTTo2J1L1Nu&jobtype=Analysis&generator=pythia&maxjobruntime=2700&numcores=1&maxmemory=2000&priority=10&nonprodsw=0&scriptexe=crab_script.sh&asyncdest=T2_IT_Pisa&requireaccelerator=0&oneEventMode=0&ignoreglobalblacklist=0&partialdataset=0&jobarch=el9_amd64_gcc12&jobminuarch=any&jobsw=CMSSW_14_1_7&cacheurl=https%3A%2F%2Fcmsweb.cern.ch%2FS3%2Fcrabcache_prod&cachefilename=d39a92cab3a72da05bd121214bc08d7b8f6a428cd5e2da052882578a3e3d616d.tar.gz&debugfilename=32659b6812f9493e24bea6aea12669d6abd12f0078c5d752f2d7fb619365060c.tar.gz&edmoutfiles=tree_hadd.root
+DEBUG 2025-03-14 14:07:51.812 UTC: 	 Result: {'result': [{'RequestName': '250314_140750:apuglia_crab_TTTo2J1L1Nu_v2'}]}
+INFO 2025-03-14 14:07:51.822 UTC: 	 Success: Your task has been delivered to the prod CRAB3 server.
+INFO 2025-03-14 14:07:51.822 UTC: 	 Task name: 250314_140750:apuglia_crab_TTTo2J1L1Nu_v2
+INFO 2025-03-14 14:07:51.822 UTC: 	 Project dir: ./crab_TTTo2J1L1Nu_v2
+INFO 2025-03-14 14:07:51.822 UTC: 	 Please use ' crab status -d ./crab_TTTo2J1L1Nu_v2 ' to check how the submission process proceeds.
+DEBUG 2025-03-14 14:07:51.822 UTC: 	 About to return
+INFO 2025-03-14 14:07:51.848 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab_TTTo2J1L1Nu_v2/crab.log

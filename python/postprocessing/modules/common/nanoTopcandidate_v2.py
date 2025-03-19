@@ -100,6 +100,44 @@ def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top):
     
     return jets_dnn
 
+def quark_number(j0=0, j1=0, j2=0, fj=0):
+    n_quark_tot = 0 
+
+    if not hasattr(j2, "pt"):
+        if ((j0.matched>0 and j1.matched>0 and fj.matched>0) and
+            (j0.topMother== j1.topMother and j0.topMother== fj.topMother)):
+            flavs_j0, flavs_j1, flavs_fj = j0.pdgId, j1.pdgId, fj.pdgId
+            jetflavs_list = get_pos_nums(flavs_j0) + get_pos_nums(flavs_j1) 
+            fatjetflavs_list = get_pos_nums(flavs_fj)
+        else: 
+            jetflavs_list = []
+            fatjetflavs_list = []
+    else:
+        if hasattr(fj, "pt"):
+            if ((j0.matched>0 and j1.matched>0 and j2.matched>0 and fj.matched>0) and
+                (j0.topMother== j1.topMother and j1.topMother== j2.topMother and
+                   j2.topMother==fj.topMother)):
+                flavs_j0, flavs_j1, flavs_j2, flavs_fj = j0.pdgId, j1.pdgId, j2.pdgId, fj.pdgId
+                jetflavs_list = get_pos_nums(flavs_j0) + get_pos_nums(flavs_j1) + get_pos_nums(flavs_j2)
+                fatjetflavs_list = get_pos_nums(flavs_fj)
+            else: 
+                jetflavs_list = []
+                fatjetflavs_list = []
+        else:
+            if ((j0.matched>0 and j1.matched>0 and j2.matched>0) and
+                ( j0.topMother== j1.topMother and j1.topMother== j2.topMother)): 
+                flavs_j0, flavs_j1, flavs_j2 = j0.pdgId, j1.pdgId, j2.pdgId
+                jetflavs_list = get_pos_nums(flavs_j0) + get_pos_nums(flavs_j1) + get_pos_nums(flavs_j2)
+                fatjetflavs_list = []
+            else: 
+                jetflavs_list = []
+                fatjetflavs_list = []
+
+    n_quark_tot = len(np.unique(jetflavs_list+fatjetflavs_list))
+    return n_quark_tot
+
+
+
 class nanoTopcand(Module):
     def __init__(self, isMC=1):
         self.isMC = isMC
@@ -123,6 +161,7 @@ class nanoTopcand(Module):
         self.out.branch("TopMixed_phi", "F", lenVar="nTopMixed")
         self.out.branch("TopMixed_mass", "F", lenVar="nTopMixed")
         self.out.branch("TopMixed_truth", "F", lenVar="nTopMixed")
+        self.out.branch("TopMixed_nquark", "I", lenVar="nTopMixed")
         "branches Top candidate low pt"
         self.out.branch("nTopResolved", "I")
         self.out.branch("TopResolved_idxJet0", "I", lenVar="nTopResolved")
@@ -148,6 +187,12 @@ class nanoTopcand(Module):
         goodjets, goodfatjets = presel(jets, fatjets)
         ngoodjets = len(goodjets)
         ngoodfatjets = len(goodfatjets)
+        #if ngoodjets != njets:
+        #    print('n good jets', ngoodjets)
+        #    print('n jets', njets)
+        #if ngoodfatjets != nfatjets:
+        #    print('n goof fat jets',ngoodfatjets)
+        #    print('n fat jets', nfatjets)
 
         pt_cut_low = 10000
         pt_cut_high = 0
@@ -177,6 +222,7 @@ class nanoTopcand(Module):
         tophigh_sumjetdeltarfatjet = []
         tophigh_sumjetmaxdeltarjet = []
         tophigh_truth = []
+        tophigh_nquark = []
         #low pt top loop
         for idx_j0 in range(ngoodjets):
             for idx_j1 in range(idx_j0):
@@ -215,6 +261,7 @@ class nanoTopcand(Module):
                             tophigh_mass_.append(top_p4.M())
                             if self.isMC:
                                 tophigh_truth.append(truth(j0=j0, j1=j1, fj=fj))
+                                tophigh_nquark.append(quark_number(j0=j0, j1=j1, fj=fj))
                             else:
                                 tophigh_truth.append(0)
                     for idx_j2 in range(idx_j1):
@@ -232,6 +279,8 @@ class nanoTopcand(Module):
                             tophigh_mass_.append(top_p4.M())
                             if self.isMC:
                                 tophigh_truth.append(truth(j0=j0, j1=j1, j2=j2))
+                                tophigh_nquark.append(quark_number(j0=j0, j1=j1, j2=j2))
+
                             else:
                                 tophigh_truth.append(0)
                         for idx_fj in range(ngoodfatjets):
@@ -250,6 +299,7 @@ class nanoTopcand(Module):
                                 tophigh_mass_.append(top_p4.M())
                                 if self.isMC:
                                     tophigh_truth.append(truth(j0=j0, j1=j1, j2=j2, fj=fj))
+                                    tophigh_nquark.append(quark_number(j0=j0, j1=j1, j2=j2, fj=fj))
                                 else: 
                                     tophigh_truth.append(0)
         
@@ -272,6 +322,7 @@ class nanoTopcand(Module):
         self.out.fillBranch("TopMixed_phi", tophigh_phi_)
         self.out.fillBranch("TopMixed_mass", tophigh_mass_)
         self.out.fillBranch("TopMixed_truth", tophigh_truth)
+        self.out.fillBranch("TopMixed_nquark", tophigh_nquark)
         # t1 = datetime.now()
         # print("TopCandidate module time :", t1-t0)  
         return True
