@@ -124,13 +124,13 @@ class collectionMerger(Module):
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
 
-lepMerger = lambda: collectionMerger(input=["Electron", "Muon"],
-                                     output="Lepton")
-lepMerger_exampleSelection = lambda: collectionMerger(
-    input=["Electron", "Muon"],
-    output=
-    "Lepton",  # this will keep only the two leading leptons among electrons with pt > 20 and muons with pt > 40
-    maxObjects=2,
-    selector=dict([("Electron", lambda x: x.pt > 20),
-                   ("Muon", lambda x: x.pt > 40)]),
-)
+# lepMerger = lambda: collectionMerger(input=["Electron", "Muon"],
+#                                      output="Lepton")
+# lepMerger_exampleSelection = lambda: collectionMerger(
+#     input=["Electron", "Muon"],
+#     output=
+#     "Lepton",  # this will keep only the two leading leptons among electrons with pt > 20 and muons with pt > 40
+#     maxObjects=2,
+#     selector=dict([("Electron", lambda x: x.pt > 20),
+#                    ("Muon", lambda x: x.pt > 40)]),
+# )

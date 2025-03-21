@@ -150,8 +150,8 @@ class trainer:
         y = BatchNormalization()(y)
 
         j_units = hp.Int('j_units', min_value = 1, max_value = 10, step = 1)
-        j_activation = hp.Choice("j_activation", values= ['relu', 'sigmoid', 'tang'])
-        j_kernel_initializer = hp.Choice('j_kernel_initializer', vlues = ['random_uniform', 'random_normal'])
+        j_activation = hp.Choice("j_activation", values= ['relu', 'sigmoid', 'tanh'])
+        j_kernel_initializer = hp.Choice('j_kernel_initializer', values = ['random_uniform', 'random_normal'])
 
         y = keras.layers.LSTM(units = j_units,
                               activation = j_activation, 
@@ -278,7 +278,7 @@ data = X_jet, X_fatjet, X_top, y
 
 trainer1 = trainer(*data)
 trainer1.split(0.3)
-trainer1.tune_hps(max_epochs= 1000, batch_size = 250, project_name = 'tuning_fatjets')
+trainer1.tune_hps(max_epochs= 1000, batch_size = 250, project_name = 'tuning_jets_fatjets')
 
 best_hps = trainer1.best_hyperparameters
 #tuner.get_best_hyperparameters(num_trials=1)
@@ -286,9 +286,9 @@ print(f"BEST HPS FOUND:\n{best_hps[0].values}")
 
 # Save best_hps to json file
 #path_to_model_folder = '/eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/' 
-path_to_model_folder = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src' 
+path_to_model_folder = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/ML' 
 ''
-with open(f"{path_to_model_folder}/best_hps_fj.json", "w") as jsFile:
+with open(f"{path_to_model_folder}/best_hps_jets_fatjets.json", "w") as jsFile:
     # f.write(best_hps[0].values)
     json.dump(best_hps[0].values, jsFile, indent=4)
     

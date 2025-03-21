@@ -2,3 +2,5 @@ drop *
 keep Top*
 keep Jet*
 keep FatJet*
+keep PF*
+keep SV*
