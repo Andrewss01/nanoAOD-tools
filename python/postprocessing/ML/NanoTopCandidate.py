@@ -113,8 +113,10 @@ class nanoTopcand(Module):
         self.out.branch("TopMixed_idxJet0", "I", lenVar="nTopMixed")
         self.out.branch("TopMixed_idxJet1", "I", lenVar="nTopMixed")
         self.out.branch("TopMixed_idxJet2", "I", lenVar="nTopMixed")
-        self.out.branch("TopMixed_idxPFC", "I", lenVar = "nIndexes")
-        self.out.branch("nIndexes", "I")
+        self.out.branch("TopMixed_idxPFC", "I", lenVar = "nIndexes_PFC")
+        self.out.branch("nIndexes_PFC", "I")
+        self.out.branch("nIndexes_SV", "I")
+        self.out.branch("TopMixed_idxSV", "I", lenVar = "nIndexes_SV")
         #self.out.branch("TopMixed_sumjetPt", "F", lenVar="nTopMixed")
         #self.out.branch("TopMixed_sumjetEta", "F", lenVar="nTopMixed")
         #self.out.branch("TopMixed_sumjetPhi", "F", lenVar="nTopMixed")
@@ -125,7 +127,7 @@ class nanoTopcand(Module):
         self.out.branch("TopMixed_mass", "F", lenVar="nTopMixed")
         self.out.branch("TopMixed_truth", "F", lenVar="nTopMixed")
         self.out.branch("TopMixed_category", "I", lenVar = "nTopMixed")
-        self.out.branch("TopMixed_nquark", "I", lenVar = "nTopMixed")
+        # self.out.branch("TopMixed_nquark", "I", lenVar = "nTopMixed")
         "branches Top candidate low pt"
         self.out.branch("nTopResolved", "I")
         self.out.branch("TopResolved_idxJet0", "I", lenVar="nTopResolved")
@@ -151,8 +153,23 @@ class nanoTopcand(Module):
         goodjets, goodfatjets = presel(jets, fatjets)
         ngoodjets = len(goodjets)
         ngoodfatjets = len(goodfatjets)
-        PFCands = Collection(event, "PFCands")
+        jetPF = Collection(event, 'JetPFCands')
+        fatjetPF = Collection(event, 'FatJetPFCands')
+        jetSV = Collection(event, 'JetSVs')
+        fatjetSV = Collection(event, 'FatJetSVs')
+        # print('n jets is', njets, 'n good jets is', ngoodjets)
+        # print('n fatjets is', nfatjets, 'n good fatjets is', ngoodfatjets)
 
+        # for obj_jet in goodjets:
+        #     for index in range(len(jets)):
+        #         if jets[index] == obj_jet:
+        #             if index != obj_jet.jetIdx: 
+        #                 print('AAAAAAAAAAAAAAAAAA')
+                    # print('index jets', index)
+                    # print('index good jets', obj_jet.jetIdx)
+            # index  = jets.index(obj_jet)
+            # index_good = obj_jet.jetIdx
+            # print(index, index_good)
         pt_cut_low = 10000
         pt_cut_high = 0
         
@@ -175,6 +192,7 @@ class nanoTopcand(Module):
         tophigh_idxjet1 = []
         tophigh_idxjet2 = []
         tophigh_idxPFC = []
+        tophigh_idxSV = []
         tophigh_category = []
         tophigh_pt_ = []
         tophigh_eta_ = []
@@ -185,7 +203,11 @@ class nanoTopcand(Module):
         tophigh_truth = []
         
         n_idxPFC = 0
+        n_idxSV = 0 
 
+        tophigh_idxPFC.append(-1)
+        n_idxPFC += 1 
+        n_idxSV += 1
         #low pt top loop
         for idx_j0 in range(ngoodjets):
             for idx_j1 in range(idx_j0):
@@ -194,9 +216,9 @@ class nanoTopcand(Module):
                     top_p4 = lowpt_top(j0, j1, j2)
                     if top_p4.Pt()<pt_cut_low:
                         ntoplowpt+=1
-                        toplow_idxjet0.append(idx_j0)
-                        toplow_idxjet1.append(idx_j1)
-                        toplow_idxjet2.append(idx_j2)
+                        toplow_idxjet0.append(j0.jetIdx)
+                        toplow_idxjet1.append(j1.jetIdx)
+                        toplow_idxjet2.append(j2.jetIdx)
                         toplow_pt_.append(top_p4.Pt())
                         toplow_eta_.append(top_p4.Eta())
                         toplow_phi_.append(top_p4.Phi())
@@ -205,18 +227,19 @@ class nanoTopcand(Module):
                             toplow_truth.append(truth(j0=j0, j1=j1, j2=j2))
                         else:
                             toplow_truth.append(0)
-        
+        #hCATEGORIA 2JETS 1 FAT JET
         for idx_j0 in range(ngoodjets):
                 for idx_j1 in range(idx_j0):
                     for idx_fj in range(ngoodfatjets):
                         j0, j1 = goodjets[idx_j0],goodjets[idx_j1]
                         fj = goodfatjets[idx_fj]
                         top_p4 = highpt_top(j0=j0, j1=j1, j2=None, fj=fj)
+                        # print('p4 top', top_p4.Pt())
                         if top_p4.Pt()>pt_cut_high:
                             ntophighpt += 1
-                            tophigh_idxfatjet.append(idx_fj)
-                            tophigh_idxjet0.append(idx_j0)
-                            tophigh_idxjet1.append(idx_j1)
+                            tophigh_idxfatjet.append(fj.fatjetIdx)
+                            tophigh_idxjet0.append(j0.jetIdx)
+                            tophigh_idxjet1.append(j1.jetIdx)
                             tophigh_idxjet2.append(-1)
                             tophigh_pt_.append(top_p4.Pt())
                             tophigh_eta_.append(top_p4.Eta())
@@ -224,30 +247,96 @@ class nanoTopcand(Module):
                             tophigh_mass_.append(top_p4.M())
                             tophigh_category.append(2)
                             
-                            # for pfcand in PFCands:
-                            #     if 
+                            
+                          
+                            for pfcand in jetPF:
+                                if j0.jetIdx == pfcand.jetIdx:
+                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                    n_idxPFC += 1
+                                elif j1.jetIdx == pfcand.jetIdx:
+                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                    n_idxPFC+=1
+
+                            for pfcand_fj in fatjetPF:
+                                if fj.fatjetIdx == pfcand_fj.jetIdx:
+                                    n_idxPFC += 1
+                                    tophigh_idxPFC.append(pfcand_fj.pFCandsIdx)
+
+                            for sv in jetSV:
+                                if j0.jetIdx == sv.jetIdx:
+                                    n_idxSV += 1
+                                    tophigh_idxSV.append(sv.sVIdx)
+                                elif j1.jetIdx == sv.jetIdx:
+                                    n_idxSV += 1
+                                    tophigh_idxSV.append(sv.sVIdx)
+                            for sv_fj in fatjetSV:
+                                if fj.fatjetIdx == sv_fj.jetIdx:
+                                    n_idxSV +=1
+                                    tophigh_idxSV.append(sv_fj.sVIdx)
+                                    
+                                    
 
                             if self.isMC:
                                 tophigh_truth.append(truth(j0=j0, j1=j1, fj=fj))
                             else:
-                                tophigh_truth.append(0)
+                                tophigh_truth.append(0) #0
+                            
+                            tophigh_idxPFC.append(-1)
+                            n_idxPFC += 1
+
+                            tophigh_idxSV.append(-1)
+                            n_idxSV += 1
+
+                    # CATEGORIA 3 JETS 
                     for idx_j2 in range(idx_j1):
                         j0, j1, j2 = goodjets[idx_j0],goodjets[idx_j1],goodjets[idx_j2]
                         top_p4 = highpt_top(j0=j0, j1=j1, j2=j2, fj=None)
                         if top_p4.Pt()>pt_cut_high:
                             ntophighpt += 1
                             tophigh_idxfatjet.append(-1)
-                            tophigh_idxjet0.append(idx_j0)
-                            tophigh_idxjet1.append(idx_j1)
-                            tophigh_idxjet2.append(idx_j2)
+                            tophigh_idxjet0.append(j0.jetIdx)
+                            tophigh_idxjet1.append(j1.jetIdx)
+                            tophigh_idxjet2.append(j2.jetIdx)
                             tophigh_pt_.append(top_p4.Pt())
                             tophigh_eta_.append(top_p4.Eta())
                             tophigh_phi_.append(top_p4.Phi())
                             tophigh_mass_.append(top_p4.M())
+                            tophigh_category.append(1)
+
+                            for pfcand in jetPF:
+                                if j0.jetIdx == pfcand.jetIdx:
+                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                    n_idxPFC += 1
+                                elif j1.jetIdx == pfcand.jetIdx:
+                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                    n_idxPFC+=1
+                                elif j2.jetIdx == pfcand.jetIdx:
+                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                    n_idxPFC += 1
+
+                            for sv in jetSV:
+                                if j0.jetIdx == sv.jetIdx:
+                                    tophigh_idxSV.append(sv.sVIdx)
+                                    n_idxSV += 1
+                                elif j1.jetIdx == sv.jetIdx:
+                                    tophigh_idxSV.append(sv.sVIdx)
+                                    n_idxSV+=1
+                                elif j2.jetIdx == sv.jetIdx:
+                                    tophigh_idxSV.append(sv.sVIdx)
+                                    n_idxSV +=1
+                            
+                            tophigh_idxPFC.append(-1)
+                            n_idxPFC +=1
+
+                            tophigh_idxSV.append(-1)
+                            n_idxSV +=1
+
+
                             if self.isMC:
                                 tophigh_truth.append(truth(j0=j0, j1=j1, j2=j2))
                             else:
-                                tophigh_truth.append(0)
+                                tophigh_truth.append(0) 
+                    #categoria 3 jets 1 fat jets
                         for idx_fj in range(ngoodfatjets):
                             j0, j1, j2 = goodjets[idx_j0],goodjets[idx_j1],goodjets[idx_j2]
                             fj = goodfatjets[idx_fj]
@@ -262,6 +351,44 @@ class nanoTopcand(Module):
                                 tophigh_eta_.append(top_p4.Eta())
                                 tophigh_phi_.append(top_p4.Phi())
                                 tophigh_mass_.append(top_p4.M())
+                                tophigh_category.append(0)
+
+                                for pfcand in jetPF:
+                                    if j0.jetIdx == pfcand.jetIdx:
+                                        tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                        n_idxPFC += 1
+                                    elif j1.jetIdx == pfcand.jetIdx:
+                                        tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                        n_idxPFC+=1
+                                    elif j2.jetIdx == pfcand.jetIdx:
+                                        tophigh_idxPFC.append(pfcand.pFCandsIdx)
+
+                                for pfcand_fj in fatjetPF:
+                                    if fj.fatjetIdx == pfcand_fj.jetIdx:
+                                        n_idxPFC += 1
+                                        tophigh_idxPFC.append(pfcand_fj.pFCandsIdx)
+
+                                for sv in jetSV:
+                                    if j0.jetIdx == sv.jetIdx:
+                                        tophigh_idxSV.append(sv.sVIdx)
+                                        n_idxSV +=1
+                                    elif j1.jetIdx == sv.jetIdx:
+                                        n_idxSV += 1
+                                        tophigh_idxSV.append(sv.sVIdx)
+                                    elif j2.jetIdx == sv.jetIdx:
+                                        n_idxSV +=1
+                                        tophigh_idxSV.append(sv.sVIdx)
+                                for sv_fj in fatjetSV:
+                                    if fj.fatjetIdx == sv_fj.jetIdx:
+                                        n_idxSV +=1
+                                        tophigh_idxSV.append(sv_fj.sVIdx)
+                                
+                                tophigh_idxPFC.append(-1)
+                                n_idxPFC +=1
+
+                                tophigh_idxSV.append(-1)
+                                n_idxSV +=1
+
                                 if self.isMC:
                                     tophigh_truth.append(truth(j0=j0, j1=j1, j2=j2, fj=fj))
                                 else: 
@@ -286,6 +413,12 @@ class nanoTopcand(Module):
         self.out.fillBranch("TopMixed_phi", tophigh_phi_)
         self.out.fillBranch("TopMixed_mass", tophigh_mass_)
         self.out.fillBranch("TopMixed_truth", tophigh_truth)
+        self.out.fillBranch("nIndexes_PFC", n_idxPFC)
+        self.out.fillBranch("TopMixed_idxPFC", tophigh_idxPFC)
+        self.out.fillBranch("TopMixed_category", tophigh_category)
+        self.out.fillBranch("nIndexes_SV", n_idxSV)
+        self.out.fillBranch("TopMixed_idxSV", tophigh_idxSV)
+
         # t1 = datetime.now()
         # print("TopCandidate module time :", t1-t0)  
         return True
