@@ -94,7 +94,7 @@ def working_points_values(histo, nbins, wp):
             out_i = i
     return out_rej, out_i
         
-def working_points(histo1,histo2 = None,histo3 = None,wp = None):
+def working_points(histo1,histo2 = None,histo3 = None,wp):
     nbins = histo1.GetNbinsX()
     found = False 
     for i in range(1,nbins):
@@ -105,17 +105,17 @@ def working_points(histo1,histo2 = None,histo3 = None,wp = None):
             print('Working point: ', wp)
             print('score cut: ', score_cut)
             print(histo1.GetName(), ' value: ', rej)
-            if histo2 != None:
+            if histo2 not None:
                 histo2_value = histo2.Integral(i,nbins)
                 print(histo2.GetName(), ' value: ', histo2_value)
-            if histo3 != None:
+            if histo3 not None:
                 histo3_value = histo3.Integral(i,nbins)
                 print(histo3.GetName(), ' value: ', histo3_value)
-    if histo2 != None and histo3 != None:
+    if histo2 not None and histo3 not None:
         return score_cut, rej, histo2_value, histo3_value
-    elif histo2 != None:
+    elif histo2 not None:
         return score_cut, rej, histo2_value
-    elif histo3 != None:
+    elif histo3 not None:
         return score_cut, rej, histo3_value
     else:
         return score_cut, rej
