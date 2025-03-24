@@ -153,10 +153,12 @@ class nanoTopcand(Module):
         goodjets, goodfatjets = presel(jets, fatjets)
         ngoodjets = len(goodjets)
         ngoodfatjets = len(goodfatjets)
-        jetPF = Collection(event, 'JetPFCands')
-        fatjetPF = Collection(event, 'FatJetPFCands')
-        jetSV = Collection(event, 'JetSVs')
-        fatjetSV = Collection(event, 'FatJetSVs')
+        # jetPF = Collection(event, 'JetPFCands')
+        # fatjetPF = Collection(event, 'FatJetPFCands')
+        # jetSV = Collection(event, 'JetSVs')
+        # fatjetSV = Collection(event, 'FatJetSVs')
+        PFCands = Collection(event, "PFCands")
+        #nPFC = len(PFCands)
         # print('n jets is', njets, 'n good jets is', ngoodjets)
         # print('n fatjets is', nfatjets, 'n good fatjets is', ngoodfatjets)
 
@@ -206,6 +208,7 @@ class nanoTopcand(Module):
         n_idxSV = 0 
 
         tophigh_idxPFC.append(-1)
+        tophigh_idxSV.append(-1)
         n_idxPFC += 1 
         n_idxSV += 1
         #low pt top loop
@@ -249,19 +252,17 @@ class nanoTopcand(Module):
                             
                             
                           
-                            for pfcand in jetPF:
-                                if j0.jetIdx == pfcand.jetIdx:
-                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                            for pfcand in PFCands:
+                                if j0.jetIdx == pfcand.JetIdx:
+                                    tophigh_idxPFC.append(pfcand.Idx)
                                     n_idxPFC += 1
-                                elif j1.jetIdx == pfcand.jetIdx:
-                                    tophigh_idxPFC.append(pfcand.pFCandsIdx)
+                                elif j1.jetIdx == pfcand.JetIdx:
+                                    tophigh_idxPFC.append(pfcand.Idx)
                                     n_idxPFC+=1
-
-                            for pfcand_fj in fatjetPF:
-                                if fj.fatjetIdx == pfcand_fj.jetIdx:
+                                elif fj.fatjetIdx == pfcand.FatJetIdx:
+                                    tophigh_idxPFC.append(pfcand.Idx)
                                     n_idxPFC += 1
-                                    tophigh_idxPFC.append(pfcand_fj.pFCandsIdx)
-
+                                    
                             for sv in jetSV:
                                 if j0.jetIdx == sv.jetIdx:
                                     n_idxSV += 1
