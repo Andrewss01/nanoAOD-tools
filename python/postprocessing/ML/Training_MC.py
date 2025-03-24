@@ -57,8 +57,7 @@ ROOT.gStyle.SetOptStat(0)
 
 ### ADD ARGUMENTS
 
-usage = 'python3 Training_MC.py -s TT,ZJ1,ZJ2 -i /eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/training_dataset/trainingSet_10k.pkl' \
-' -m ./models/model.h5 -j ./scores.json -g ./grafiche -v True -o True'
+usage = 'python3 Training_MC.py -s TT,ZJ1,ZJ2 -i /eos/user/a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/training_dataset/trainingSet_10k.pkl -m ./models/model.h5 -j ./scores.json -g ./grafiche -v True -o True'
 parser = argparse.ArgumentParser(usage)
 parser.add_argument('-s', '--samples'  , dest = 'samples'   ,  required = True)
 parser.add_argument('-i', '--inFile'   , dest = 'inFile'    ,  required = True)
@@ -184,7 +183,7 @@ class trainer:
         outputs = Dense(3, activation = 'softmax')(x)
 
         self.model = tf.keras.Model(inputs = [fj_inputs, jet_inputs, top_inputs], outputs = outputs)
-        l_rate  = hp.Float("learning_rate", 1e-4, 1e-1, sampling="log", default=1e-3)
+        l_rate  = hp.Float("learning_rate", 1e-4, 1e-1, sampling="log", step  = 10)
         # learning_rate = hp.Int('learning_rate', min_value = 0.0001, ma)
         trainer = tf.keras.optimizers.Nadam(learning_rate = l_rate)
         loss = tf.keras.losses.SparseCategoricalCrossentropy()
@@ -227,7 +226,7 @@ class trainer:
         self.model   = tf.keras.Model(inputs=[fj_inputs, jet_inputs, top_inputs], outputs=outputs)
         
         
-        trainer = tf.keras.optimizers.Nadam(learning_rate = self.best_hyperparameters["l_rate"])
+        trainer = tf.keras.optimizers.Nadam(learning_rate = self.best_hyperparameters['learning_rate'])
         loss = tf.keras.losses.SparseCategoricalCrossentropy()
         self.model.compile(optimizer = trainer, loss = loss, metrics = ['accuracy'])  
 
@@ -244,7 +243,7 @@ class trainer:
         reduce_LR = keras.callbacks.ReduceLROnPlateau(monitor="val_accuracy",
                                                       mode="max",# quantity that has to be monitored
                                                       min_delta=1e-5,
-                                                      factor=0.1, # factor by which LR has to be reduced...
+                                                      factor=0.01, # factor by which LR has to be reduced...
                                                       patience=10, #...after waiting this number of epochs with no improvements on monitored quantity
                                                       min_lr=1e-15) 
         self.callback_list=[early_stop, reduce_LR]
