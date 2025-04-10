@@ -14,7 +14,8 @@ _rootLeafType2rootBranchType = {
     'Double_t': 'D',
     'ULong64_t': 'l',
     'Long64_t': 'L',
-    'Bool_t': 'O'
+    'Bool_t': 'O', 
+    'Short_t' : 'S'
 }
 
 
@@ -84,6 +85,7 @@ class collectionMerger(Module):
         # Create output branches
         self.out = wrappedOutputTree
         for br in self.brlist_all:
+            # print(self.branchType[br])
             self.out.branch("%s_%s" % (self.output, br),
                             _rootLeafType2rootBranchType[self.branchType[br]],
                             lenVar="n%s" % self.output)

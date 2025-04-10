@@ -13,7 +13,8 @@ _rootBranchType2PythonArray = {
     'D': 'd',
     'l': 'L',
     'L': 'l',
-    'O': 'B'
+    'O': 'B',
+    'S': 'h'
 }
 
 

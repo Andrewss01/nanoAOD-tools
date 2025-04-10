@@ -1,0 +1,4 @@
+drop *
+keep Top*
+keep Jet*
+keep FatJet*
