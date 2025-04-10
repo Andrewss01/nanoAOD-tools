@@ -1,0 +1,8 @@
+{
+    "fj_units": 8,
+    "fj_activation": "tanh",
+    "tuner/epochs": 2,
+    "tuner/initial_epoch": 0,
+    "tuner/bracket": 4,
+    "tuner/round": 0
+}
