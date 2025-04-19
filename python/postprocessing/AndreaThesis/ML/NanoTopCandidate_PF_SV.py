@@ -336,10 +336,10 @@ class nanoTopcand_PFC_SV(Module):
                             top_p4 = highpt_top(j0=j0, j1=j1, j2=j2, fj=fj)
                             if top_p4.Pt()>pt_cut_high:
                                 ntophighpt += 1
-                                tophigh_idxfatjet.append(idx_fj)
-                                tophigh_idxjet0.append(idx_j0)
-                                tophigh_idxjet1.append(idx_j1)
-                                tophigh_idxjet2.append(idx_j2)
+                                tophigh_idxfatjet.append(fj.fatjetIdx)
+                                tophigh_idxjet0.append(j0.jetIdx)
+                                tophigh_idxjet1.append(j1.jetIdx)
+                                tophigh_idxjet2.append(j2.jetIdx)
                                 tophigh_pt_.append(top_p4.Pt())
                                 tophigh_eta_.append(top_p4.Eta())
                                 tophigh_phi_.append(top_p4.Phi())

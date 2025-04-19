@@ -166,7 +166,7 @@ def top_cluster_excl(top, trs):
     }
     return dictOut
 ##########################
-
+ 
 
 def get_pos_nums(num):
     pos_nums = []
@@ -206,6 +206,7 @@ def truth(j0=0, j1=0, j2=0, fj=0):
             else: 
                 jetflavs_list = []
                 fatjetflavs_list = []
+    
     if len(jetflavs_list)==3:
         top_truth = 1
     elif len(fatjetflavs_list)==3:
@@ -214,6 +215,17 @@ def truth(j0=0, j1=0, j2=0, fj=0):
         top_truth = 1
     else:
         top_truth = 0
+
+    # if len(jetflavs_list) != 0 and len(fatjetflavs_list) != 0:
+    #     print('jet:', jetflavs_list)
+    #     print('fatjet:' ,fatjetflavs_list)
+    #     print(top_truth)
+    # elif len(jetflavs_list) != 0 and len(fatjetflavs_list) ==0:
+    #     print('jet:', jetflavs_list)
+    #     print(top_truth)
+    # elif len(fatjetflavs_list) != 0 and len(jetflavs_list) == 0:
+    #     print('fatjet: ',fatjetflavs_list)
+    #     print(top_truth)
     return top_truth
 
 def top_p4(category, top, jets, fatjets):

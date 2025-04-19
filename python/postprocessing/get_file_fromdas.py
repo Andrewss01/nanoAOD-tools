@@ -5,7 +5,7 @@ def get_files_string(dataset):
     username = str(os.environ.get('USER'))
     inituser = str(os.environ.get('USER')[0])
     if username == 'apuglia':
-        uid = 180940
+        uid = 180940 
     if not hasattr(dataset, "dataset"): 
         return "ERROR: a sample with dataset method is required"
     else:
@@ -21,8 +21,12 @@ def get_files_string(dataset):
         return files_string.split('\n')
 
 
-ZtoNu_4Jets_800to1500       = sample(ROOT.kGray, 1, 1001, "ZtoNu_4Jets_800to1500", "ZtoNu_4Jets_800to1500")
+# ZtoNu_4Jets_800to1500       = sample(ROOT.kGray, 1, 1001, "ZtoNu_4Jets_800to1500", "ZtoNu_4Jets_800to1500")
 
-ZtoNu_4Jets_800to1500.dataset = "/Zto2Nu-4Jets_HT-800to1500_TuneCP5_13p6TeV_madgraphMLM-pythia8/fsalerno-QCD_HT_800_1500_2022-0fa328e40e38f44cd311b92489b92b5b/USER"
-strings = get_files_string(ZtoNu_4Jets_800to1500)
-print(strings[0])
+# ZtoNu_4Jets_800to1500.dataset = "/Zto2Nu-4Jets_HT-800to1500_TuneCP5_13p6TeV_madgraphMLM-pythia8/fsalerno-QCD_HT_800_1500_2022-0fa328e40e38f44cd311b92489b92b5b/USER"
+# strings = get_files_string(ZtoNu_4Jets_800to1500)
+# print(strings)
+# for num_file, string in enumerate(strings):
+#     file = ROOT.TFile.Open("root://cms-xrd-global.cern.ch/"+string)
+#     tree = file.Get('Events')
+#     print('file num ', num_file, 'num entries ', tree.GetEntries())

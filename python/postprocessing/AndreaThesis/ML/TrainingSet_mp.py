@@ -135,8 +135,8 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, pt_cut, 
                 
                 if best_top_category == 0:
                     
-                    fj = goodfatjets[t.idxFatJet]
-                    j0,j1,j2 = goodjets[t.idxJet0], goodjets[t.idxJet1], goodjets[t.idxJet2]
+                    fj = fatjets[t.idxFatJet]
+                    j0,j1,j2 = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
                     
                     fatjet_toappend = fill_fj(fj_dnn = fatjet_toappend, fj = fj, idx_top = 0)
                     jet_toappend = fill_jets(jets_dnn = jet_toappend, j0=j0,j1=j1,j2=j2, sumjet = (j0.p4()+j1.p4()+j2.p4()), fj_phi = fj.phi, fj_eta = fj.eta, idx_top = 0)
@@ -152,7 +152,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, pt_cut, 
                     
                     fj = ROOT.TLorentzVector()
                     fj.SetPtEtaPhiM(0,0,0,0)
-                    j0,j1,j2 = goodjets[t.idxJet0], goodjets[t.idxJet1], goodjets[t.idxJet2]
+                    j0,j1,j2 = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
                     
                     
                     jet_toappend = fill_jets(jets_dnn = jet_toappend, j0=j0,j1=j1,j2=j2, sumjet = (j0.p4()+j1.p4()+j2.p4()), fj_phi = fj.Phi(), fj_eta = fj.Eta(), idx_top = 0)
@@ -166,8 +166,8 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, pt_cut, 
                     
                 else:
                     
-                    fj = goodfatjets[t.idxFatJet]
-                    j0,j1,j2 = goodjets[t.idxJet0], goodjets[t.idxJet1], goodjets[t.idxJet2]
+                    fj = fatjets[t.idxFatJet]
+                    j0,j1,j2 = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
                     
                     fatjet_toappend = fill_fj(fj_dnn = fatjet_toappend, fj = fj, idx_top = 0)
                     jet_toappend = fill_jets(jets_dnn = jet_toappend, j0=j0,j1=j1,j2=0, sumjet = (j0.p4()+j1.p4()), fj_phi = fj.phi, fj_eta = fj.eta, idx_top = 0)
@@ -286,7 +286,10 @@ def main( component=component, inFile_to_open=inFile_to_open, nev=nev, path_to_p
     output        = {component: {cat: 0 for cat in categories}}
     #Define the number of workers and batch size
     num_workers = mp.cpu_count()
-    batch_size = nev//num_workers
+    if nev < num_workers:
+        batch_size = 1
+    else:
+        batch_size = nev//num_workers
     print(f"Batch size:\t{batch_size}")
     batches = [range(i, min(i + batch_size, nev)) for i in range(0, nev, batch_size)]
 

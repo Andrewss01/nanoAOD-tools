@@ -7,53 +7,121 @@ import numpy as np
 
 
 
-def fill_histo(object_type, sv_list, var_name, histo, type_histo):
-    if object_type == 'top':
+def fill_histo(sv_list, var_name, histo, type_histo):
+    # if object_type == 'top':
+    if var_name != 'nsv':
         sv_values = []
         for sv_idx in sv_list: 
             sv = SVs[sv_idx] 
             # print(type(sv))
             sv_var  = getattr(sv,var_name)
             sv_values.append(sv_var)
-
+        
         if len(sv_values) != 0:
             if type_histo == '_mean_':
                 histo.Fill(np.mean(sv_values))
             elif type_histo == '_max_':
                 histo.Fill(np.max(sv_values))
+            elif type_histo == '_max-mean_':
+                histo.Fill(np.max(sv_values)/np.mean(sv_values))
 
+    else:
+        sv_values = len(sv_list)
+
+        histo.Fill(sv_values)
+
+
+
+    
+
+def top_matched(top,jets, fatjets):
+    # to_print = ['no', 'no', 'no', 'no']
+    idx_jet0 = top.idxJet0
+    if idx_jet0 != -1:
+        jet0 = jets[idx_jet0]
+        if '5' in str(abs(jet0.pdgId)):
+            return False
+        # else:
+        # to_print[0] = jet0.pdgId
+
+    idx_jet1 = top.idxJet1
+    if idx_jet1 != -1:
+        jet1 = jets[idx_jet1]
+        if '5' in str(abs(jet1.pdgId)):
+            return False    
+        # else:
+        # to_print[1] = jet1.pdgId
+        
+    idx_jet2 = top.idxJet2
+    if idx_jet2 != -1:
+        jet2 = jets[idx_jet2]
+        if '5' in str(abs(jet2.pdgId)):
+            return False
+        # else:
+        # to_print[2] = jet2.pdgId
+        
+    idx_fatjet = top.idxFatJet
+    if idx_fatjet != -1:
+        fatjet = fatjets[idx_fatjet]
+        
+        if '5' in str(abs(fatjet.pdgId)):
+            return False
+        # else: 
+        # to_print[3] = fatjet.pdgId
+    
+
+    
+    return True
 
 
 from argparse import ArgumentParser
 parser                      = ArgumentParser()
 parser.add_argument("-inFile_to_open",                      dest="inFile_to_open",                      default=None    ,       required=True      ,       type=str,       help="path to root file to run")
-parser.add_argument("-type_plot"     ,                      dest="type_plot"     ,                      default="_mean_",       required=False     ,       type=str,       help="wite _mean_ or _max_ and it will fill histogram with means or max of the feautres")  
+parser.add_argument("-type_plot"     ,                      dest="type_plot"     ,                      default="_max-mean_" ,       required=False     ,       type=str,       help="wite _mean_ or _max_ and it will fill histogram with means or max of the feautres")  
 parser.add_argument("-out_file"      ,                      dest="out_file"      ,                      default=None    ,       required=True      ,       type=str,       help="path of root file in which store histograms")
 parser.add_argument("-variabili"     ,                      dest="variabili"     ,                      default=None    ,       required=True      ,       type=str,       help="variables to plot") 
 parser.add_argument("-verbose"       ,                      dest="verbose"       ,                      default=False   ,       action="store_true",                       help="Default do not print")
-
+parser.add_argument("-dataset"       ,                      dest="dataset"       ,                      default=None    ,       required=True      ,       type=str,       help="Component name of the dataset") 
 options                     = parser.parse_args()
 
-usage  = "python3 Analysis -inFile_to_open /eos/user/a/apuglia/thesis/Datasets/nano_mcRun3_ttsl1_Skim_total.root -out_file /eos/user/a/apuglia/thesis/SV_analysis.root -variabili dlen,dxy,ntracks,mass,z"
+usage  = "python3 Analysis_SVs.py -inFile_to_open /eos/user/a/apuglia/thesis/Datasets/nano_mcRun3_ttsl1_Skim_total.root -out_file /eos/user/a/apuglia/thesis/SV_analysis.root -variabili dlen,dxy,ntracks,mass,z,nsv -dataset ttsl"
 ### ARGS ###
 inFile_to_open              = options.inFile_to_open
 type_plot                   = options.type_plot
 verbose                     = options.verbose
 out_file                    = options.out_file
-variabili                   = options.variabli
+data_name                   = options.dataset
+variabili                   = (options.variabili).split(',')
 
 dict_variabili = {}
 for index in range(len(variabili)):
-    dict_variabili[index]  = variabili[i]
+    dict_variabili[index]  = variabili[index]
+
+print(dict_variabili)
 
 
-components = ['true_tops', 'false_tops', 'b_jets', 'no_b_jets', 'b_fat_jets', 'no_b_fat_jets']
+components = ['true_tops', 'no_b_false_tops', 'b_false_tops', 'b_jets', 'no_b_jets']
 
 histo_list = []
+list_top, list_jet, list_fat_jet = [], [], []
 for var_name in dict_variabili.values():
-    for c in components:
-        histo = ROOT.TH1F('h_'+c+type_plot+var_name, 'h_'+c+type_plot+var_name, 100, 0 ,100)
-        histo_list.append(histo) 
+    
+    for num,c in enumerate(components):
+        #tt_true_tops_max_dlen
+        #h_true_tops_max_dlen_ttsl
+        histo = ROOT.TH1F(data_name+"_"+c+type_plot+var_name, data_name+"_"+c+type_plot+var_name, 100, 0 ,30)
+        if num <= 2:
+            list_top.append(histo) 
+        elif num in range(3,5):
+            list_jet.append(histo)
+        # elif num in range(4,6):
+        #     list_fat_jet.append(histo)
+histo_list.append(list_top)
+histo_list.append(list_jet)
+    # histo_list.append(list_fat_jet)
+
+
+
 
 rfile         = ROOT.TFile.Open(inFile_to_open)
 tree          = InputTree(rfile.Get("Events"))
@@ -85,14 +153,23 @@ for i in range(tree.GetEntries()):
         stop_idx  = sv_indexes.index(-(top_num + 2))
         sv_to_append = sv_indexes[start_idx + 1: stop_idx]
         if top.truth == 1:
-            for histo_idx in range(len(histo_list)):
-                if histo_idx % 2 == 0: 
-                    fill_histo(object_type= 'top', sv_list= sv_to_append, var_name= dict_variabili[str(histo_idx//2)], type_histo= type_histo, histo = histo_list[histo_idx])
+            # top_matched(top,jets,fatjets)
+            for histo_idx in range(len(histo_list[0])):
+                if histo_idx % 3 == 0: 
+                    fill_histo(sv_list= sv_to_append, var_name= dict_variabili[histo_idx//3], type_histo= type_plot, histo = histo_list[0][histo_idx])
         else:
-            for histo_idx in range(len(histo_list)):
-                if histo_idx %2 != 0:
-                    fill_histo(object_type= 'top', sv_list= sv_to_append, var_name= dict_variabili[str(histo_idx//2)], type_histo= type_histo, histo= histo_list[histo_idx])
-        
+            if top_matched(top, jets, fatjets) :
+                
+                for histo_idx in range(len(histo_list[0])):
+                    if histo_idx %3 == 1:
+                        fill_histo(sv_list= sv_to_append, var_name= dict_variabili[histo_idx//3], type_histo= type_plot, histo= histo_list[0][histo_idx])
+
+            if not top_matched(top,jets,fatjets):
+
+                for histo_idx in range(len(histo_list[0])):
+                    if histo_idx % 3 == 2:
+                        fill_histo(sv_list= sv_to_append, var_name= dict_variabili[histo_idx//3], type_histo= type_plot, histo= histo_list[0][histo_idx])
+            
     goodjets_idx, goodfatjets_idx = [], []
     for goodjet in goodjets:
         goodjets_idx.append(goodjet.jetIdx)
@@ -104,7 +181,7 @@ for i in range(tree.GetEntries()):
     for sv in SVs:
         jet_idx = sv.JetIdx
         fj_idx  = sv.FatJetIdx
-
+        sv_idx = sv.Idx
         if jet_idx != -1 and jet_idx in goodjets_idx:
             if jets_sv_index[jet_idx] == 0.0:
                 jets_sv_index[jet_idx] = [sv_idx]
@@ -114,28 +191,25 @@ for i in range(tree.GetEntries()):
         if fj_idx != -1 and fj_idx in goodfatjets_idx:
             if fatjet_sv_index[fj_idx] == 0.0:
                 fatjet_sv_index[fj_idx] = [sv_idx]
+            else: 
+                fatjet_sv_index[fj_idx].append(sv_idx)
+    # print(jets_sv_index)
+#Adesso prendiamo per ogni jet 
+
+    for jet_idx in range(len(jets_sv_index)):
+        sv_index_jet = jets_sv_index[jet_idx]
+        jet = jets[jet_idx]
+        jet_pdgid = jet.pdgId
+
+        if type(jets_sv_index[jet_idx]) == list:
+            if '5' in str(abs(jet_pdgid)):
+                for histo_idx in range(len(histo_list[1])):
+                    if histo_idx %2 == 0:
+                        fill_histo(sv_list= sv_index_jet, var_name= dict_variabili[histo_idx//2], type_histo= type_plot, histo = histo_list[1][histo_idx])
             else:
-                
-
-    #Adesso noi abbiamo i jetidx riferiti alla collection SVs: facciamo una lista di liste che invece ci da le informazioni sugli svs a partire dai jets
-    # jets_svs, fatjets_svs = list(np.zeros(len(jets))), list(np.zeros(len(fatjets))) #saranno liste dove al posto i-esimo, che corrisponde all'i-esimo jet (dopo aver controllato che sia un good jet), 
-    #appendiamo una lista di indici di sv
-
-    # for sv in SVs:
-    #     jet_idx = sv.JetIdx
-    #     fj_idx = sv.FatJetIdx
-    #     if jet_idx != -1 and jet_idx in goodjet_idx:
-    #         if jets_svs[jet_idx] == 0.0:
-    #             jets_svs[jet_idx] = [sv.Idx]
-    #         else:
-    #             jets_svs[jet_idx].append(sv.Idx)
-        
-    #     if fj_idx != -1 and fj_idx in goodfatjet_idx:
-    #         if fatjets_svs[fj_idx] == 0.0:
-    #             fatjets_svs[fj_idx] = [sv.Idx]
-    #         else:
-    #             fatjets_svs[fj_idx].append(sv.Idx)
-
+                for histo_idx in range(len(histo_list[1])):
+                    if histo_idx %2 != 0:
+                        fill_histo( sv_list= sv_index_jet, var_name= dict_variabili[histo_idx//2], type_histo= type_plot, histo= histo_list[1][histo_idx])
     
     # for jet_idx in range(len(jets_svs)):
     #     jet = jets[jet_idx]
@@ -151,7 +225,7 @@ for i in range(tree.GetEntries()):
         #     print('EVNTO', i, 'TOP NUMERO', top_num,  'NON CI SONO SVS')
         #     print(sv_indexes[start_idx - 1: stop_idx +1])
         
-            # fill_dict(dict = SVs_true_tops, object_type= 'top', lista = indexes, obj_idx= top_num, histo = h_len_true_tops)
+            # fill_dict(dict = SVs_true_tops, lista = indexes, obj_idx= top_num, histo = h_len_true_tops)
         # elif top.truth == 0 and top_num <= 5:
         #     fill_dict(dict = SVs_false_tops, object_type= 'top', lista = indexes, obj_idx= top_num, histo= h_len_false_tops)
 
@@ -240,9 +314,27 @@ for i in range(tree.GetEntries()):
 # print(SVs_bmatch_jets['dlen'])
 # print(SVs_bmatch_jets['nsv'])
 
-file = ROOT.TFile('/eos/user/a/apuglia/thesis/prova_file.root', 'RECREATE')
-file.cd()
-for histo in histo_list:
+if type_plot == '_mean_':
+    file_tops = ROOT.TFile('/eos/user/a/apuglia/thesis/tops_histos'+type_plot+ '.root'   , 'UPDATE')
+    file_jets = ROOT.TFile('/eos/user/a/apuglia/thesis/jet_histos' + type_plot + '.root' , 'UPDATE')
+
+elif type_plot == '_max_': 
+    file_tops = ROOT.TFile('/eos/user/a/apuglia/thesis/tops_histos'+type_plot+ '.root'   , 'UPDATE')
+    file_jets = ROOT.TFile('/eos/user/a/apuglia/thesis/jet_histos' + type_plot + '.root' , 'UPDATE')
+
+elif type_plot == '_max-mean_':
+    file_tops = ROOT.TFile('/eos/user/a/apuglia/thesis/tops_histos_'+type_plot+ '.root'   , 'RECREATE')
+    file_jets = ROOT.TFile('/eos/user/a/apuglia/thesis/jet_histos_' +type_plot+ '.root' , 'RECREATE')
+file_tops.cd()
+
+for histo in histo_list[0]:
     histo.Write()
 
-file.Close()
+
+file_tops.Close()
+
+file_jets.cd()
+for histo in histo_list[1]:
+    histo.Write()
+
+file_jets.Close()
