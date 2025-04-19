@@ -25,22 +25,22 @@ start_time = time.time()
 def fill_mass(mass_dnn, idx_top, j0, j1, j2, fj, variables_cluster):
     if fj == None:#3j0fj
         mass_dnn[idx_top, 0] = (j0.p4()+j1.p4()+j2.p4()).M()
-        mass_dnn[idx_top, 1] = (j0.p4()+j1.p4()+j2.p4()).M()
-        mass_dnn[idx_top, 2] = (j0.p4()+j1.p4()+j2.p4()).Pt()
+        # mass_dnn[idx_top, 1] = (j0.p4()+j1.p4()+j2.p4()).M()
+        mass_dnn[idx_top, 1] = (j0.p4()+j1.p4()+j2.p4()).Pt()
     elif j2 == None:#2j1fj
         mass_dnn[idx_top, 0] = (j0.p4()+j1.p4()).M()
         top                  = top2j1fj(fj, j0, j1)
         mass_dnn[idx_top, 1] = top.M()
-        mass_dnn[idx_top, 2] = top.Pt()
+        # mass_dnn[idx_top, 2] = top.Pt()
     else: #3j1fj
         mass_dnn[idx_top, 0] = (j0.p4()+j1.p4()+j2.p4()).M()
         top                  = top3j1fj(fj, j0, j1, j2)
         mass_dnn[idx_top, 1] = top.M()
-        mass_dnn[idx_top, 2] = top.Pt()
+        # mass_dnn[idx_top, 2] = top.Pt()
     # if isinstance(variables_cluster,list):
     #     mass_dnn[idx_top, 2] = variables_cluster[0]
     #     mass_dnn[idx_top, 3] = variables_cluster[1]
-    #     mass_dnn[idx_top, 4] = variables_cluster[2]
+    #     mass_dnn[idx_top, 4] = variables_cluster[2] 
     return mass_dnn
 
 def fill_fj(fj_dnn, fj, idx_top):
@@ -60,9 +60,12 @@ def fill_fj(fj_dnn, fj, idx_top):
     elif year==2022: 
         fj_dnn[idx_top, 0]  = fj.area
         fj_dnn[idx_top, 1]  = fj.btagDeepB
-        fj_dnn[idx_top, 2]  = fj.particleNetWithMass_QCD
-        fj_dnn[idx_top, 3]  = fj.particleNetWithMass_TvsQCD
-        fj_dnn[idx_top, 4]  = fj.particleNetWithMass_WvsQCD
+        fj_dnn[idx_top, 2]  = fj.particleNetWithMass_TvsQCD
+        fj_dnn[idx_top, 3]  = fj.particleNetWithMass_WvsQCD
+        fj_dnn[idx_top, 4]  = fj.particleNet_QCD
+        fj_dnn[idx_top, 5]  = fj.particleNetWithMass_QCD
+        fj_dnn[idx_top, 6]  = fj.particleNet_XbbVsQCD
+        fj_dnn[idx_top, 7]  = fj.particleNet_XqqVsQCD
         fj_dnn[idx_top, 5]  = fj.eta
         fj_dnn[idx_top, 6]  = fj.mass
         fj_dnn[idx_top, 7]  = fj.phi
@@ -99,7 +102,7 @@ def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top):
             jets_dnn[idx_top, 2, 7] = deltaEta(j2.eta, fj_eta)
     elif year==2022:
         jets_dnn[idx_top, 0, 0] = j0.area
-        jets_dnn[idx_top, 0, 1] = j0.btagPNetB
+        jets_dnn[idx_top, 0, 1] = j0.btagDeepFlavB
         jets_dnn[idx_top, 0, 2] = deltaEta(j0.eta, sumjet.Eta())#j0.#delta eta 3jets-jet
         jets_dnn[idx_top, 0, 3] = j0.mass
         jets_dnn[idx_top, 0, 4] = deltaPhi(j0.phi, sumjet.Phi())#j0.#delta phi 3jets-jet
@@ -108,7 +111,7 @@ def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top):
         jets_dnn[idx_top, 0, 7] = deltaEta(j0.eta, fj_eta)#j0.#deltaeta fj-jet
         
         jets_dnn[idx_top, 1, 0] = j1.area
-        jets_dnn[idx_top, 1, 1] = j1.btagPNetB
+        jets_dnn[idx_top, 1, 1] = j1.btagDeepFlavB
         jets_dnn[idx_top, 1, 2] = deltaEta(j1.eta, sumjet.Eta())
         jets_dnn[idx_top, 1, 3] = j1.mass
         jets_dnn[idx_top, 1, 4] = deltaPhi(j1.phi, sumjet.Phi())
@@ -117,7 +120,7 @@ def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top):
         jets_dnn[idx_top, 1, 7] = deltaEta(j1.eta, fj_eta)
         if hasattr(j2,"pt"):
             jets_dnn[idx_top, 2, 0] = j2.area
-            jets_dnn[idx_top, 2, 1] = j2.btagPNetB
+            jets_dnn[idx_top, 2, 1] = j2.btagDeepFlavB
             jets_dnn[idx_top, 2, 2] = deltaEta(j2.eta, sumjet.Eta())#j2.#delta eta fj-jet
             jets_dnn[idx_top, 2, 3] = j2.mass
             jets_dnn[idx_top, 2, 4] = deltaPhi(j2.phi, sumjet.Phi())#j2.#delta phi fatjet-jet
@@ -201,7 +204,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
     rfile         = ROOT.TFile.Open(inFile_to_open)
     #print("\nprova type tree\n",type(rfile.Get("Events")),"\n")
     tree          = InputTree(rfile.Get("Events"))
-    n_SVs = len(tree.SV_pt)
+    
     doLoop        = True
     # Skip if empty file
     if tree.GetEntries()==0:
@@ -212,12 +215,13 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
             data_jets      = np.zeros((1,3,8))
             data_fatjets   = np.zeros((1,12))
         elif year==2022:        
+            n_SVs = len(tree.SV_pt)
             data_jets           = np.zeros((1,3,8))
-            data_fatjets        = np.zeros((1,9))
+            data_fatjets        = np.zeros((1,12))
             #mergia jet e fatjet e salvane sui 40 !!senza overlap e controlla l'ordinamento in pt eindice di distanza e se appatriene ejet fgj o entrambi
             data_PFC         = np.zeros((1,n_PFCs,13)) #!! setta il masssimo delle 20 da prendere e andranno usate LSTM
             data_SV          = np.zeros((1, n_SVs,12 ))
-        data_mass      = np.zeros((1,3))
+        data_mass      = np.zeros((1,2))
         data_label     = np.zeros((1,1))
         event_category = np.zeros((1,1))
         if verbose:
@@ -229,12 +233,13 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
             event        = Event(tree, i)
             jets         = Collection(event, "Jet")
             fatjets      = Collection(event, "FatJet")
-            # tops       = Collection(event, "TopHighPt")
+            
             tops         = Collection(event, "TopMixed")
             ntops        = len(tops)
+
             PFCands      = Collection(event,"PFCands")
-            # top_PFC_idx  = Collection(event,"Indexes")
             SV_vertexes  = Collection(event, "SV")
+
             Indexes_pfc  = Collection(event, "IndexesPFC")
             Indexes_sv   = Collection(event, "IndexesSV") 
             
@@ -248,188 +253,188 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
             if ntops==0: 
                 continue   
             for top_num, t in enumerate(tops):
-                if t.pt>=pt_cut:
+                # if t.pt>=pt_cut:
                     # if select_top_over_threshold: # AGGIUSTA NOME DATO ALLO SCORE, ALTRIMENTI DA ERRORE
                     #     if t.score_base<thr:
                     #         continue
                     #     # pass
-                    best_top_category       = topcategory(t)
-                    
-                    if year==2018:
-                        jet_toappend            = np.zeros((1,3,8))
-                        fatjet_toappend         = np.zeros((1,12))
-                    elif year==2022:
-                        jet_toappend            = np.zeros((1,3,8))
-                        fatjet_toappend         = np.zeros((1,9))
-                        PFC_toappend            = np.zeros((1,n_PFCs,13))
-                        SVs_toappend            = np.zeros((1,n_SVs, 12))
-                    mass_toappend               = np.zeros((1,3))
-                    label_toappend              = np.zeros((1,1))
-                    event_category_toappend     = np.zeros((1,1))
-
-                    PFCs=[]
-                    pfc_indexes=[]
-                    sv_indexes = []
-                    SVs = []
-
-                    for idx in Indexes_pfc:    
-                        #print(idx.idxPFC)
-                        pfc_indexes.append(idx.idxPFC)
-                    
-                    for idx in Indexes_sv:
-                        sv_indexes.append(idx.idxSV)
-
-                    #print(indexes)
-                    #print(idx.idxPFC)
-
-                    start_index_pfc = pfc_indexes.index(-(top_num+1))
-                    end_index_pfc = pfc_indexes.index(-(top_num+2))
-                    idx_pfc_to_append = pfc_indexes[start_index_pfc+1:end_index_pfc]
-
-                    start_index_sv = sv_indexes.index(-(top_num + 1))
-                    end_index_sv   = sv_indexes.index(-(top_num + 2))
-                    idx_sv_to_append = sv_indexes[start_index_sv+1 : end_index_sv]
-                    for particle in PFCands: #ciclo sulle particles
-                        if particle.Idx in idx_pfc_to_append:
-                            PFCs.append(particle)
+                best_top_category       = topcategory(t)
                 
-                    for vertex in SV_vertexes:
-                        if vertex.Idx in idx_sv_to_append:
-                            SVs.append(vertex)
+                if year==2018:
+                    jet_toappend            = np.zeros((1,3,8))
+                    fatjet_toappend         = np.zeros((1,12))
+                elif year==2022:
+                    jet_toappend            = np.zeros((1,3,8))
+                    fatjet_toappend         = np.zeros((1,12))
+                    PFC_toappend            = np.zeros((1,n_PFCs,13))
+                    SVs_toappend            = np.zeros((1,n_SVs, 12))
+                mass_toappend               = np.zeros((1,2))
+                label_toappend              = np.zeros((1,1))
+                event_category_toappend     = np.zeros((1,1))
 
-                    if t.truth!=-1:
-                        PFC_toappend    = fill_PFCs(n_PFCs=n_PFCs,
-                                                PFCs_dnn=PFC_toappend, 
-                                                PFCs=PFCs, 
+                PFCs=[]
+                pfc_indexes=[]
+                sv_indexes = []
+                SVs = []
+
+                for idx in Indexes_pfc:    
+                    #print(idx.idxPFC)
+                    pfc_indexes.append(idx.idxPFC)
+                
+                for idx in Indexes_sv:
+                    sv_indexes.append(idx.idxSV)
+
+                #print(indexes)
+                #print(idx.idxPFC)
+
+                start_index_pfc = pfc_indexes.index(-(top_num+1))
+                end_index_pfc = pfc_indexes.index(-(top_num+2))
+                idx_pfc_to_append = pfc_indexes[start_index_pfc+1:end_index_pfc]
+
+                start_index_sv = sv_indexes.index(-(top_num + 1))
+                end_index_sv   = sv_indexes.index(-(top_num + 2))
+                idx_sv_to_append = sv_indexes[start_index_sv+1 : end_index_sv]
+                for particle in PFCands: #ciclo sulle particles
+                    if particle.Idx in idx_pfc_to_append:
+                        PFCs.append(particle)
+            
+                for vertex in SV_vertexes:
+                    if vertex.Idx in idx_sv_to_append:
+                        SVs.append(vertex)
+
+                # if t.truth!=-1:
+                PFC_toappend    = fill_PFCs(n_PFCs=n_PFCs,
+                                        PFCs_dnn=PFC_toappend, 
+                                        PFCs=PFCs, 
+                                        idx_top=0,
+                                        pt_top=t.pt,
+                                        eta_top=t.eta,
+                                        phi_top=t.phi,
+                                        M_top=t.mass)        
+                
+                SVs_toappend    = fill_SVs(n_SVs= n_SVs, 
+                                            SVs_dnn= SVs_toappend, 
+                                            SVs = SVs, 
+                                            idx_top = 0, 
+                                            pt_top = t.pt, 
+                                            eta_top = t.eta,
+                                            phi_top = t.phi,
+                                            M_top = t.mass)
+                
+                if best_top_category == 0: #3j1fj
+                    fj              = fatjets[t.idxFatJet]
+                    j0, j1, j2      = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
+                
+                    fatjet_toappend = fill_fj(fj_dnn=fatjet_toappend,
+                                            fj=fj,
+                                            idx_top=0
+                                            )
+                    jet_toappend    = fill_jets(jets_dnn=jet_toappend,
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=j2,
+                                                sumjet=(j0.p4()+j1.p4()+j2.p4()),
+                                                fj_phi=fj.phi,
+                                                fj_eta=fj.eta,
+                                                idx_top=0
+                                                )
+                    mass_toappend   = fill_mass(mass_dnn=mass_toappend,
                                                 idx_top=0,
-                                                pt_top=t.pt,
-                                                eta_top=t.eta,
-                                                phi_top=t.phi,
-                                                M_top=t.mass)        
-                        
-                        SVs_toappend    = fill_SVs(n_SVs= n_SVs, 
-                                                   SVs_dnn= SVs_toappend, 
-                                                   SVs = SVs, 
-                                                   idx_top = 0, 
-                                                   pt_top = t.pt, 
-                                                   eta_top = t.eta,
-                                                   phi_top = t.phi,
-                                                   M_top = t.mass)
-                        
-                        if best_top_category == 0: #3j1fj
-                            fj              = fatjets[t.idxFatJet]
-                            j0, j1, j2      = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
-                        
-                            fatjet_toappend = fill_fj(fj_dnn=fatjet_toappend,
-                                                    fj=fj,
-                                                    idx_top=0
-                                                    )
-                            jet_toappend    = fill_jets(jets_dnn=jet_toappend,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=j2,
-                                                        sumjet=(j0.p4()+j1.p4()+j2.p4()),
-                                                        fj_phi=fj.phi,
-                                                        fj_eta=fj.eta,
-                                                        idx_top=0
-                                                        )
-                            mass_toappend   = fill_mass(mass_dnn=mass_toappend,
-                                                        idx_top=0,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=j2,
-                                                        fj=fj,
-                                                        variables_cluster=variables_cluster
-                                                        )
-                            
-                            if not "QCD" in component:
-                                label_toappend[0] = truth(fj=fj,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=j2
-                                                        ) 
-                            event_category_toappend[0] = best_top_category
-                            
-                        elif best_top_category == 1: #3j0fj
-                            fj              = ROOT.TLorentzVector()
-                            fj.SetPtEtaPhiM(0,0,0,0)
-                            j0, j1, j2      = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
-                            
-                            jet_toappend    = fill_jets(jets_dnn=jet_toappend,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=j2,
-                                                        sumjet=(j0.p4()+j1.p4()+j2.p4()),
-                                                        fj_phi=fj.Phi(),
-                                                        fj_eta=fj.Eta(),
-                                                        idx_top=0
-                                                        )
-                            mass_toappend   = fill_mass(mass_dnn=mass_toappend,
-                                                        idx_top=0,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=j2,
-                                                        fj=None,
-                                                        variables_cluster=variables_cluster
-                                                        )
-                            if not "QCD" in component: 
-                                label_toappend[0] = truth(j0=j0,
-                                                        j1=j1,
-                                                        j2=j2
-                                                        ) 
-                            event_category_toappend[0] = best_top_category
-                        else: #2j1fj
-                            fj              = fatjets[t.idxFatJet]
-                            j0, j1          = jets[t.idxJet0], jets[t.idxJet1]
-
-                            fatjet_toappend = fill_fj(fj_dnn=fatjet_toappend,
-                                                    fj=fj,
-                                                    idx_top=0
-                                                    )
-                            jet_toappend    = fill_jets(jets_dnn=jet_toappend,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=0,
-                                                        sumjet=(j0.p4()+j1.p4()),
-                                                        fj_phi=fj.phi,
-                                                        fj_eta=fj.eta,
-                                                        idx_top=0
-                                                        )
-                            mass_toappend   = fill_mass(mass_dnn=mass_toappend,
-                                                        idx_top=0,
-                                                        j0=j0,
-                                                        j1=j1,
-                                                        j2=None,
-                                                        fj=fj,
-                                                        variables_cluster=variables_cluster
-                                                        )
-                            if not "QCD" in component: 
-                                label_toappend[0] = truth(fj=fj,
-                                                        j0=j0,
-                                                        j1=j1
-                                                        ) 
-                            event_category_toappend[0] = best_top_category
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=j2,
+                                                fj=fj,
+                                                variables_cluster=variables_cluster
+                                                )
                     
-                    # append single-top information to all-tops information
-                    data_jets         = np.append(data_jets,      jet_toappend,            axis = 0)
-                    data_fatjets      = np.append(data_fatjets,   fatjet_toappend,         axis = 0)
-                    data_PFC          = np.append(data_PFC,       PFC_toappend,            axis = 0)
-                    data_SV           = np.append(data_SV,        SVs_toappend,            axis = 0)
-                    #print("data", data_mass,"\nto append", mass_toappend)
-                    data_mass       = np.append(data_mass,      mass_toappend,           axis = 0)
-                    if (label_toappend[0]==2 and verbose): 
-                        print(component, i, label_toappend)
-                    data_label      = np.append(data_label,     label_toappend,          axis=0)
-                    event_category  = np.append(event_category, event_category_toappend, axis=0)
-                    if (data_jets[0, 0, 0]==0):
-                        data_jets       = np.delete(data_jets,      0, axis = 0)
-                        data_fatjets    = np.delete(data_fatjets,   0, axis = 0)
-                        data_PFC        = np.delete(data_PFC,       0, axis = 0)
-                        data_SV         = np.delete(data_SV,        0, axis = 0)
-                        data_mass       = np.delete(data_mass,      0, axis = 0)
-                        data_label      = np.delete(data_label,     0, axis = 0)
-                        event_category  = np.delete(event_category, 0, axis = 0)
-                        
+                    if not "QCD" in component:
+                        label_toappend[0] = truth(fj=fj,
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=j2
+                                                ) 
+                    event_category_toappend[0] = best_top_category
+                    
+                elif best_top_category == 1: #3j0fj
+                    fj              = ROOT.TLorentzVector()
+                    fj.SetPtEtaPhiM(0,0,0,0)
+                    j0, j1, j2      = jets[t.idxJet0], jets[t.idxJet1], jets[t.idxJet2]
+                    
+                    jet_toappend    = fill_jets(jets_dnn=jet_toappend,
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=j2,
+                                                sumjet=(j0.p4()+j1.p4()+j2.p4()),
+                                                fj_phi=fj.Phi(),
+                                                fj_eta=fj.Eta(),
+                                                idx_top=0
+                                                )
+                    mass_toappend   = fill_mass(mass_dnn=mass_toappend,
+                                                idx_top=0,
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=j2,
+                                                fj=None,
+                                                variables_cluster=variables_cluster
+                                                )
+                    if not "QCD" in component: 
+                        label_toappend[0] = truth(j0=j0,
+                                                j1=j1,
+                                                j2=j2
+                                                ) 
+                    event_category_toappend[0] = best_top_category
+                else: #2j1fj
+                    fj              = fatjets[t.idxFatJet]
+                    j0, j1          = jets[t.idxJet0], jets[t.idxJet1]
+
+                    fatjet_toappend = fill_fj(fj_dnn=fatjet_toappend,
+                                            fj=fj,
+                                            idx_top=0
+                                            )
+                    jet_toappend    = fill_jets(jets_dnn=jet_toappend,
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=0,
+                                                sumjet=(j0.p4()+j1.p4()),
+                                                fj_phi=fj.phi,
+                                                fj_eta=fj.eta,
+                                                idx_top=0
+                                                )
+                    mass_toappend   = fill_mass(mass_dnn=mass_toappend,
+                                                idx_top=0,
+                                                j0=j0,
+                                                j1=j1,
+                                                j2=None,
+                                                fj=fj,
+                                                variables_cluster=variables_cluster
+                                                )
+                    if not "QCD" in component: 
+                        label_toappend[0] = truth(fj=fj,
+                                                j0=j0,
+                                                j1=j1
+                                                ) 
+                    event_category_toappend[0] = best_top_category
+            
+                # append single-top information to all-tops information
+                data_jets         = np.append(data_jets,      jet_toappend,            axis = 0)
+                data_fatjets      = np.append(data_fatjets,   fatjet_toappend,         axis = 0)
+                data_PFC          = np.append(data_PFC,       PFC_toappend,            axis = 0)
+                data_SV           = np.append(data_SV,        SVs_toappend,            axis = 0)
+                #print("data", data_mass,"\nto append", mass_toappend)
+                data_mass       = np.append(data_mass,      mass_toappend,           axis = 0)
+                if (label_toappend[0]==2 and verbose): 
+                    print(component, i, label_toappend)
+                data_label      = np.append(data_label,     label_toappend,          axis=0)
+                event_category  = np.append(event_category, event_category_toappend, axis=0)
+                if (data_jets[0, 0, 0]==0):
+                    data_jets       = np.delete(data_jets,      0, axis = 0)
+                    data_fatjets    = np.delete(data_fatjets,   0, axis = 0)
+                    data_PFC        = np.delete(data_PFC,       0, axis = 0)
+                    data_SV         = np.delete(data_SV,        0, axis = 0)
+                    data_mass       = np.delete(data_mass,      0, axis = 0)
+                    data_label      = np.delete(data_label,     0, axis = 0)
+                    event_category  = np.delete(event_category, 0, axis = 0)
+    
         # fill output
         event_category = event_category.flatten()
         for cat in categories:
@@ -439,7 +444,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                 n = 2
             else:
                 n = 0
-            batch_output[component][cat] = [data_jets[event_category == n], data_fatjets[event_category == n], data_PFC[event_category == n],  data_SV[event_category == n], data_mass[event_category == n], data_label[event_category == n]]
+            batch_output[component][cat] = [data_jets[event_category == n], data_fatjets[event_category == n],data_mass[event_category == n], data_label[event_category == n], data_PFC[event_category == n],  data_SV[event_category == n] ]
             #output[component][cat] = [data_PFC[event_category == n], data_fatPFC[event_category == n], data_mass[event_category == n], data_label[event_category == n]]
     rfile.Close()
     return batch_output
@@ -497,7 +502,7 @@ def main(year=year, component=component, inFile_to_open=inFile_to_open, nev=nev,
         print(f"inFile_to_open:                 {inFile_to_open}")
         print(f"nev:                            {nev}")
         print(f"path_to_pkl:                    {path_to_pkl}")
-        print(f"select_top_over_threshold:      {select_top_over_threshold}")
+        print(f"select_top_over_threshold:      {select_top_over_threshold}") 
         print(f"thr:                            {thr}")
         print(f"n_PFCs:                         {n_PFCs}")
         # print(f"n_SVs:                          {n_SVs}")
@@ -518,7 +523,9 @@ def main(year=year, component=component, inFile_to_open=inFile_to_open, nev=nev,
     output        = {component: {cat: 0 for cat in categories}}
     #Define the number of workers and batch size
     num_workers = mp.cpu_count()
+    print('num cup: ', num_workers, 'nev:  ', nev)
     batch_size = nev//num_workers
+    print('batch size: ',batch_size)
     print(f"Batch size:\t{batch_size}")
     batches = [range(i, min(i + batch_size, nev)) for i in range(0, nev, batch_size)]
     if verbose:
