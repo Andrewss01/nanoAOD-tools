@@ -57,7 +57,7 @@ ROOT.gStyle.SetOptStat(0)
 
 ### ADD ARGUMENTS
 
-usage = 'python3 Training_MC.py -s tt,zjets -i /eos/user/a/apuglia/thesis/training_dataset/trainingSet_pf_sv_10k.pkl -m ./models/model_1.h5 -j ./scores_model_1.json -g ./grafiche/model_1 -v True -o False'
+usage = 'python3 Training_PF_SV.py -s TT,ZJetsto2Nu_800to1500 -i /eos/user/a/apuglia/thesis/training_dataset/trainingSet_training_26_04_2025.pkl -m ./models/model_debug_2.h5 -j ./scores_model_debug_2.json -g ./grafiche/model_debug_2 -v True -o True'
 parser = argparse.ArgumentParser(usage)
 parser.add_argument('-s', '--samples'  , dest = 'samples'   ,  required = True)
 parser.add_argument('-i', '--inFile'   , dest = 'inFile'    ,  required = True)
@@ -80,6 +80,7 @@ multiple_outputs = args.multiscore
 with open(inFile, 'rb') as fpkl:
     dataset = pkl.load(fpkl)
 components = dataset.keys()
+print('components: ', components)
 categories = ['3j1fj', '3j0fj', '2j1fj']
 
 ### REMOVE EMPTY COMPONENTS
@@ -266,9 +267,9 @@ class trainer:
                      epochs = max_epochs, 
                      batch_size = batch_size, verbose = 1)
 
-        self.best_hyperparameters = tuner.get_best_hyperparameters(num_trials=1)
+        self.best_hyperparameters = (tuner.get_best_hyperparameters(num_trials=1))[0].values
         #self.model = tuner.hypermodel.build(self.best_hyperparameters)
-        print(f'best hps found: \n {self.best_hyperparameters[0].values}')
+        print(f'best hps found: \n {self.best_hyperparameters}')
         #return self.best_hyperparameters
     
     def training(self, validation_split = 0.3, epochs = 50, batch_size = 1, verbose = True, save_model = True, path_to_model = outModel):
@@ -514,18 +515,18 @@ if verbose:
 path_to_model_folder = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/ML' 
 epochs, batch_size        = 1000, 250
 
-if not os.path.exists(path_to_model_folder + "/best_hps_jets_fatjets.json"):
+if not os.path.exists(path_to_model_folder + "/best_hps_jets_fatjets_debug.json"):
     trainer1 = trainer(*data)
     trainer1.split(0.3)
-    trainer1.tune_hps(max_epochs= 1000, batch_size = 250, project_name = 'tuning_jets_fatjets')
+    trainer1.tune_hps(max_epochs= 1000, batch_size = 250, project_name = 'tuning_jets_fatjets_debug')
 
     best_hps = trainer1.best_hyperparameters
 #tuner.get_best_hyperparameters(num_trials=1)
-    print(f"BEST HPS FOUND:\n{best_hps[0].values}")
-    with open(f"{path_to_model_folder}/best_hps_jets_fatjets.json", "w") as jsFile:
+    print(f"BEST HPS FOUND:\n{best_hps}")
+    with open(f"{path_to_model_folder}/best_hps_jets_fatjets_debug.json", "w") as jsFile:
         # f.write(best_hps[0].values)
-        json.dump(best_hps[0].values, jsFile, indent=4)
-    trainer1.training(validation_split = 0.3, epochs = epochs, batch_size= batch_size, save_model = True, path_to_model= outModel, verbose = True)
+        json.dump(best_hps, jsFile, indent=4)
+    trainer1.training(validation_split = 0.4, epochs = epochs, batch_size= batch_size, save_model = True, path_to_model= outModel, verbose = True)
 else:
     with open(path_to_model_folder + "/best_hps_jets_fatjets.json" ) as f:
         best_hps = json.load(f)

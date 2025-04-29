@@ -26,17 +26,19 @@ def fill_mass(mass_dnn, idx_top, j0, j1, j2, fj, variables_cluster):
     if fj == None:#3j0fj
         mass_dnn[idx_top, 0] = (j0.p4()+j1.p4()+j2.p4()).M()
         # mass_dnn[idx_top, 1] = (j0.p4()+j1.p4()+j2.p4()).M()
-        mass_dnn[idx_top, 1] = (j0.p4()+j1.p4()+j2.p4()).Pt()
+        # top = 
+        mass_dnn[idx_top, 1] = ((j0.p4()+j1.p4()+j2.p4())).M()
+        mass_dnn[idx_top, 2] = ((j0.p4()+j1.p4()+j2.p4())).Pt()
     elif j2 == None:#2j1fj
         mass_dnn[idx_top, 0] = (j0.p4()+j1.p4()).M()
         top                  = top2j1fj(fj, j0, j1)
         mass_dnn[idx_top, 1] = top.M()
-        # mass_dnn[idx_top, 2] = top.Pt()
+        mass_dnn[idx_top, 2] = top.Pt()
     else: #3j1fj
         mass_dnn[idx_top, 0] = (j0.p4()+j1.p4()+j2.p4()).M()
         top                  = top3j1fj(fj, j0, j1, j2)
         mass_dnn[idx_top, 1] = top.M()
-        # mass_dnn[idx_top, 2] = top.Pt()
+        mass_dnn[idx_top, 2] = top.Pt()
     # if isinstance(variables_cluster,list):
     #     mass_dnn[idx_top, 2] = variables_cluster[0]
     #     mass_dnn[idx_top, 3] = variables_cluster[1]
@@ -66,10 +68,10 @@ def fill_fj(fj_dnn, fj, idx_top):
         fj_dnn[idx_top, 5]  = fj.particleNetWithMass_QCD
         fj_dnn[idx_top, 6]  = fj.particleNet_XbbVsQCD
         fj_dnn[idx_top, 7]  = fj.particleNet_XqqVsQCD
-        fj_dnn[idx_top, 5]  = fj.eta
-        fj_dnn[idx_top, 6]  = fj.mass
-        fj_dnn[idx_top, 7]  = fj.phi
-        fj_dnn[idx_top, 8]  = fj.pt
+        fj_dnn[idx_top, 8]  = fj.eta
+        fj_dnn[idx_top, 9]  = fj.mass
+        fj_dnn[idx_top, 10]  = fj.phi
+        fj_dnn[idx_top, 11]  = fj.pt
     return fj_dnn
 
 def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top): 
@@ -215,13 +217,13 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
             data_jets      = np.zeros((1,3,8))
             data_fatjets   = np.zeros((1,12))
         elif year==2022:        
-            n_SVs = len(tree.SV_pt)
+            n_SVs = 3
             data_jets           = np.zeros((1,3,8))
             data_fatjets        = np.zeros((1,12))
             #mergia jet e fatjet e salvane sui 40 !!senza overlap e controlla l'ordinamento in pt eindice di distanza e se appatriene ejet fgj o entrambi
             data_PFC         = np.zeros((1,n_PFCs,13)) #!! setta il masssimo delle 20 da prendere e andranno usate LSTM
             data_SV          = np.zeros((1, n_SVs,12 ))
-        data_mass      = np.zeros((1,2))
+        data_mass      = np.zeros((1,3))
         data_label     = np.zeros((1,1))
         event_category = np.zeros((1,1))
         if verbose:
@@ -268,7 +270,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                     fatjet_toappend         = np.zeros((1,12))
                     PFC_toappend            = np.zeros((1,n_PFCs,13))
                     SVs_toappend            = np.zeros((1,n_SVs, 12))
-                mass_toappend               = np.zeros((1,2))
+                mass_toappend               = np.zeros((1,3))
                 label_toappend              = np.zeros((1,1))
                 event_category_toappend     = np.zeros((1,1))
 
