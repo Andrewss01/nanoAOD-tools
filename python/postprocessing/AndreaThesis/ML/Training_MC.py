@@ -57,7 +57,7 @@ ROOT.gStyle.SetOptStat(0)
 
 ### ADD ARGUMENTS
 
-usage = 'python3 Training_MC.py -s tt,zjets -i /eos/user/a/apuglia/thesis/training_dataset/trainingSet_pf_sv_10k.pkl -m ./models/model_1.h5 -j ./scores_model_1.json -g ./grafiche/model_1 -v True -o False'
+usage = 'python3 Training_MC.py -s tt,zjets -i /eos/user/a/apuglia/thesis/training_dataset/trainingSet_10k.pkl -m ./models/model_debug_3.h5 -j ./scores_model_debug_3.json -g ./grafiche/model_3 -v True -o True'
 parser = argparse.ArgumentParser(usage)
 parser.add_argument('-s', '--samples'  , dest = 'samples'   ,  required = True)
 parser.add_argument('-i', '--inFile'   , dest = 'inFile'    ,  required = True)
@@ -227,12 +227,12 @@ class trainer:
         x = Dense(5, activation ="relu", kernel_initializer="random_normal")(x)
     
 
-        outputs      = Dense(1, activation="softmax")(x) 
+        outputs      = Dense(3, activation="softmax")(x) 
         self.model   = tf.keras.Model(inputs=[fj_inputs, jet_inputs, top_inputs], outputs=outputs)
         
         
         trainer = tf.keras.optimizers.Nadam(learning_rate = self.best_hyperparameters['learning_rate'])
-        loss = tf.keras.losses.BinaryCrossentropy()
+        loss = tf.keras.losses.SparseCategoricalCrossentropy()
         self.model.compile(optimizer = trainer, loss = loss, metrics = ['accuracy'])  
 
         return self.model
@@ -266,9 +266,9 @@ class trainer:
                      epochs = max_epochs, 
                      batch_size = batch_size, verbose = 1)
 
-        self.best_hyperparameters = tuner.get_best_hyperparameters(num_trials=1)
+        self.best_hyperparameters = (tuner.get_best_hyperparameters(num_trials=1))[0].values
         #self.model = tuner.hypermodel.build(self.best_hyperparameters)
-        print(f'best hps found: \n {self.best_hyperparameters[0].values}')
+        print(f'best hps found: \n {self.best_hyperparameters}')
         #return self.best_hyperparameters
     
     def training(self, validation_split = 0.3, epochs = 50, batch_size = 1, verbose = True, save_model = True, path_to_model = outModel):
@@ -281,7 +281,7 @@ class trainer:
         self.callbacks()
         self.model_builder()
         weights = class_weight.compute_class_weight(class_weight= 'balanced', classes = np.unique(self.y_train), y = np.concatenate(self.y_train))
-        class_weights = {0: weights[0], 1: weights[1]} 
+        class_weights = {0: weights[0], 1: weights[1], 2:weights[2]} 
         self.history = self.model.fit({"fatjet": self.X_fatjet_train, "jet": self.X_jet_train, "top": self.X_top_train}, self.y_train,
                                        callbacks=self.callback_list, validation_split=validation_split, epochs=epochs, batch_size=batch_size, verbose=verbose,
                                        class_weight=class_weights)
@@ -317,22 +317,22 @@ class trainer:
         # print("1: ",self.y_train.flatten()==1)  
         # print('2:',self.y_pred_train)
         # print('3:', self.y_pred_train[self.y_train.flatten() == 1,1])
-        y_pred_train_bkg_tt = self.y_pred_train[self.y_train.flatten()==0,0]   #1 fondo TT
-        y_pred_train_sgn = self.y_pred_train[self.y_train.flatten()==1,0]      #0 segnale
-        # y_pred_train_bkg_zj = self.y_pred_train[self.y_train.flatten()==2,0]   #2 fondo ZJ
+        y_pred_train_bkg_tt = self.y_pred_train[self.y_train.flatten()==1,0]   #1 fondo TT
+        y_pred_train_sgn = self.y_pred_train[self.y_train.flatten()==0,0]      #0 segnale
+        y_pred_train_bkg_zj = self.y_pred_train[self.y_train.flatten()==2,0]   #2 fondo ZJ
         #print('PRINT out', y_pred_train_bkg_zj)
 
-        y_pred_test_bkg_tt  = self.y_pred_test[self.y_test.flatten()==0,0]
-        y_pred_test_sgn  = self.y_pred_test[self.y_test.flatten()==1,0]
-        # y_pred_test_bkg_zj = self.y_pred_test[self.y_test.flatten()==2,0]
+        y_pred_test_bkg_tt  = self.y_pred_test[self.y_test.flatten()==1,0]
+        y_pred_test_sgn  = self.y_pred_test[self.y_test.flatten()==0,0]
+        y_pred_test_bkg_zj = self.y_pred_test[self.y_test.flatten()==2,0]
 
         train_test_pred  = {}
         train_test_pred["train_bkg_tt"] = y_pred_train_bkg_tt
         train_test_pred["train_sgn"] = y_pred_train_sgn
-        # train_test_pred["train_bkg_zj"] = y_pred_train_bkg_zj
+        train_test_pred["train_bkg_zj"] = y_pred_train_bkg_zj
         train_test_pred["test_bkg_tt"]  = y_pred_test_bkg_tt  
         train_test_pred["test_sgn"]  = y_pred_test_sgn
-        # train_test_pred["test_bkg_zj"] = y_pred_test_bkg_zj
+        train_test_pred["test_bkg_zj"] = y_pred_test_bkg_zj
 
         # Histograms to be drawn #
         train_test_histos = {}   
@@ -341,14 +341,14 @@ class trainer:
         c.SetLogy()
         c.Draw()
         # leg = ROOT.TLegend(0.75, 0.6, 0.9, 0.9)
-        leg = ROOT.TLegend(0.6, 0.6, 0.9, 0.9)
+        leg = ROOT.TLegend(0.7, 0.7, 0.8, 0.9)
 
         train_test_histos["train_bkg_tt"] = ROOT.TH1F("histo_train_bkg_tt", "histo_train_bkg_tt", bins, 0, 1)
         train_test_histos["train_sgn"] = ROOT.TH1F("histo_train_sgn", "histo_train_sgn", bins, 0, 1)
         train_test_histos["test_bkg_tt"]  = ROOT.TH1F("histo_test_bkg_tt",  "histo_test_bkg_tt",  bins, 0, 1)
         train_test_histos["test_sgn"]  = ROOT.TH1F("histo_test_sgn",  "histo_test_sgn",  bins, 0, 1)
-        # train_test_histos["train_bkg_zj"] = ROOT.TH1F("histo_train_bkg_zj", "histo_train_bkg_zj", bins, 0, 1)
-        # train_test_histos["test_bkg_zj"] = ROOT.TH1F("histo_test_bkg_zj", "histo_test_bkg_tt", bins, 0, 1)
+        train_test_histos["train_bkg_zj"] = ROOT.TH1F("histo_train_bkg_zj", "histo_train_bkg_zj", bins, 0, 1)
+        train_test_histos["test_bkg_zj"] = ROOT.TH1F("histo_test_bkg_zj", "histo_test_bkg_tt", bins, 0, 1)
 
         for k in train_test_pred.keys():
             print('traing_test_pred', k, train_test_pred[k])
@@ -356,10 +356,10 @@ class trainer:
                 train_test_histos[k].Fill(x)
 
             print(k, train_test_histos[k].GetEntries())
-            # train_test_histos[k].Scale(1./train_test_histos[k].Integral())
+            train_test_histos[k].Scale(1./train_test_histos[k].Integral())
             train_test_histos[k].SetTitle("")
             train_test_histos[k].GetXaxis().SetTitle("Score")
-            # train_test_histos[k].SetMaximum(1)
+            train_test_histos[k].SetMaximum(1)
             train_test_histos[k].GetYaxis().SetTitle("Normalized Counts")
 
             if "test" in k:
@@ -374,19 +374,19 @@ class trainer:
         train_test_histos["train_bkg_tt"].SetLineColorAlpha(ROOT.kBlue, 0.3)
         train_test_histos["train_sgn"].SetFillColorAlpha(ROOT.kRed,  0.3)
         train_test_histos["train_sgn"].SetLineColorAlpha(ROOT.kRed,  0.3)
-        # train_test_histos["train_bkg_zj"].SetFillColorAlpha(ROOT.kGreen, 0.3)
-        # train_test_histos["train_bkg_zj"].SetLineColorAlpha(ROOT.kGreen, 0.3)
+        train_test_histos["train_bkg_zj"].SetFillColorAlpha(ROOT.kGreen, 0.3)
+        train_test_histos["train_bkg_zj"].SetLineColorAlpha(ROOT.kGreen, 0.3)
 
         train_test_histos["test_bkg_tt"].SetMarkerColor(ROOT.kBlue)
         train_test_histos["test_sgn"].SetMarkerColor(ROOT.kRed)
-        # train_test_histos["test_bkg_zj"].SetMarkerColor(ROOT.kGreen)
+        train_test_histos["test_bkg_zj"].SetMarkerColor(ROOT.kGreen)
 
         train_test_histos["train_bkg_tt"].Draw("HIST")
         train_test_histos["train_sgn"].Draw("HISTSAME")
         train_test_histos["test_bkg_tt"].Draw("SAME")
         train_test_histos["test_sgn"].Draw("SAME")
-        # train_test_histos["train_bkg_zj"].Draw('SAME')
-        # train_test_histos["test_bkg_zj"].Draw('SAME')
+        train_test_histos["train_bkg_zj"].Draw('SAME')
+        train_test_histos["test_bkg_zj"].Draw('SAME')
         leg.Draw("SAME")
 
         c.SaveAs(f"{path_graphics}/traintestDiscrimination.png")
@@ -493,7 +493,7 @@ def Multi_score(data):
     y = np.concatenate([a])
     return y
 
-# multiple_outputs=  True
+multiple_outputs=  True
 if multiple_outputs:
     y = Multi_score(dataset)
 
@@ -528,11 +528,13 @@ if not os.path.exists(path_to_model_folder + "/best_hps_jets_fatjets.json"):
     trainer1.tune_hps(max_epochs= 1000, batch_size = 250, project_name = 'tuning_jets_fatjets')
 
     best_hps = trainer1.best_hyperparameters
+    print('best hps', best_hps['fj_units'])
+    # print('fj units', best_hps[0].values)
 #tuner.get_best_hyperparameters(num_trials=1)
-    print(f"BEST HPS FOUND:\n{best_hps[0].values}")
-    with open(f"{path_to_model_folder}/best_hps_jets_fatjets.json", "w") as jsFile:
+    print(f"BEST HPS FOUND:\n{best_hps}")
+    with open(f"{path_to_model_folder}/best_hps_jets_fatjets_3.json", "w") as jsFile:
         # f.write(best_hps[0].values)
-        json.dump(best_hps[0].values, jsFile, indent=4)
+        json.dump(best_hps, jsFile, indent=4)
     trainer1.training(validation_split = 0.3, epochs = epochs, batch_size= batch_size, save_model = True, path_to_model= outModel, verbose = True)
 else:
     with open(path_to_model_folder + "/best_hps_jets_fatjets.json" ) as f:
@@ -541,7 +543,7 @@ else:
     
     trainer1 = trainer(*data, best_hps)
     trainer1.split(0.3)
-    trainer1.training(validation_split= 0.4, epochs= epochs, batch_size= batch_size, save_model= True, path_to_model= outModel, verbose= True)
+    trainer1.training(validation_split= 0.3, epochs= epochs, batch_size= batch_size, save_model= True, path_to_model= outModel, verbose= True)
     
 eval_result     = trainer1.evaluate()
 trainer1.train_test_discrimination(bins=100)
