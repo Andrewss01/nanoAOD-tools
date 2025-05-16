@@ -431,7 +431,7 @@ with open(best_hps_file) as hps_file:
 print(f'BEST HPS ARE: ', best_hyperparams)
 trainer1 = trainer(*data,best_hyperparams)
 trainer1.split(test_size= 0.3)
-# trainer1.model_builder(trainer1.X_fatjet_train.shape[1], trainer1.X_jet_train.shape[2], trainer1.X_top_train.shape[1])
+trainer1.model_builder(trainer1.X_fatjet_train.shape[1], trainer1.X_jet_train.shape[2], trainer1.X_top_train.shape[1], trainer1.X_pfc_train.shape[2], trainer1.X_sv_train.shape[2])
 trainer1.training(validation_split= 0.3, epochs = 1000, batch_size= 250, save_model= True, path_to_model=outModel)
 best_hps_path = path_outJson.replace('scores', 'best_hps')
 with open(best_hps_path, "w") as jsFile:
