@@ -15,7 +15,7 @@ def get_files_string(dataset):
             
         os.popen("export XRD_NETWORKSTACK=IPv4")
         command      = 'dasgoclient -query="file dataset='+dataset.dataset+' instance=prod/phys03"'
-        out_stream   = os.popen(command)
+        out_stream   = os.popen(command) 
         files_string = out_stream.read()
         out_stream.close()
         return files_string.split('\n')
