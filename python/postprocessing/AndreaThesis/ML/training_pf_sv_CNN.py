@@ -177,16 +177,26 @@ class trainer:
                               dropout=self.best_hps['j_dropout'])(y)
         
         ### Operations on PFC Input Layer ###
+<<<<<<< HEAD
         print("0",pfc_inputs.shape)
+=======
+        #print("0",PFC_inputs.shape)
+>>>>>>> f11b9505a90d871535a21e15c5c09d8fa8f565d9
         #z = tf.gather(PFC_inputs, [0, 1, 2, 3, 6, 7], axis=-1)
         z = pfc_inputs[:,:,:3]
         print('z is: ',z)
         z = Masking(mask_value=0.)(z)
         print('z is:', z)
+<<<<<<< HEAD
         print("post slice",z.shape)
         z = tf.expand_dims(z, axis=-1)
         print("post expand",z.shape)
 
+=======
+        #print("post slice",z.shape)
+        z = tf.expand_dims(z, axis=-1)
+        #print("post expand",z.shape)
+>>>>>>> f11b9505a90d871535a21e15c5c09d8fa8f565d9
         #Conv2D layer
         z = Conv2D(filters=32, kernel_size=3, activation='relu', padding='same', kernel_regularizer=tf.keras.regularizers.l2(0.01))(z)
         z = BatchNormalization()(z)
@@ -219,6 +229,12 @@ class trainer:
         z = Dense(4, activation='relu')(z)
         z = BatchNormalization()(z)
         
+<<<<<<< HEAD
+=======
+    
+        
+
+>>>>>>> f11b9505a90d871535a21e15c5c09d8fa8f565d9
 
         ### Operations on TOP Input Layer ###
         t = Dense(1, activation="relu")(top_inputs)
@@ -497,6 +513,10 @@ if verbose:
 
 
 best_hps_file = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/trainings/tuning_'+label+'/best_hps_'+label+'.json'
+<<<<<<< HEAD
+=======
+# best_hps_file = 
+>>>>>>> f11b9505a90d871535a21e15c5c09d8fa8f565d9
 with open(best_hps_file) as hps_file:
     best_hyperparams = json.load(hps_file)
 print(f'BEST HPS ARE: ', best_hyperparams)
