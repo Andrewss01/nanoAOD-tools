@@ -17,6 +17,7 @@ def get_electron(electrons):
 def get_muon(muons):
     return list(filter(lambda x : x.miniPFRelIso_all<0.1 and x.pt>30 and x.eta<2.4, muons))
 
+
 class preselection(Module):
     def __init__(self):
         pass
@@ -45,10 +46,13 @@ class preselection(Module):
         ngoodmuons = len(goodmuons)
         goodelectrons = get_electron(electrons)
         ngoodelectrons = len(goodelectrons)
+        # ngoodjets = get_jets(goodjets, jets)
+        
+
 
         btagPNet_mediumWP_2022    = 0.245 
         
-        isGoodEvent =  ngoodmuons==1 and ngoodelectrons==0 and met.pt>50 
+        isGoodEvent =  ngoodmuons>1 or ngoodelectrons>1 and met.pt>50 
         
         nbjets=0
 

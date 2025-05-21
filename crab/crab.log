@@ -923,3 +923,78 @@ Traceback (most recent call last):
     raise ConfigurationException(msg)
 CRABClient.ClientExceptions.ConfigurationException: [91mError[0m: ./crab_TTTo2J1L1nu is not a valid CRAB project directory.
 INFO 2025-03-14 11:47:45.164 UTC: 	 Log file is /eos/home-a/apuglia/SWAN_projects/thesis/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/crab.log
+DEBUG 2025-05-19 08:21:08.212 UTC: 	 CRAB Client version: v3.250409
+DEBUG 2025-05-19 08:21:08.212 UTC: 	 Running on: Linux lxplus978.cern.ch 5.14.0-503.34.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Mar 17 21:49:47 EDT 2025 x86_64 x86_64 x86_64 GNU/Linux
+DEBUG 2025-05-19 08:21:08.212 UTC: 	 Not using Singularity
+DEBUG 2025-05-19 08:21:08.212 UTC: 	 Operating System: Red Hat Enterprise Linux 9.5 (Plow)
+DEBUG 2025-05-19 08:21:08.212 UTC: 	 Executing command: 'checkwrite'
+DEBUG 2025-05-19 08:21:08.213 UTC: 	 Found CRAB cache file /afs/cern.ch/user/a/apuglia/.crab3
+DEBUG 2025-05-19 08:21:08.213 UTC: 	 Checking credentials
+DEBUG 2025-05-19 08:21:08.213 UTC: 	 Found proxy file /tmp/x509up_u180940
+DEBUG 2025-05-19 08:21:08.213 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2025-05-19 08:21:08.213 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u180940
+DEBUG 2025-05-19 08:21:08.634 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2025-05-19 08:21:08.634 UTC: 	 Getting proxy life time left
+DEBUG 2025-05-19 08:21:08.634 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u180940
+DEBUG 2025-05-19 08:21:09.010 UTC: 	 output : 42894
+42894
+
+ error: 
+ retcode : 0
+DEBUG 2025-05-19 08:21:09.010 UTC: 	 Proxy valid for 11:54:54 hours
+DEBUG 2025-05-19 08:21:09.010 UTC: 	 Retrieving username ...
+DEBUG 2025-05-19 08:21:09.010 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-05-19 08:21:09.819 UTC: 	 username is apuglia
+INFO 2025-05-19 08:21:10.561 UTC: 	 Rucio client intialized for account apuglia
+DEBUG 2025-05-19 08:21:10.561 UTC: 	 Command use: checkwrite
+DEBUG 2025-05-19 08:21:10.561 UTC: 	 Options use: ['--site', 'T2_IT_Pisa']
+DEBUG 2025-05-19 08:21:10.561 UTC: 	 Instance is None
+DEBUG 2025-05-19 08:21:10.561 UTC: 	 Server base url is None
+DEBUG 2025-05-19 08:21:10.561 UTC: 	 Retrieving username ...
+DEBUG 2025-05-19 08:21:10.561 UTC: 	 Retrieving username from CRIC...
+DEBUG 2025-05-19 08:21:11.356 UTC: 	 username is apuglia
+INFO 2025-05-19 08:21:11.357 UTC: 	 Will check write permission in the default location /store/user/<username>
+INFO 2025-05-19 08:21:11.357 UTC: 	 Validating LFN /store/user/apuglia...
+INFO 2025-05-19 08:21:11.357 UTC: 	 LFN /store/user/apuglia is valid.
+INFO 2025-05-19 08:21:11.372 UTC: 	 Will use `gfal-copy`, `gfal-rm` commands for checking write permissions
+INFO 2025-05-19 08:21:11.372 UTC: 	 Will check write permission in /store/user/apuglia on site T2_IT_Pisa
+INFO 2025-05-19 08:21:11.388 UTC: 	 Will use PFN: davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp
+INFO 2025-05-19 08:21:11.388 UTC: 	 
+Attempting to create (dummy) directory crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da and copy (dummy) file f9371734-2929-4c0d-b69a-a2cbd35325da.tmp to /store/user/apuglia
+
+INFO 2025-05-19 08:21:11.395 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-copy -p -v -t 180 file:///afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/crab/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp 'davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp'
+INFO 2025-05-19 08:21:11.395 UTC: 	 Please wait...
+INFO 2025-05-19 08:22:15.486 UTC: 	 
+Successfully created directory crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da and copied file f9371734-2929-4c0d-b69a-a2cbd35325da.tmp to /store/user/apuglia
+INFO 2025-05-19 08:22:15.486 UTC: 	 
+Attempting to delete file davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp
+
+INFO 2025-05-19 08:22:15.486 UTC: 	 Executing command: which scram >/dev/null 2>&1 && eval `scram unsetenv -sh`; gfal-rm -v -t 180 'davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp'
+INFO 2025-05-19 08:22:15.486 UTC: 	 Please wait...
+INFO 2025-05-19 08:22:47.456 UTC: 	 Failed running delete command
+INFO 2025-05-19 08:22:47.456 UTC: 	   Stdout:
+    davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp	FAILED
+    
+INFO 2025-05-19 08:22:47.456 UTC: 	   Stderr:
+    gfal-rm error: 13 (Permission denied) - Result (Neon): SSL handshake failed: Connection timed out during SSL handshake after 1 attempts
+    
+INFO 2025-05-19 08:22:47.456 UTC: 	 
+Failed to delete file davs://stwebdav.pi.infn.it:8443/cms/store/user/apuglia/crab3checkwrite_20250519_102111_f9371734-2929-4c0d-b69a-a2cbd35325da/f9371734-2929-4c0d-b69a-a2cbd35325da.tmp
+INFO 2025-05-19 08:22:47.458 UTC: 	 
+Checkwrite Result:
+INFO 2025-05-19 08:22:47.458 UTC: 	 Error: CRAB3 is able to copy but unable to delete file in /store/user/apuglia on site T2_IT_Pisa. Asynchronous Stage Out with CRAB3 will fail.
+       You may want to contact the site administrators sending them the 'crab checkwrite' output as printed above.
+INFO 2025-05-19 08:22:47.458 UTC: 	 Note: You cannot write to a site if you did not ask permission.
+WARNING 2025-05-19 08:22:47.459 UTC: 	 Command checkwrite failed
+ERROR 2025-05-19 08:22:47.459 UTC: 	 Caught CommandFailedException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250409.00/bin/crab.py", line 157, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.250409.00/bin/crab.py", line 144, in __call__
+    raise CommandFailedException("Command %s failed" % str(args[0]))
+CRABClient.ClientExceptions.CommandFailedException: Command checkwrite failed

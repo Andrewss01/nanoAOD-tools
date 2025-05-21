@@ -17,7 +17,7 @@ import argparse
 
 path_to_training_folder = '/eos/user/a/apuglia/thesis/training_dataset/'
 
-path_to_pkl_folder          = "{}/pkls_07_05_2025".format(path_to_training_folder)
+path_to_pkl_folder          = "{}/pkls_19_05_2025".format(path_to_training_folder)
 dataset                     = {}
 for fileName in tqdm(os.listdir(path_to_pkl_folder)):
     if fileName.endswith(".pkl") and  not(fileName.startswith(".")):
@@ -30,7 +30,7 @@ for fileName in tqdm(os.listdir(path_to_pkl_folder)):
         continue
 
 # Save the dataset in a single file
-concName             = "training_dataset_07_05_2025.pkl"
+concName             = "training_dataset_19_05_2025.pkl"
 path_to_conc         = f"{path_to_training_folder}/{concName}"
 with open(path_to_conc, "wb") as f:
     pkl.dump(obj=dataset, file=f)
