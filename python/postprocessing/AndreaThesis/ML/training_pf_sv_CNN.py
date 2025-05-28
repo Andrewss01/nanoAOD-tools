@@ -187,17 +187,11 @@ class trainer:
         print('z is: ',z)
         z = Masking(mask_value=0.)(z)
         print('z is:', z)
-<<<<<<< HEAD
         print("post slice",z.shape)
         z = tf.expand_dims(z, axis=-1)
         print("post expand",z.shape)
 
-=======
-        #print("post slice",z.shape)
-        z = tf.expand_dims(z, axis=-1)
-        #print("post expand",z.shape)
->>>>>>> f11b9505a90d871535a21e15c5c09d8fa8f565d9
-        #Conv2D layer
+ 
         z = Conv2D(filters=32, kernel_size=3, activation='relu', padding='same', kernel_regularizer=tf.keras.regularizers.l2(0.01))(z)
         z = BatchNormalization()(z)
         #print("1 pre pool",z.shape)
@@ -229,12 +223,9 @@ class trainer:
         z = Dense(4, activation='relu')(z)
         z = BatchNormalization()(z)
         
-<<<<<<< HEAD
-=======
     
         
 
->>>>>>> f11b9505a90d871535a21e15c5c09d8fa8f565d9
 
         ### Operations on TOP Input Layer ###
         t = Dense(1, activation="relu")(top_inputs)

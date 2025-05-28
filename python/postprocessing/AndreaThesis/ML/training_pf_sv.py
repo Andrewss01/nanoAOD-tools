@@ -134,6 +134,8 @@ def multi_score(dataset):
                     multi_output.append([1])
                 elif 'ZJ' in c or 'zj' in c:
                     multi_output.append([2])
+                # elif 'QCD' in c.
+                #     multi_output.append([])
     y = np.concatenate([multi_output])
     return y
 
@@ -422,6 +424,7 @@ if verbose:
     print(f"\tX_top shape:            {X_top.shape}")
     print(f"\tX_pfc shape:            {X_pfc.shape}")
     print(f"\tX_sv shape:             {X_sv.shape}")
+    print(f"\ty shape:                {y.shape}")
 
 
 best_hps_file = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/trainings/tuning_'+label+'/best_hps_'+label+'.json'

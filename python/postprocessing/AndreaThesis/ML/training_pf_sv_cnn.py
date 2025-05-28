@@ -29,7 +29,7 @@ import pickle as pkl
 # import random
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, roc_auc_score, accuracy_score, f1_score, confusion_matrix, auc, roc_curve
-from tensorflow.keras.layers import Dense, Dropout, LSTM, concatenate, GRU,Masking, Activation, TimeDistributed, Conv1D, BatchNormalization, MaxPooling1D, Reshape, Flatten
+from tensorflow.keras.layers import Dense, Dropout, LSTM, concatenate, GRU,Masking, Activation, TimeDistributed, Conv1D, BatchNormalization, MaxPooling1D, Reshape, Flatten, Conv2D, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from tensorflow.keras.callbacks import EarlyStopping
@@ -78,6 +78,8 @@ if not os.path.exists(path_graphics):
 
 with open(inFile,'rb') as fpkl:
     dataset = pkl.load(fpkl)
+
+
 components = dataset.keys()
 categories = ['3j1fj', '3j0fj', '2j1fj']
 if verbose:
@@ -137,6 +139,22 @@ def multi_score(dataset):
     return y
 
 
+# X_jet                     = np.concatenate([dataset[c][cat][0] for c in samples for cat in categories]) # here we use only the samples selected by the user
+# X_fatjet                  = np.concatenate([dataset[c][cat][1] for c in samples for cat in categories]) # here we use only the samples selected by the user
+# X_top                     = np.concatenate([dataset[c][cat][2] for c in samples for cat in categories]) # here we use only the samples selected by the user
+# X_pfc                     = np.concatenate([dataset[c][cat][4] for c in samples for cat in categories])
+# X_sv                      = np.concatenate([dataset[c][cat][5] for c in samples for cat in categories])
+# y                         = np.concatenate([dataset[c][cat][3] for c in samples for cat in categories]) # here we use only the samples selected by the user
+
+# print(f"\tX_jet shape:            {X_jet.shape}")
+# print(f"\tX_fatjet shape:         {X_fatjet.shape}")
+# print(f"\tX_top shape:            {X_top.shape}")
+# print(f"\tX_pfc shape:            {X_pfc.shape}")
+# print(f"\tX_sv shape:             {X_sv.shape}")
+# print(f"\ty shape:                {y.shape}")
+
+
+
 class trainer:
     def __init__(self, X_jet, X_fatjet, X_top, X_pfc, X_sv, y, best_hyperparameters = None):
         self.X_jet = X_jet
@@ -176,20 +194,27 @@ class trainer:
 
         z = pfc_inputs[:,:,:3]
         print('post slice: ', z.shape)
+        # z = Masking(mask_value = 0.)(z)
         z = tf.expand_dims(z, axis = -1)
         print('post expand: ', z.shape)
 
         z = Conv2D(filters=32, kernel_size=3, activation='relu', padding='same', kernel_regularizer=tf.keras.regularizers.l2(0.01))(z)
         z = BatchNormalization()(z)
+        print('post conv 1: ', z.shape)
 
         z = Conv2D(filters=64, kernel_size=3, activation='relu', padding='same', kernel_regularizer=tf.keras.regularizers.l2(0.01))(z)
         z = BatchNormalization()(z)
+        print('post conv 2: ', z.shape)
 
         z = Conv2D(filters=128, kernel_size=3, activation='relu', padding='same', kernel_regularizer=tf.keras.regularizers.l2(0.01))(z)
         z = BatchNormalization()(z)
-        
-        z = Flatten()(z)
+        print('post conv 3: ', z.shape)
+        # (None,None,3,1)
+        z = GlobalAveragePooling2D()(z)
+        # print('post flatten: ')
+        # (None, None)
 
+        print('pre dense: ', z.shape)
         z = Dense(256, activation='relu')(z)  #
         z = Dropout(0.5)(z)     
 
@@ -215,7 +240,7 @@ class trainer:
         k = Conv2D(filters=128, kernel_size=3, activation='relu', padding='same', kernel_regularizer=tf.keras.regularizers.l2(0.01))(k)
         k = BatchNormalization()(k)
         
-        k = Flatten()(k)
+        k = GlobalAveragePooling2D()(k)
 
         k = Dense(256, activation='relu')(k)  #
         k = Dropout(0.5)(k)     
@@ -469,6 +494,7 @@ if verbose:
     print(f"\tX_top shape:            {X_top.shape}")
     print(f"\tX_pfc shape:            {X_pfc.shape}")
     print(f"\tX_sv shape:             {X_sv.shape}")
+    print(f"\ty shape:                {y.shape}")
 
 
 # print('X_pfc is: ', X_pfc[:,:,:3])
