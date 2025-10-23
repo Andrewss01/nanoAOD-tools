@@ -7,3 +7,6 @@ keep Top*
 keep Indexes*
 keep GenPart*
 keep MET*
+keep Electron* 
+keep Muon*
+keep HLT*

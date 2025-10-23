@@ -279,6 +279,7 @@ WJets_2018.components = [#WJetsHT70to100_2018,
                          WJetsHT800to1200_2018, WJetsHT1200to2500_2018, 
                          WJetsHT2500toInf_2018]
 
+
 ################################ Signal tDM ################################
 
 tDM_mPhi1000_mChi1_2018 = sample(ROOT.kGreen+2, 1, 1001, "DM (m_{#Phi}=1000)", "tDM_mPhi1000_mChi1_2018")
@@ -3053,3 +3054,34 @@ sample_dict = {
     "DataEGamma_2023postBPix" : DataEGamma_2023postBPix,
 
     }
+
+
+WtoLNu_4Jets_2022 = sample(ROOT.kRed -7,1,1001,'WtoLNu_4Jets_2022', 'WtoLNu_4Jets_2022')
+WtoLNu_4Jets_2022.dataset = '/WtoLNu-4Jets_TuneCP5_13p6TeV_madgraphMLM-pythia8/apuglia-WtoLNu_4Jets_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+WtoLNu_4Jets_2022.sigma = 55390
+
+WtoLNu_4Jets_2J_2022 = sample(ROOT.kRed-7,1,1001,'WtoLNu_4Jets_2J_2022', 'WtoLNu_4Jets_2J_2022')
+WtoLNu_4Jets_2J_2022.dataset = '/WtoLNu-4Jets_2J_TuneCP5_13p6TeV_madgraphMLM-pythia8/apuglia-WtoLNu_4Jets_2J_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+WtoLNu_4Jets_2J_2022.sigma = 2925
+
+WtoLNu_4Jets_3J_2022 = sample(ROOT.kRed-7,1,1001,'WtoLNu_4Jets_3J_2022', 'WtoLNu_4Jets_3J_2022')
+WtoLNu_4Jets_3J_2022.dataset = '/WtoLNu-4Jets_3J_TuneCP5_13p6TeV_madgraphMLM-pythia8/apuglia-WtoLNu_4Jets_3J_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+WtoLNu_4Jets_3J_2022.sigma = 861.7	
+
+WtoLNu_4Jets_4J_2022 = sample(ROOT.kRed-7,1,1001,'WtoLNu_4Jets_4J_2022', 'WtoLNu_4Jets_4J_2022')
+WtoLNu_4Jets_4J_2022.dataset = '/WtoLNu-4Jets_4J_TuneCP5_13p6TeV_madgraphMLM-pythia8/apuglia-WtoLNu_4Jets_2022-0fa328e40e38f44cd311b92489b92b5b/USER'
+WtoLNu_4Jets_4J_2022.sigma = 416.5
+
+
+
+TWminus_1L_2022 = sample(ROOT.kTeal-7,1, 1001, 'TWminus_1L_2022', 'TWminus_1L_2022')
+TWminus_1L_2022.dataset = '/TWminus_DR_AtLeastOneLepton_TuneCP5_13p6TeV_powheg-pythia8/apuglia-TWminus_1L_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+TWminus_1L_2022.sigma = 36
+
+TbarWplus_1L_2022 = sample(ROOT.kTeal -7,1,1001,'TbarWplus_1L_2022', 'TbarWplus_1L_2022')
+TbarWplus_1L_2022.dataset = '/TbarWplus_DR_AtLeastOneLepton_TuneCP5_13p6TeV_powheg-pythia8/apuglia-TbarWplus_1L_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+TbarWplus_1L_2022.sigma = 36
+
+TT_dilep_2022  = sample(ROOT.kTeal -5,1,1001,'TT_dilep_2022', 'TT_dilep_2022')
+TT_dilep_2022.dataset = '/TTto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8/apuglia-TTto2L2Nu_2022_v2-0fa328e40e38f44cd311b92489b92b5b/USER'
+TT_dilep_2022.sigma = 90
