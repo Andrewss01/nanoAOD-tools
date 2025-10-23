@@ -9,7 +9,7 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import *
 import tensorflow as tf
 from itertools import combinations, chain
 import os
-import keras 
+import keras  
 
 # from keras import initializers
 
@@ -190,18 +190,23 @@ def fill_SVs(n_SVs, SVs_dnn, SVs, idx_top, pt_top, eta_top, phi_top, M_top):
     return SVs_dnn
 
 
-path_to_model = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/trainings/training_08_05_2025/" % os.environ["CMSSW_BASE"]
+path_to_model = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/final_trainings/" % os.environ["CMSSW_BASE"]
 
-TTvsZJets_08_05_2025 = 'model_08_05_2025.h5'
+# TTvsZJets_08_05_2025 = 'model_20_06_2025.h5'
+
+# model_Mixed = 'training_pfsv_Mixed_31_08_2025/model_31_08_2025.h5'
+model_Mixed = 'training_pfsv_cnn_Mixed_01_09_2025/model_01_09_2025.h5'
+model_Resolved = 'training_resolved_31_08_2025/model_31_08_2025.h5'
 
 models                  = {}
 # models['TTvsZJ'] = tf.keras.models.load_model(path_to_model + TTvsZJets_28_04_2025)
-models['TTvsZJ'] = tf.keras.models.load_model(path_to_model + TTvsZJets_08_05_2025)
-model = models['TTvsZJ']
+models['mixed'] = tf.keras.models.load_model(path_to_model + model_Mixed)
+models['resolved'] = tf.keras.models.load_model(path_to_model + model_Resolved)
+# model = models['TTvsZJ']
 
 
 class nanoTopevaluate_MultiClass(Module):
-    def __init__(self, isMC=1, resolved = False, year = '2022'):
+    def __init__(self, isMC=1, resolved = True, year = '2022'):
         self.isMC = isMC
         self.resolved = resolved
         self.year = year
@@ -218,9 +223,12 @@ class nanoTopevaluate_MultiClass(Module):
         "Branch scores to tree"
         # High Pt
         # self.out.branch("TopMixed_score2", "F", lenVar="nTopMixed")
-        self.out.branch(f"TopMixed_ZJScore", "F", lenVar = 'nTopMixed')
+        self.out.branch(f"TopMixed_QCDScore", "F", lenVar = 'nTopMixed')
         self.out.branch(f"TopMixed_TTScore", "F", lenVar = 'nTopMixed')
         self.out.branch(f"TopMixed_FTScore", "F", lenVar = 'nTopMixed')
+        self.out.branch(f"TopResolved_TTScore", "F", lenVar = 'nTopResolved')
+        self.out.branch(f"TopResolved_QCDScore", "F", lenVar = 'nTopResolved')
+        self.out.branch(f"TopResolved_FTScore", "F", lenVar = 'nTopResolved')
         # Low Pt
         #self.out.branch("TopResolved_TopScore", "F", lenVar="nTopResolved")
 
@@ -301,14 +309,18 @@ class nanoTopevaluate_MultiClass(Module):
             for idx in Indexes_sv:
                 sv_indexes.append(idx.idxSV)
 
+            # print('pfc indexes: ', pfc_indexes)
+            
             start_index_pfc = pfc_indexes.index(-(i+1))
             end_index_pfc = pfc_indexes.index(-(i+2))
+            # print(start_index_pfc, end_index_pfc)
             idx_pfc_to_append = pfc_indexes[start_index_pfc+1:end_index_pfc]
 
             start_index_sv = sv_indexes.index(-(i + 1))
             end_index_sv   = sv_indexes.index(-(i + 2))
             idx_sv_to_append = sv_indexes[start_index_sv+1 : end_index_sv]
-
+            # print(sv_indexes)
+            # print(start_index_sv, end_index_sv)
             for particle in PFCands: #ciclo sulle particles
                 if particle.Idx in idx_pfc_to_append:
                     PFCs.append(particle)
@@ -316,14 +328,12 @@ class nanoTopevaluate_MultiClass(Module):
             for vertex in SV_vertexes:
                 if vertex.Idx in idx_sv_to_append:
                     SVs.append(vertex)
-
+            # print(SVs)
             fill_PFCs(n_PFCs= n_PFCs, PFCs_dnn= PFC_dnn, PFCs= PFCs, idx_top= i, pt_top= top.pt, eta_top= top.eta, phi_top= top.phi, M_top= top.mass)
 
             fill_SVs(n_SVs= n_SVs, SVs_dnn= SVs_dnn, SVs= SVs, idx_top= i, pt_top= top.pt, eta_top= top.eta, phi_top= top.phi, M_top= top.mass)
 
-        # print('fj dnn: ', fj_dnn)
-        # print('mass dnn: ', mass_dnn)
-        # print('jet dnn: ', jets_dnn)
+       
  
         ####### SCORES ####### 
         # Calculate Scores for several models #
@@ -331,53 +341,92 @@ class nanoTopevaluate_MultiClass(Module):
         if len(tophighpt)!=0:
             # top_score2      = models["score2"].predict({"fatjet":fj_dnn, "jet": jets_dnn,  "top_mass": mass_dnn[:,:2]}).flatten().tolist()
             
-            model = models['TTvsZJ']
+            model = models['mixed']
             scores = model({"fatjet": fj_dnn, "jet": jets_dnn, "top": mass_dnn, 'pfc': PFC_dnn, 'sv': SVs_dnn}).numpy()
-            #print('SIZE degli score', np.size(scores))
-            #print(scores)
-            # print(scores)
-            # prob_false_tt, prob_true_tt, prob_zj = [], [],[]
+           
             prob_true_tt = (scores[:,1]).flatten().tolist()
             prob_false_tt = (scores[:,0]).flatten().tolist()
-            prob_zj = (scores[:,2]).flatten().tolist()
-            #score_ZJ = (prob_true_tt/(prob_true_tt + prob_zj)).flatten().tolist()
-            #score_tt = (prob_true_tt/(prob_true_tt + prob_false_tt)).flatten().tolist()
-            # for j in scores:
-            #     print(j)
-            # print(scores[:,0])
-            # print('fine evento')
+            prob_qcd = (scores[:,2]).flatten().tolist()
+          
 
-        #print(scores)
-        #scores = scores.flatten().tolist()
         else:
-            prob_false_tt, prob_true_tt, prob_zj = [], [], []
+            prob_false_tt, prob_true_tt, prob_qcd = [], [], []
             # scores = []
         
         # Branch the scores calculated #
         # self.out.fillBranch("TopHighPt_score2", top_score2)
-        self.out.fillBranch(f"TopMixed_ZJScore", prob_zj)
+        self.out.fillBranch(f"TopMixed_QCDScore", prob_qcd)
         self.out.fillBranch(f"TopMixed_TTScore", prob_true_tt)
         self.out.fillBranch(f'TopMixed_FTScore', prob_false_tt)
 
         # loop su Low Pt candidates per valutare lo score con i modelli corrispondenti
         # if self.resolved: 
-        #     jets_dnn = np.zeros((int(len(toplowpt)), 3, 8))        
-        #     for i, top in enumerate(toplowpt):
-        #         j0, j1, j2 = goodjets[top.idxJet0],goodjets[top.idxJet1],goodjets[top.idxJet2]
-        #         fj = ROOT.TLorentzVector()
-        #         fj.SetPtEtaPhiM(0,0,0,0)
-        #         sumjet = j0.p4()+j1.p4()+j2.p4()
-        #         jets_dnn = fill_jets( jets_dnn, j0, j1, j2, sumjet, fj.Phi(), fj.Eta(), i)
-        #     if len(toplowpt)!=0:
-        #         #if self.year == 2018:
-        #           #  modelRes = models["TopResolved_2018"]
-        #         #lif self.year == 2022 or self.year == 2023:
-        #             #modelRes = models["TopResolved_2022"]
-        #         modelRes = models['TopMixed_TTvsZJ']
-        #             #print(modelRes)
-        #         top_score_DNN = modelRes({"jet0": jets_dnn[:,0,:-2], "jet1": jets_dnn[:,1,:-2], "jet2": jets_dnn[:,2,:-2]}).numpy().flatten().tolist()
-        #     else:
-        #         top_score_DNN = []
+        jets_dnn_res = np.zeros((int(len(toplowpt)), 3, 8)) 
+        n_SVs, n_PFCs = 3,20
+        PFC_dnn_res            = np.zeros((len(toplowpt),n_PFCs,13))
+        SVs_dnn_res            = np.zeros((len(toplowpt),n_SVs, 12))
+        mass_dnn_res    = np.zeros((len(toplowpt), 3))
+        idx_resolved = 0
+        for i, top in enumerate(tophighpt):
+            if top.idxFatJet == -1:
+                
+                j0, j1, j2 = jets[top.idxJet0],jets[top.idxJet1],jets[top.idxJet2]
+                fj = ROOT.TLorentzVector()
+                fj.SetPtEtaPhiM(0,0,0,0)
+                sumjet = j0.p4()+j1.p4()+j2.p4()
+                jets_dnn = fill_jets(jets_dnn=jets_dnn_res, j0= j0,j1= j1,j2= j2,sumjet= sumjet,fj_phi= fj.Phi(),fj_eta= fj.Eta(),idx_top= idx_resolved, year = self.year)
+                mass_dnn    = fill_mass(mass_dnn=mass_dnn_res, idx_top=idx_resolved, j0=j0, j1=j1, j2 =j2, fj = None)
+                PFCs=[]
+                pfc_indexes=[]
+                sv_indexes = []
+                SVs = []
 
-        #     self.out.fillBranch("TopResolved_TopScore", top_score_DNN)
+                for idx in Indexes_pfc:    
+                    #print(idx.idxPFC)
+                    pfc_indexes.append(idx.idxPFC)
+
+                for idx in Indexes_sv:
+                    sv_indexes.append(idx.idxSV)
+
+                start_index_pfc = pfc_indexes.index(-(i+1))
+                end_index_pfc = pfc_indexes.index(-(i+2))
+                idx_pfc_to_append = pfc_indexes[start_index_pfc+1:end_index_pfc]
+
+                start_index_sv = sv_indexes.index(-(i + 1))
+                end_index_sv   = sv_indexes.index(-(i + 2))
+                idx_sv_to_append = sv_indexes[start_index_sv+1 : end_index_sv]
+
+                for particle in PFCands: #ciclo sulle particles
+                    if particle.Idx in idx_pfc_to_append:
+                        PFCs.append(particle)
+
+                for vertex in SV_vertexes:
+                    if vertex.Idx in idx_sv_to_append:
+                        SVs.append(vertex)
+
+                fill_PFCs(n_PFCs= n_PFCs, PFCs_dnn= PFC_dnn_res, PFCs= PFCs, idx_top= idx_resolved, pt_top= top.pt, eta_top= top.eta, phi_top= top.phi, M_top= top.mass)
+
+                fill_SVs(n_SVs= n_SVs, SVs_dnn= SVs_dnn_res, SVs= SVs, idx_top= idx_resolved, pt_top= top.pt, eta_top= top.eta, phi_top= top.phi, M_top= top.mass)
+                idx_resolved += 1
+
+
+        print('jets dnn: ', jets_dnn_res.shape)
+        print('mass dnn;' , mass_dnn_res.shape)
+        print('pfc: ', PFC_dnn_res.shape)
+        print('sv: ', SVs_dnn_res.shape )
+
+
+        if len(toplowpt)!=0:
+            modelRes = models['resolved']
+            top_score_DNN = modelRes({"jet": jets_dnn_res,'top': mass_dnn_res,'pfc': PFC_dnn_res, 'sv': SVs_dnn_res}).numpy()
+            prob_true_tt_res = (top_score_DNN[:,1]).flatten().tolist()
+            prob_false_tt_res= (top_score_DNN[:,0]).flatten().tolist()
+            prob_qcd_res = (top_score_DNN[:,2]).flatten().tolist()
+        else:
+            prob_false_tt_res, prob_true_tt_res, prob_qcd_res  = [], [], []
+
+        # self.out.fillBranch("TopResolved_TopScore", top_score_DNN)
+        self.out.fillBranch(f"TopResolved_QCDScore", prob_qcd_res)
+        self.out.fillBranch(f"TopResolved_TTScore", prob_true_tt_res)
+        self.out.fillBranch(f'TopResolved_FTScore', prob_false_tt_res)
         return True

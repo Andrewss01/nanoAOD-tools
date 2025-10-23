@@ -1,7 +1,8 @@
 ##### FIX SEED #####
-seed_value= 0
+seed_value= 1
 import os
 os.environ['PYTHONHASHSEED']=str(seed_value)
+
 
 import random
 random.seed(seed_value)
@@ -46,13 +47,15 @@ hep.style.use(hep.style.CMS)
 from sklearn.utils import class_weight
 import argparse
 
+random.seed(42)
+np.random.seed(42)
+tf.random.set_seed(42)
 
 ROOT.gROOT.SetBatch()
 ROOT.gStyle.SetOptStat(0)
 
 
-usage = 'python3 Tuning_Training.py -s TT,ZJ -i /eos/user/a/apuglia/thesis/training_dataset/trainingSet_PF_SV_10k.pkl -o True -g ./model_26_04_2025/ -m ./model_26_04_2025/model_26_04_2025.h5 -j ./model_26_04_2025/scores_26_04_2025.json -v True'
-
+usage = 'python3 tuning_pf_sv.py -s QCD_HT100to200_0,QCD_HT1500to2000_0,QCD_HT2000_0,QCD_HT200to400_0,QCD_HT400to600_0,QCD_HT600to800_0,QCD_HT70to100_0,TT_hadronic_0,TT_hadronic_1,TT_hadronic_2,TT_hadronic_3,TT_hadronic_4,TT_hadronic_5,TT_semilep_0,TT_semilep_1,TT_semilep_2,TT_semilep_3,TT_semilep_4,TT_semilep_5,ZJetsto2Nu_HT1500to2500_0,ZJetsto2Nu_HT2500_0,ZJetsto2Nu_HT400to800_0,ZJetsto2Nu_HT800to1500_0 -i /eos/user/a/apuglia/Master_Thesis/pkls/training_dataset_1.pkl -o True -g /afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/final_trainings/grid_search_lstm_28_08_2025 -m /afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/final_trainings/grid_search_lstm_28_08_2025/model_28_08_2025.h5 -j /afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/final_trainings/grid_search_lstm_28_08_2025/scores_28_08_2025.json -v True -l 28_08_2025'
 parser = argparse.ArgumentParser(usage)
 parser.add_argument('-s', '--samples'   , dest = 'samples'   , required = True  )
 parser.add_argument('-i', '--inFile'    , dest = 'inFile'    , required = True  )
@@ -132,7 +135,7 @@ def multi_score(dataset):
                     multi_output.append([0])  
                 elif j == 1 and ('TT' in c or 'tt' in c):    #True tops : 1
                     multi_output.append([1])
-                elif 'ZJ' in c or 'zj' in c:
+                elif 'ZJ' in c or 'zj' in c or 'QCD' in c:
                     multi_output.append([2])
     y = np.concatenate([multi_output])
     return y
@@ -168,7 +171,7 @@ class trainer:
         sv_inputs  = tf.keras.Input(shape = (None, InputShape_Sv,), name = 'sv')
 
         x = BatchNormalization()(fj_inputs)
-        fj_units              = hp.Int('fj_units', min_value = 1, max_value = 10, step = 1)
+        fj_units              = hp.Int('fj_units', min_value = 5, max_value = 30, step = 5)
         fj_activation         = hp.Choice('fj_activation', values = ['relu', 'sigmoid', 'tanh'])
         fj_kernel_initializer = hp.Choice('fj_kernel_initializer', values  = ['random_uniform', 'random_normal'])
         x = Dense(units = fj_units, activation = fj_activation, kernel_initializer = fj_kernel_initializer)(x)
@@ -176,7 +179,7 @@ class trainer:
         y = Masking(mask_value = 0.)(jet_inputs)
         y = BatchNormalization()(y)
 
-        j_units = hp.Int('j_units', min_value = 1, max_value = 10, step = 1)
+        j_units = hp.Int('j_units', min_value = 5, max_value = 30, step = 5)
         j_activation = hp.Choice('j_activation', values = ['relu', 'sigmoid', 'tanh'])
         j_kernel_initializer = hp.Choice('j_kernel_initializer', values = ['random_uniform', 'random_normal'])
         j_dropout = hp.Choice('j_dropout', values = list(np.arange(0,1,0.3)))
@@ -189,14 +192,14 @@ class trainer:
         z = Dense(1, activation = 'relu')(top_inputs)
 
         w = BatchNormalization()(pfc_inputs)
-        pfc_units = hp.Int('pfc_units', min_value = 1, max_value = 10, step = 1)
+        pfc_units = hp.Int('pfc_units', min_value = 5, max_value = 30, step = 5)
         pfc_activation = hp.Choice('pfc_activation', values = ['relu', 'sigmoid', 'tanh'])
         pfc_kernel_initializer = hp.Choice('pfc_kernel_initializer', values = ['random_uniform', 'random_normal'])
         w = keras.layers.LSTM(units = pfc_units, activation = pfc_activation, 
                               kernel_initializer = pfc_kernel_initializer)(w)
         
         k = BatchNormalization()(sv_inputs)
-        sv_units = hp.Int('sv_units', min_value = 1, max_value = 10, step = 1)
+        sv_units = hp.Int('sv_units', min_value = 5, max_value = 30, step = 5)
         sv_activation = hp.Choice('sv_activation', values = ['relu', 'sigmoid', 'tanh'])
         sv_kernel_initializer = hp.Choice('sv_kernel_initializer', values = ['random_uniform', 'random_normal'])
         k = keras.layers.LSTM(units = sv_units, activation = sv_activation, 
@@ -206,6 +209,7 @@ class trainer:
         x = concatenate([x,z])
         w = concatenate([w,k])
         x = concatenate([x,w])
+
         x = Dense(5, activation = 'relu', kernel_initializer = 'random_normal')(x)
 
         outputs = Dense(3, activation = 'softmax')(x)
@@ -427,7 +431,7 @@ class trainer:
                 FPR.append(fpr)
                 TPR.append(tpr)
                 TRS.append(trs)
-                plt.plot(fpr,tpr, label = name[class_label-1], linewidth = 2, color = color[class_label], linestyle = linestyle) 
+                plt.plot(fpr,tpr, label = name[int(class_label/2)], linewidth = 2, color = color[class_label], linestyle = linestyle) 
 
         
         plt.xlabel("False positives [%]")
@@ -448,7 +452,7 @@ class trainer:
     def test_roc(self, roc_model = 'OvR'):
         # fpr_train, tpr_train, trs_train = self.plot_roc("Train Baseline", np.concatenate(self.y_train), self.y_pred_train, color="steelblue", roc_model = 'OVR')
         if roc_model == 'OvR':
-            names_ovr = ['false tt', 'truee tt', 'zj']
+            names_ovr = ['False top', 'True top', 'QCD']
             colors = ['steelblue','darkorange','green']
             fpr_ovr,tpr_ovr,trs_ovr = self.plot_roc(names_ovr, np.concatenate(self.y_test), self.y_pred_test, color=colors, linestyle="--", roc_model = 'OvR')
             results_ovr = [fpr_ovr, tpr_ovr, trs_ovr]
@@ -456,7 +460,7 @@ class trainer:
         if roc_model == 'OvO':
 
 
-            names_ovo = ['true tt vs false tt', 'true tt vs zj']
+            names_ovo = ['True top vs False top', 'True Top vs QCD']
             colors = ['steelblue','darkorange','green']
         
             fpr_ovo,tpr_ovo,trs_ovo = self.plot_roc(names_ovo, np.concatenate(self.y_test), self.y_pred_test, color=colors,linestyle = '--', roc_model ='OvO')
@@ -471,7 +475,7 @@ class trainer:
         else:
             eval_result      = self.model.evaluate({"fatjet": X_fatjet_test, "jet": X_jet_test, "top": X_top_test, "pfc": X_pfc_test, "sv": X_sv_test}, y_test)
             return eval_result
-
+ 
 
 X_jet                     = np.concatenate([dataset[c][cat][0] for c in samples for cat in categories]) # here we use only the samples selected by the user
 X_fatjet                  = np.concatenate([dataset[c][cat][1] for c in samples for cat in categories]) # here we use only the samples selected by the user
@@ -501,13 +505,14 @@ if verbose:
     print(f"\tX_top shape:            {X_top.shape}")
     print(f"\tX_pfc shape:            {X_pfc.shape}")
     print(f"\tX_sv shape:             {X_sv.shape}")
+    print(f"\ty shape:                {y.shape}")
 
 
 
 trainer1 = trainer(*data)
-trainer1.split(test_size= 0.3)
-trainer1.tune_hps(project_name= 'tuning_'+label, max_epochs= 1000, batch_size= 250)
-trainer1.training(validation_split= 0.3, epochs = 1000, batch_size= 250)
+trainer1.split(test_size= 0.4)
+trainer1.tune_hps(project_name= 'grid_search_lstm_'+label, max_epochs= 1000, batch_size= 250)
+trainer1.training(validation_split= 0.4, epochs = 1000, batch_size= 250)
 best_hyperparams  = trainer1.best_hps
 print(f"BEST HPS FOUND:\n{best_hyperparams}")
 best_hps_path = path_outJson.replace('scores', 'best_hps')
@@ -532,7 +537,7 @@ if verbose:
 
 
 fprs_wp          = [("10%", 0.1), ("5%", 0.05), ("1%", 0.01), ("0.1%", 0.001)]
-components = ["False TT", "True TT", "ZJ"] 
+components = ["False top", "True top", "QCD"] 
 scores = {}
 fpr_ovr, tpr_ovr, trs_ovr = ovr_res[0], ovr_res[1], ovr_res[2]
 for index in range(len(components)):
@@ -544,7 +549,7 @@ for index in range(len(components)):
         scores[components[index]]['trs ' + wp[0]] = float(trs[fpr<wp[1]][-1])
 
 
-components = ['True TT vs False TT', 'True TT vs ZJets']
+components = ['True top vs False top', 'True top vs QCD']
 
 fpr_ovo, tpr_ovo, trs_ovo = ovo_res[0], ovo_res[1], ovo_res[2]
 for index in range(len(components)):

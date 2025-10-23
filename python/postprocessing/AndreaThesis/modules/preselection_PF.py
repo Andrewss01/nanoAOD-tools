@@ -9,13 +9,13 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import *
 
 
 def get_electron(electrons):
-    return list(filter(lambda x :  x.miniPFRelIso_all<0.1 and x.pt>35 and x.eta<2.5, electrons))
+    return list(filter(lambda x :  x.miniPFRelIso_all<0.1 and x.pt>50 and abs(x.eta)<2.5 and x.cutBased >= 3, electrons))
     
 #tightRelIso_tightID_Muons_pfRelIso04_all constrains 03 ma perchè 0.3 e 0.4 sono i raggi dei coni in vui è definita l'isolation
 #∆R = 0.2 when pT < 50 GeV, ∆R = 10 GeV/pT when 50 < pT < 200 GeV, and ∆R = 0.05
 
 def get_muon(muons):
-    return list(filter(lambda x : x.miniPFRelIso_all<0.1 and x.pt>30 and x.eta<2.4, muons))
+    return list(filter(lambda x : x.miniPFRelIso_all<0.1 and x.pt>50 and abs(x.eta)<2.4 and x.tightId == 1, muons))
 
 
 class preselection(Module):
@@ -38,6 +38,7 @@ class preselection(Module):
         muons      = Collection(event,"Muon")
         jets       = Collection(event,"Jet")
         fatjets    = Collection(event,"FatJet")
+        hlt        = Object(event, "HLT")
         eventSum = ROOT.TLorentzVector()
         
         goodjets, goodfatjets = presel(jets, fatjets) 
@@ -52,7 +53,7 @@ class preselection(Module):
 
         btagPNet_mediumWP_2022    = 0.245 
         
-        isGoodEvent =  ngoodmuons>1 or ngoodelectrons>1 and met.pt>50 
+        isGoodEvent =  (ngoodmuons==1 and ngoodelectrons ==0) and met.pt>50 and (hlt.IsoMu24)
         
         nbjets=0
 
@@ -60,6 +61,7 @@ class preselection(Module):
             if goodjet.btagPNetB>btagPNet_mediumWP_2022:
                 nbjets+=1
         
+
         goodEvent =  isGoodEvent and nbjets>=1
 
         #for j in goodJet:

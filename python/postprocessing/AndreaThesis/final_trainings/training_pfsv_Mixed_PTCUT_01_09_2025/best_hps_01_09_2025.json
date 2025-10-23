@@ -1,0 +1,21 @@
+{
+    "fj_units": 30,
+    "fj_activation": "tanh",
+    "fj_kernel_initializer": "random_normal",
+    "j_units": 25,
+    "j_activation": "relu",
+    "j_kernel_initializer": "random_normal",
+    "j_dropout": 0.0,
+    "pfc_units": 10,
+    "pfc_activation": "tanh",
+    "pfc_kernel_initializer": "random_normal",
+    "sv_units": 5,
+    "sv_activation": "sigmoid",
+    "sv_kernel_initializer": "random_normal",
+    "learning_rate": 0.001,
+    "tuner/epochs": 100,
+    "tuner/initial_epoch": 34,
+    "tuner/bracket": 4,
+    "tuner/round": 4,
+    "tuner/trial_id": "0144"
+}

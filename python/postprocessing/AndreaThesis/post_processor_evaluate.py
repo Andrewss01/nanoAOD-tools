@@ -7,7 +7,7 @@ from modules.preselection_PF import *
 fnames = [sys.argv[1]]
 path = sys.argv[2]
 
-
-p=PostProcessor(path,fnames,branchsel=None,modules=[nanoTopevaluate_MultiClass()], postfix = '_Scores', 
-                outputbranchsel="%s/src/PhysicsTools/NanoAODTools/scripts/keep_and_drop_jets_pf_sv.txt" % os.environ["CMSSW_BASE"])
+#preselection()
+p=PostProcessor(path,fnames,branchsel=None,modules=[  preselection(), nanoTopevaluate_MultiClass()], postfix = '_cnn_model_sel', 
+                outputbranchsel="%s/src/PhysicsTools/NanoAODTools/scripts/keep_and_drop_large.txt" % os.environ["CMSSW_BASE"])
 p.run()

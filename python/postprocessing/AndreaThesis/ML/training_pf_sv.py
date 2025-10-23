@@ -1,5 +1,5 @@
 ##### FIX SEED #####
-seed_value= 0
+seed_value= 1
 import os
 os.environ['PYTHONHASHSEED']=str(seed_value)
 
@@ -46,7 +46,9 @@ hep.style.use(hep.style.CMS)
 from sklearn.utils import class_weight
 import argparse
 
-
+random.seed(42)
+np.random.seed(42)
+tf.random.set_seed(42)
 ROOT.gROOT.SetBatch()
 ROOT.gStyle.SetOptStat(0)
 
@@ -134,8 +136,8 @@ def multi_score(dataset):
                     multi_output.append([1])
                 elif 'ZJ' in c or 'zj' in c:
                     multi_output.append([2])
-                # elif 'QCD' in c.
-                #     multi_output.append([])
+                elif 'QCD' in c:
+                    multi_output.append([2])
     y = np.concatenate([multi_output])
     return y
 
@@ -181,12 +183,15 @@ class trainer:
         z = Dense(1, activation = 'relu')(top_inputs)
 
         w = BatchNormalization()(pfc_inputs)
-        w = keras.layers.LSTM(units = 5, activation = 'tanh', kernel_initializer= 'random_uniform')(w)
+        w = keras.layers.LSTM(units = self.best_hps['pfc_units'], activation = self.best_hps['pfc_activation'], kernel_initializer= self.best_hps['pfc_kernel_initializer'])(w)
 
         k = BatchNormalization()(sv_inputs)
-        k = keras.layers.LSTM(units= 3, activation = 'tanh', kernel_initializer = 'random_uniform')(k)
+        k = keras.layers.LSTM(units= self.best_hps['sv_units'], activation = self.best_hps['sv_activation'], kernel_initializer = self.best_hps['sv_kernel_initializer'])(k)
 
-        # print('x is:', x , 'y is: ', y, 'z is:', z, 'w is:', w, 'k is: ', k)
+        print('fj shape: ', x.shape)
+        print('j shape: ', y.shape)
+        print('top shape: ', z.shape)
+        print('x is:', x , 'y is: ', y, 'z is:', z, 'w is:', w, 'k is: ', k)
         x = concatenate([x,y])
         x = concatenate([x,z])
         k = concatenate([k,w])
@@ -262,12 +267,12 @@ class trainer:
         y_pred_test_zj     = self.y_pred_test[self.y_test.flatten() == 2, 1]
 
         train_test_pred = {}
-        train_test_pred['train_bkg_tt'] = y_pred_train_bkg_tt
+        train_test_pred['train_bkg_ft'] = y_pred_train_bkg_tt
         train_test_pred['train_sgn']    = y_pred_train_sgn
-        train_test_pred['train_bkg_zj'] = y_pred_train_zj
-        train_test_pred['test_bkg_tt']  = y_pred_test_bkg_tt
+        train_test_pred['train_bkg_qcd'] = y_pred_train_zj
+        train_test_pred['test_bkg_ft']  = y_pred_test_bkg_tt
         train_test_pred['test_sgn']     = y_pred_test_sgn
-        train_test_pred['test_bkg_zj']  = y_pred_test_zj
+        train_test_pred['test_bkg_qcd']  = y_pred_test_zj
 
         train_test_histos = {}
         ROOT.gStyle.SetOptStat(0)
@@ -277,12 +282,12 @@ class trainer:
 
         leg = ROOT.TLegend(0.7 , 0.7, 0.9, 0.9)
 
-        train_test_histos['train_bkg_tt'] = ROOT.TH1F('histo_train_bkg_tt', 'histo_train_bkg_tt', bins, 0, 1)
+        train_test_histos['train_bkg_ft'] = ROOT.TH1F('histo_train_bkg_ft', 'histo_train_bkg_ft', bins, 0, 1)
         train_test_histos['train_sgn'] = ROOT.TH1F('histo_train_sgn', 'histo_train_sgn', bins, 0, 1)
-        train_test_histos['train_bkg_zj'] = ROOT.TH1F('histo_train_bkg_zj', 'histo_train_bkg_zj', bins, 0, 1)
-        train_test_histos['test_bkg_tt'] = ROOT.TH1F('histo_test_bkg_tt', 'histo_test_bkg_tt', bins, 0, 1)
+        train_test_histos['train_bkg_qcd'] = ROOT.TH1F('histo_train_bkg_qcd', 'histo_train_bkg_qcd', bins, 0, 1)
+        train_test_histos['test_bkg_ft'] = ROOT.TH1F('histo_test_bkg_ft', 'histo_test_bkg_ft', bins, 0, 1)
         train_test_histos['test_sgn'] = ROOT.TH1F('histo_test_sgn', 'histo_test_sgn', bins, 0, 1)
-        train_test_histos['test_bkg_zj'] = ROOT.TH1F('histo_test_bkg_zj', 'histo_test_bkg_zj', bins, 0, 1)
+        train_test_histos['test_bkg_qcd'] = ROOT.TH1F('histo_test_bkg_qcd', 'histo_test_bkg_qcd', bins, 0, 1)
 
         for k in train_test_pred.keys():
             for q in train_test_pred[k]:
@@ -300,23 +305,23 @@ class trainer:
             elif 'train' in k:
                 leg.AddEntry(train_test_histos[k], k, 'f')
 
-        train_test_histos["train_bkg_tt"].SetFillColorAlpha(ROOT.kBlue, 0.3)
-        train_test_histos["train_bkg_tt"].SetLineColorAlpha(ROOT.kBlue, 0.3)
+        train_test_histos["train_bkg_ft"].SetFillColorAlpha(ROOT.kBlue, 0.3)
+        train_test_histos["train_bkg_ft"].SetLineColorAlpha(ROOT.kBlue, 0.3)
         train_test_histos["train_sgn"].SetFillColorAlpha(ROOT.kRed,  0.3)
         train_test_histos["train_sgn"].SetLineColorAlpha(ROOT.kRed,  0.3)
-        train_test_histos["train_bkg_zj"].SetFillColorAlpha(ROOT.kGreen, 0.3)
-        train_test_histos["train_bkg_zj"].SetLineColorAlpha(ROOT.kGreen, 0.3)
+        train_test_histos["train_bkg_qcd"].SetFillColorAlpha(ROOT.kGreen, 0.3)
+        train_test_histos["train_bkg_qcd"].SetLineColorAlpha(ROOT.kGreen, 0.3)
 
-        train_test_histos["test_bkg_tt"].SetMarkerColor(ROOT.kBlue)
+        train_test_histos["test_bkg_ft"].SetMarkerColor(ROOT.kBlue)
         train_test_histos["test_sgn"].SetMarkerColor(ROOT.kRed)
-        train_test_histos["test_bkg_zj"].SetMarkerColor(ROOT.kGreen)
+        train_test_histos["test_bkg_qcd"].SetMarkerColor(ROOT.kGreen)
 
-        train_test_histos["train_bkg_tt"].Draw("HIST")
+        train_test_histos["train_bkg_ft"].Draw("HIST")
         train_test_histos["train_sgn"].Draw("HISTSAME")
-        train_test_histos["test_bkg_tt"].Draw("SAME")
+        train_test_histos["test_bkg_ft"].Draw("SAME")
         train_test_histos["test_sgn"].Draw("SAME")
-        train_test_histos["train_bkg_zj"].Draw('SAME')
-        train_test_histos["test_bkg_zj"].Draw('SAME')
+        train_test_histos["train_bkg_qcd"].Draw('SAME')
+        train_test_histos["test_bkg_qcd"].Draw('SAME')
         leg.Draw("SAME")
 
         c.SaveAs(f"{path_graphics}/traintestDiscrimination.png")
@@ -350,7 +355,7 @@ class trainer:
                 FPR.append(fpr)
                 TPR.append(tpr)
                 TRS.append(trs)
-                plt.plot(fpr,tpr, label = name[class_label-1], linewidth = 2, color = color[class_label], linestyle = linestyle) 
+                plt.plot(fpr,tpr, label = name[int(class_label/2)], linewidth = 2, color = color[class_label], linestyle = linestyle) 
 
         
         plt.xlabel("False positives [%]")
@@ -371,7 +376,7 @@ class trainer:
     def test_roc(self, roc_model = 'OvR'):
         # fpr_train, tpr_train, trs_train = self.plot_roc("Train Baseline", np.concatenate(self.y_train), self.y_pred_train, color="steelblue", roc_model = 'OVR')
         if roc_model == 'OvR':
-            names_ovr = ['false tt', 'truee tt', 'zj']
+            names_ovr = ['False top', 'True top', 'QCD']
             colors = ['steelblue','darkorange','green']
             fpr_ovr,tpr_ovr,trs_ovr = self.plot_roc(names_ovr, np.concatenate(self.y_test), self.y_pred_test, color=colors, linestyle="--", roc_model = 'OvR')
             results_ovr = [fpr_ovr, tpr_ovr, trs_ovr]
@@ -379,7 +384,7 @@ class trainer:
         if roc_model == 'OvO':
 
 
-            names_ovo = ['true tt vs false tt', 'true tt vs zj']
+            names_ovo = ['True top vs False Top', 'True Top vs QCD']
             colors = ['steelblue','darkorange','green']
         
             fpr_ovo,tpr_ovo,trs_ovo = self.plot_roc(names_ovo, np.concatenate(self.y_test), self.y_pred_test, color=colors,linestyle = '--', roc_model ='OvO')
@@ -427,19 +432,19 @@ if verbose:
     print(f"\ty shape:                {y.shape}")
 
 
-best_hps_file = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/trainings/tuning_'+label+'/best_hps_'+label+'.json'
+best_hps_file = '/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/final_trainings/grid_search_lstm_'+label+'/best_hps_'+label+'.json'
 # best_hps_file = 
 with open(best_hps_file) as hps_file:
     best_hyperparams = json.load(hps_file)
 print(f'BEST HPS ARE: ', best_hyperparams)
 trainer1 = trainer(*data,best_hyperparams)
-trainer1.split(test_size= 0.3)
-trainer1.model_builder(trainer1.X_fatjet_train.shape[1], trainer1.X_jet_train.shape[2], trainer1.X_top_train.shape[1], trainer1.X_pfc_train.shape[2], trainer1.X_sv_train.shape[2])
-trainer1.training(validation_split= 0.3, epochs = 1000, batch_size= 250, save_model= True, path_to_model=outModel)
+trainer1.split(test_size= 0.4)
+trainer1.model_builder( trainer1.X_fatjet_train.shape[1], trainer1.X_jet_train.shape[2], trainer1.X_top_train.shape[1], trainer1.X_pfc_train.shape[2], trainer1.X_sv_train.shape[2])
+trainer1.training(validation_split= 0.4, epochs = 1000, batch_size= 250, save_model= True, path_to_model=outModel)
 best_hps_path = path_outJson.replace('scores', 'best_hps')
 with open(best_hps_path, "w") as jsFile:
     json.dump(best_hyperparams, jsFile, indent=4)
-
+# model = trainer1.load_model('/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/final_trainings/grid_search_lstm_28_08_2025/model_28_08_2025.h5')
 eval_result = trainer1.evaluate()
 trainer1.train_test_discrimination(bins = 100)
 ovr_res  = trainer1.test_roc(roc_model = 'OvR')
@@ -457,7 +462,7 @@ if verbose:
 
 
 
-fprs_wp          = [("10%", 0.1), ("5%", 0.05), ("1%", 0.01), ("0.1%", 0.001)]
+fprs_wp    = [("10%", 0.1), ("5%", 0.05), ("1%", 0.01), ("0.1%", 0.001)]
 components = ["False TT", "True TT", "ZJ"] 
 scores = {}
 fpr_ovr, tpr_ovr, trs_ovr = ovr_res[0], ovr_res[1], ovr_res[2]
@@ -470,7 +475,7 @@ for index in range(len(components)):
         scores[components[index]]['trs ' + wp[0]] = float(trs[fpr<wp[1]][-1])
 
 
-components = ['True TT vs False TT', 'True TT vs ZJets']
+components = ['True top vs False top', 'True top vs QCD']
 
 fpr_ovo, tpr_ovo, trs_ovo = ovo_res[0], ovo_res[1], ovo_res[2]
 for index in range(len(components)):

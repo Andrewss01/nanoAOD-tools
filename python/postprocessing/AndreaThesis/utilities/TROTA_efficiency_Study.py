@@ -8,10 +8,16 @@ from collections import Counter
 import itertools
 import json
 import os
-
-
+from tqdm import tqdm
 
 def check_same_top(topmixed1, topmixed2, resolved = False):
+
+    '''
+    Questa funzione prende due top in input e controlla se sono uguali o no
+    In particolare restituisce True o se hanno anche solo un jet in comune
+    oppure se entrambi hanno lo stesso fatjet (nel caso di top Mixed)
+    se sono due top resolved confronta solo i jet normali, perchè il check sui fatjet è automaticamente False
+    '''
     if not resolved:
         idx_fj_1, idx_j0_1, idx_j1_1, idx_j2_1 = topmixed1.idxFatJet, topmixed1.idxJet0, topmixed1.idxJet1, topmixed1.idxJet2
         idx_fj_2, idx_j0_2, idx_j1_2, idx_j2_2 = topmixed2.idxFatJet, topmixed2.idxJet0, topmixed2.idxJet1, topmixed2.idxJet2
@@ -27,24 +33,30 @@ def check_same_top(topmixed1, topmixed2, resolved = False):
     return check_jets or check_fj
 
 def selectTop(topmixed, resolved = False, year = 2022):
+    '''
+    Questa funzione invece prende tutti i top e li ordina in base allo score
+    dopodichè mette nella lista tutti i top, in ordine di score, ma prima controlla che siano diversi nel senso spiegato prima
+    '''
     if len(topmixed) == 0: return []
     # print([top.TopScore for top in topmixed])
     if year == 2018:
-        topmixed_sorted = sorted(topmixed, key=lambda x: x.TopScore, reverse=True)
+        topmixed_sorted = sorted(topmixed, key=lambda x: x.TTScore, reverse=True)
     elif year == 2022:
-        topmixed_sorted = sorted(topmixed, key=lambda x: x.TopScore_nominal, reverse=True)
+        topmixed_sorted = sorted(topmixed, key=lambda x: (x.TTScore/(x.FTScore + x.TTScore)), reverse=True)  
     # print("sorted ", [top.TopScore for top in topmixed_sorted])
     topselected = []
     for i, top in enumerate(topmixed_sorted):
         if(i==0):
-            topselected.append(top)
+            if top.TTScore/(top.TTScore + top.FTScore) >= 0.92:
+                topselected.append(top)
         else:
             same_top = False
             for bestTop in topselected:
                 same_top = check_same_top(top, bestTop, resolved = resolved)
                 if same_top: break
             if not same_top:
-                topselected.append(top)
+                if (top.TTScore)/(top.TTScore + top.FTScore) >= 0.92:
+                    topselected.append(top)
     #print("starting number of tops", len(topmixed))
     #print("number of selected tops", len(topselected))
     return topselected
@@ -53,17 +65,22 @@ def sortTop(topmixed, resolved = False, year = 2022):
     if len(topmixed) == 0: return []
     # print([top.TopScore for top in topmixed])
     if year == 2018:
-        topmixed_sorted = sorted(topmixed, key=lambda x: x.TopScore, reverse=True)
+        topmixed_sorted = sorted(topmixed, key=lambda x: x.TTScore, reverse=True)
     elif year == 2022:
-        topmixed_sorted = sorted(topmixed, key=lambda x: x.TopScore_nominal, reverse=True)
-    # print("sorted ", [top.TopScore for top in topmixed_sorted])
+        topmixed_sorted = sorted(topmixed, key=lambda x: (x.TTScore/(x.FTScore + x.TTScore)), reverse=True)
+    # print("sorted ", [top.TopScore for top in topmixed_sorted]
     topselected = []
     for i, top in enumerate(topmixed_sorted):
-        topselected.append(top)
+        if (top.TTScore/(top.FTScore + top.TTScore) >= 0.92):
+            topselected.append(top)
 
     return topselected
 
 def removeResolved(topmixed):
+    '''
+    Questa parte separa i top resolved 
+    che si trovano all'interno dei top mixed
+    '''
     if len(topmixed) == 0: return []
     topselected = []
     for top in topmixed:
@@ -256,7 +273,7 @@ def matchingTopResGenPart(genpart, top_res, jets):
         if(part.genPartIdxMother_prompt>-1 and (part.statusFlags & (1<<12))):
             if(part.pdgId ==5*sign_w and abs(genpart[part.genPartIdxMother_prompt].pdgId)==6):
                 b = part  
-
+ 
     #print(top_res)
     for top in top_res:
         j0 = jets[top.idxJet0]
@@ -284,7 +301,7 @@ def matchingTopResGenPart(genpart, top_res, jets):
 
     return top_res_matched_q
 
-def matchingTopMerGenPart(genpart, top_mer):
+def matchingTopMerGenPart(genpart, top_mer, type):
     top_mer_matched_q = []
 
     b  = None
@@ -293,7 +310,8 @@ def matchingTopMerGenPart(genpart, top_mer):
     sign_w = 0
     for part in genpart:
         #se non è prompt(non generata dai gluoni) e prima copia 
-        if(part.genPartIdxMother_prompt>-1 and (part.statusFlags & (1<<12))): #la parte su statusFlag controlla se il 12esimo bit è 0 o 1 (1 << 12:Sposta il bit "1" di 12 posizioni verso sinistra & controlla bit a bit) il 12 slot indica se è la prima copia della particella
+        if(part.genPartIdxMother_prompt>-1 and (part.statusFlags & (1<<12))): 
+            #la parte su statusFlag controlla se il 12esimo bit è 0 o 1 (1 << 12:Sposta il bit "1" di 12 posizioni verso sinistra & controlla bit a bit) il 12 slot indica se è la prima copia della particella
             #se è un quark non top e la madre è un w e la nonna è un top
             if(abs(part.pdgId)<6 and abs(genpart[part.genPartIdxMother_prompt].pdgId)==24 and abs(genpart[genpart[part.genPartIdxMother_prompt].genPartIdxMother_prompt].pdgId)==6):
                 sign_w = genpart[part.genPartIdxMother_prompt].pdgId/24
@@ -317,18 +335,27 @@ def matchingTopMerGenPart(genpart, top_mer):
             drb, drq, drq_ = 1000, 1000, 1000
         #se la distanza tra ogni quark e il proprio jet è minore di 0.4 ritorna i 3 oggetti
         if(drb<0.8 and drq<0.8 and drq_<0.8):
-            top_mer_matched_q.append(top)
+            if type == 'Mixed':
+                if (top.TTScore)/(top.TTScore + top.FTScore) >= 0.92:
+                    top_mer_matched_q.append(top)
+            else:
+                top_mer_matched_q.append(top)
 
     return top_mer_matched_q
 
-def matchingRecoTopGenTop(gentop, recotop, dR):
+def matchingRecoTopGenTop(gentop, recotop, dR, type):
     # if len(gentop)==1:  top = gentop[0] # sempre vero per tt semilep
     top_reco_matched = []
     for top_r in recotop: 
         # Funziona solo per semilep
         dRGenTopRecoTop = deltaR(gentop[0].eta, gentop[0].phi, top_r.eta, top_r.phi) 
         if(dRGenTopRecoTop<dR): 
-            top_reco_matched.append(top_r)
+            if type == 'Mixed':
+                if (top_r.TTScore)/(top_r.TTScore + top_r.FTScore) >= 0.92:
+                    top_reco_matched.append(top_r)
+            else:
+                top_reco_matched.append(top_r)
+
     return top_reco_matched
 
 def thresholdTopScore(topreco, Top_threshold, top_type, year):
@@ -337,9 +364,9 @@ def thresholdTopScore(topreco, Top_threshold, top_type, year):
     topselected_tight = []
     if top_type == 'Mixed' or top_type == 'Resolved':
         if year == 2018:
-            attr_name = f"TopScore"
+            attr_name = f"TTScore"
         elif year == 2022:
-            attr_name = f"TopScore_nominal"
+            attr_name = f"TTScore"
     elif top_type == 'Merged':
         if year == 2018:
             attr_name = f"particleNet_TvsQCD"
@@ -356,20 +383,28 @@ def thresholdTopScore(topreco, Top_threshold, top_type, year):
             topselected_tight.append(t)
     return topselected_loose, topselected_medium, topselected_tight 
 
-with open("dict_samples_2022.json", "r") as f:
-    sample = json.load(f)
-year = 2018
+# with open("/afs/cern.ch/user/a/apuglia/CMSSW_14_1_7/src/PhysicsTools/NanoAODTools/python/postprocessing/AndreaThesis/samples/dict_samples_2022.json", "r") as f:
+#     sample = json.load(f)
+
+
+year = 2022
 if year == 2018:    
     file = "root://cms-xrd-global.cern.ch//store/user/acagnott/Run3Analysis_Tprime/TT_semilep_2018/20240731_214516/tree_hadd_755.root"
     print(f"Using file: {file}")
     chain = ROOT.TChain('Events')
     chain.Add(file)
 elif year == 2022:
-    file_dict = sample["TT_semilep_2022"]["TT_semilep_2022"]
-    file_idx = file_dict["ntot"].index(max(file_dict["ntot"]))
-    file = file_dict["strings"][file_idx]
+    # file_dict = sample["TT_semilep_2022"]["TT_semilep_2022"] 
+    # file_idx = file_dict["ntot"].index(max(file_dict["ntot"])) 
+    # file = file_dict["strings"][file_idx]
+    path = '/eos/user/a/apuglia/Master_Thesis/PostProcessed_Datasets/TT_semilep_2022/scores_model_lstm/'
     chain = ROOT.TChain('Events')
-    chain.Add(file)
+
+    for fileName in tqdm(os.listdir(path)):
+        if fileName.endswith(".root") and not(fileName.startswith(".")):
+            file = path + fileName
+            # print(file)
+            chain.Add(file)
     # for i in range(0,20):
     #     file=file_dict["strings"][i]
     #     print(f"Using file: {file}")
@@ -377,7 +412,7 @@ elif year == 2022:
 
 
 tree = InputTree(chain)
-
+print('num events: ', tree.GetEntries())
 
 if year == 2018: 
     dir_path = "/eos/user/f/fsalerno/Evaluation/TROTA_2018_studies/Histo_files"
@@ -386,7 +421,7 @@ if year == 2018:
     outfile = ROOT.TFile(f"{dir_path}/output_TROTA_efficiency_Study_ttsemilep_noResinMix.root","RECREATE")
 
 elif year == 2022:
-    dir_path = "/eos/user/f/fsalerno/Evaluation/TROTA_2022_studies/Histo_files"
+    dir_path = "/eos/user/a/apuglia/Thesis/Evaluation/TROTA_2022_studies/FT_Score_cut/Histo_files"
     if not os.path.exists(dir_path):  
         os.makedirs(dir_path)   
     outfile = ROOT.TFile(f"{dir_path}/output_TROTA_efficiency_Study_ttsemilep_noResinMix.root","RECREATE")
@@ -401,11 +436,11 @@ if year == 2018:
 
 elif year == 2022:
     Top_threshold = {"Resolved" :{'WPloose': "0.1422998", 'WPmedium': "0.59264845", 'WPtight': "0.86580896"},
-                    "Mixed"    :{'WPloose': "0.7214655876159668", 'WPmedium': "0.9436638951301575", 'WPtight': "0.9789741635322571"},
+                    "Mixed"    :{'WPloose': "0.7780495285987854", 'WPmedium': "0.8904699683189392", 'WPtight': "0.9797756671905518"},
                     "Merged"   :{'WPloose': "0.79", 'WPmedium': "0.8", 'WPtight': "0.97"}}
 
 ###############!!! DA CONTROLLARE I WORKING POINTS 2022 !!!#############
-
+ 
 
 h_GenTop_pt              = ROOT.TH1D("h_gentop_pt","; genTop pT", 20, 0, 1000)
 h_GenTop_pt_exist_resolved              = ROOT.TH1D("h_gentop_pt_exist_resolved","; genTop pT", 20, 0, 1000)
@@ -496,8 +531,8 @@ nEvRecoTopGenTop04Matched = 0
 nEvBestRecoTopGenQuarktMatched = 0
 nEvBestRecoTopGenTop02Matched = 0
 nEvBestRecoTopGenTop04Matched = 0
-
-for i in range(tree.GetEntries()):
+# print('a')
+for i in tqdm(range(tree.GetEntries())):
     event = Event(tree,i)
     genpart = Collection(event, "GenPart")
     if year == 2018:
@@ -588,13 +623,19 @@ for i in range(tree.GetEntries()):
                                         #Print("salvato indice:",is_hadronic_top
         topgen = [particle for particle, is_hadr_top in zip(genpart, is_hadronic_top) if is_hadr_top==1]
     # topgen = [genpart[i] for i in hadronic_top_idx]
+    # print('topgen is: ', topgen)
     # if len(topgen) != 2:
-    #     print("numero di top hadronici trovati:", len(topgen))
-    #     print("top hadronici trovati:", [top.pdgId for top in topgen])
-    #     print("hadronic top idx:", hadronic_top_idx)
-    #     print("i top sono:", [genpart[idx].pdgId for idx in hadronic_top_idx])
-    #     for i,part in enumerate(genpart):
-    #         print(i,"part pdgId:", part.pdgId, "e idx madre:", part.genPartIdxMother)
+    print("numero di top hadronici trovati:", len(topgen))
+    tot_top = []
+    for particle in genpart:
+        if abs(particle.pdgId) ==6:
+            particle.append(tot_top)
+    print('numero totale di top: ', len(tot_top))
+    # print("top hadronici trovati:", [top.pdgId for top in topgen])
+    # print("hadronic top idx:", hadronic_top_idx)
+    # print("i top sono:", [genpart[idx].pdgId for idx in hadronic_top_idx])
+    # for i,part in enumerate(genpart):
+    #     print(i,"part pdgId:", part.pdgId, "e idx madre:", part.genPartIdxMother)
     if year == 2022:
         for top in topgen:
             if top.pdgId != 6 and top.pdgId != -6:
@@ -615,14 +656,15 @@ for i in range(tree.GetEntries()):
     #quark match
     #lista dei top matchati secondo il criterio dei quark
     topResolvedQuarkMatch = matchingTopResGenPart(genpart, topresolved, jets)
-    topMixedQuarkMatch = list(filter(lambda x : x.truth==1, topMixedNoRes)) #qui uso la truth per "almeno un quark matchato"
-    topMergedQuarkMatch = matchingTopMerGenPart(genpart, topmerged)
-    if len(topResolvedQuarkMatch) != 0:
-        h_GenTop_pt_Reconstructable_QuarkMatch_Resolved.Fill(topgen[0].pt)
+    # if (top.TTScore/(top.ZJScore + top.TTScore) >= 0.79):
+    topMixedQuarkMatch = list(filter(lambda x : x.truth==1 and (x.TTScore/(x.TTScore + x.FTScore)) >= 0.92, topMixedNoRes)) #qui uso la truth per "almeno un quark matchato"
+    topMergedQuarkMatch = matchingTopMerGenPart(genpart, topmerged, type = 'Merged')
+    # if len(topResolvedQuarkMatch) != 0:
+        # h_GenTop_pt_Reconstructable_QuarkMatch_Resolved.Fill(topgen[0].pt)
         #print(len(topResolvedQuarkMatch))
-        h2_Num_cand_GenTop_pt_ExistsMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topresolved))
+        # h2_Num_cand_GenTop_pt_ExistsMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topresolved))
         #h2_Num_cand_GenTop_pt_ExistsMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topResolvedQuarkMatch))
-        nEvRecoTopGenQuarktMatched += 1
+        # nEvRecoTopGenQuarktMatched += 1
     if len(topMixedQuarkMatch) != 0:
         h_GenTop_pt_Reconstructable_QuarkMatch_Mixed.Fill(topgen[0].pt)
         h2_Num_cand_GenTop_pt_ExistsMatched_QuarkMatch_Mixed.Fill(topgen[0].pt, len(topmixed))
@@ -633,13 +675,13 @@ for i in range(tree.GetEntries()):
         h2_Num_cand_GenTop_pt_ExistsMatched_QuarkMatch_Merged.Fill(topgen[0].pt, len(topmerged))
         #h2_Num_cand_GenTop_pt_ExistsMatched_QuarkMatch_Merged.Fill(topgen[0].pt, len(topMergedQuarkMatch))
     #gentop match dr=0.4
-    topResolvedGenTopMatch_04 = matchingRecoTopGenTop(topgen, topresolved, 0.4)
-    topMixedGenTopMatch_04 = matchingRecoTopGenTop(topgen, topMixedNoRes, 0.4)
-    topMergedGenTopMatch_04 = matchingRecoTopGenTop(topgen, topmerged, 0.4)
-    if len(topResolvedGenTopMatch_04) != 0:
-        h_GenTop_pt_Reconstructable_GenTopMatch04_Resolved.Fill(topgen[0].pt)
-        h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch04_Resolved.Fill(topgen[0].pt, len(topresolved))
-        nEvRecoTopGenTop04Matched += 1
+    # topResolvedGenTopMatch_04 = matchingRecoTopGenTop(topgen, topresolved, 0.4)
+    topMixedGenTopMatch_04 = matchingRecoTopGenTop(topgen, topMixedNoRes, 0.4, type = 'Mixed')
+    topMergedGenTopMatch_04 = matchingRecoTopGenTop(topgen, topmerged, 0.4, type = 'Merged')
+    # if len(topResolvedGenTopMatch_04) != 0:
+    #     h_GenTop_pt_Reconstructable_GenTopMatch04_Resolved.Fill(topgen[0].pt)
+    #     h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch04_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #     nEvRecoTopGenTop04Matched += 1
     if len(topMixedGenTopMatch_04) != 0:
         h_GenTop_pt_Reconstructable_GenTopMatch04_Mixed.Fill(topgen[0].pt)
         h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch04_Mixed.Fill(topgen[0].pt, len(topmixed))
@@ -647,13 +689,13 @@ for i in range(tree.GetEntries()):
         h_GenTop_pt_Reconstructable_GenTopMatch04_Merged.Fill(topgen[0].pt)
         h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch04_Merged.Fill(topgen[0].pt, len(topmerged))
     #gentop match dr=0.2
-    topResolvedGenTopMatch_02 = matchingRecoTopGenTop(topgen, topresolved, 0.2)
-    topMixedGenTopMatch_02 = matchingRecoTopGenTop(topgen, topMixedNoRes, 0.2)
-    topMergedGenTopMatch_02 = matchingRecoTopGenTop(topgen, topmerged, 0.2)
-    if len(topResolvedGenTopMatch_02) != 0:
-        h_GenTop_pt_Reconstructable_GenTopMatch02_Resolved.Fill(topgen[0].pt)
-        h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch02_Resolved.Fill(topgen[0].pt, len(topresolved))
-        nEvRecoTopGenTop02Matched += 1
+    # topResolvedGenTopMatch_02 = matchingRecoTopGenTop(topgen, topresolved, 0.2)
+    topMixedGenTopMatch_02 = matchingRecoTopGenTop(topgen, topMixedNoRes, 0.2, type = 'Mixed')
+    topMergedGenTopMatch_02 = matchingRecoTopGenTop(topgen, topmerged, 0.2, type = 'Merged')
+    # if len(topResolvedGenTopMatch_02) != 0:
+    #     h_GenTop_pt_Reconstructable_GenTopMatch02_Resolved.Fill(topgen[0].pt)
+    #     h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch02_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #     nEvRecoTopGenTop02Matched += 1
     if len(topMixedGenTopMatch_02) != 0:
         h_GenTop_pt_Reconstructable_GenTopMatch02_Mixed.Fill(topgen[0].pt)
         h2_Num_cand_GenTop_pt_ExistsMatched_GenTopMatch02_Mixed.Fill(topgen[0].pt, len(topmixed))
@@ -663,7 +705,7 @@ for i in range(tree.GetEntries()):
 
     ####HISTO PT PER EFFICIENZA "DI SELEZIONE" E "REAL LIFE" IL MIGLIOR CANDIDATO TROTA è MATCHATO  #####
     #Lista dei topmixed non sovrapposti ordinati per score
-    topResolvedSelect = selectTop(topresolved, resolved = True, year=year)
+    # topResolvedSelect = selectTop(topresolved, resolved = True, year=year)
     #print("topResolvedSelect",isinstance(topResolvedSelect,list), topResolvedSelect[0].pt)
     #Lista dei topmixed senza resolved non sovrapposti ordinati per score
     topMixedSelect = selectTop(topMixedNoRes, resolved = False, year=year)
@@ -673,52 +715,52 @@ for i in range(tree.GetEntries()):
     elif year == 2022:
         topMergedSelect = sorted(topmerged, key=lambda x: x.particleNetWithMass_TvsQCD, reverse=True)
     #Esiste almeno un candidato TROTA
-    if len(topResolvedSelect) != 0:
-        h_GenTop_pt_exist_resolved.Fill(topgen[0].pt)
+    # if len(topResolvedSelect) != 0:
+    #     h_GenTop_pt_exist_resolved.Fill(topgen[0].pt)
     if len(topMixedSelect) != 0:
         h_GenTop_pt_exist_mixed.Fill(topgen[0].pt)
     if len(topMergedSelect) != 0:
         h_GenTop_pt_exist_merged.Fill(topgen[0].pt)
     
     
-    if len(topResolvedSelect) !=0:
-        h2_DeltaR_BestTop_GenTop_pt_Resolved.Fill(topgen[0].pt, deltaR(topResolvedSelect[0], topgen[0]))
-        #Il miglior candidato TROTA è matchato con i quark
-        if len(matchingTopResGenPart(genpart, [topResolvedSelect[0]], jets))!=0:
-            h_GenTop_pt_Selection_QuarkMatch_Resolved.Fill(topgen[0].pt)
-            h_GenTop_pt_RealLife_QuarkMatch_Resolved.Fill(topgen[0].pt)
-            h2_Num_cand_GenTop_pt_BestMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topresolved))
-            #h2_Num_cand_GenTop_pt_BestMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topResolvedSelect))
+    # if len(topResolvedSelect) !=0:
+    #     h2_DeltaR_BestTop_GenTop_pt_Resolved.Fill(topgen[0].pt, deltaR(topResolvedSelect[0], topgen[0]))
+    #     #Il miglior candidato TROTA è matchato con i quark
+    #     if len(matchingTopResGenPart(genpart, [topResolvedSelect[0]], jets))!=0:
+    #         h_GenTop_pt_Selection_QuarkMatch_Resolved.Fill(topgen[0].pt)
+    #         h_GenTop_pt_RealLife_QuarkMatch_Resolved.Fill(topgen[0].pt)
+    #         h2_Num_cand_GenTop_pt_BestMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #         #h2_Num_cand_GenTop_pt_BestMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topResolvedSelect))
 
-            nEvBestRecoTopGenQuarktMatched += 1
-            top_resolved_selected_loose_QuarkMatch, top_resolved_selected_medium_QuarkMatch, top_resolved_selected_tight_QuarkMatch = thresholdTopScore([topResolvedSelect[0]], Top_threshold, 'Resolved', year)
-            if len(top_resolved_selected_medium_QuarkMatch) != 0:
-                h_GenTop_pt_TagMediumWP_QuarkMatch_Resolved.Fill(topgen[0].pt)
-        else:
-            h2_Num_cand_GenTop_pt_NotMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topresolved))
-        #Il miglior candidato TROTA è matchato con un topgen con dr = 0.4
-        if len(matchingRecoTopGenTop(topgen, [topResolvedSelect[0]], 0.4))!=0:
-            h_GenTop_pt_Selection_GenTopMatch04_Resolved.Fill(topgen[0].pt)
-            h_GenTop_pt_RealLife_GenTopMatch04_Resolved.Fill(topgen[0].pt)
-            h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch04_Resolved.Fill(topgen[0].pt, len(topresolved))
-            nEvBestRecoTopGenTop04Matched += 1
-            top_resolved_selected_loose_GenTopMatch04_Resolved, top_resolved_selected_medium_GenTopMatch04_Resolved, top_resolved_selected_tight_GenTopMatch04_Resolved = thresholdTopScore([topResolvedSelect[0]], Top_threshold, 'Resolved', year)  
-            if len(top_resolved_selected_medium_GenTopMatch04_Resolved) != 0:
-                h_GenTop_pt_TagMediumWP_GenTopMatch04_Resolved.Fill(topgen[0].pt)
-        else:
-            h2_Num_cand_GenTop_pt_NotMatched_GenTopMatch04_Resolved.Fill(topgen[0].pt, len(topresolved))
-        #Il miglior candidato TROTA è matchato con un topgen con dr = 0.2
-        if len(matchingRecoTopGenTop(topgen, [topResolvedSelect[0]], 0.2))!=0:
-            h_GenTop_pt_Selection_GenTopMatch02_Resolved.Fill(topgen[0].pt)
-            h_GenTop_pt_RealLife_GenTopMatch02_Resolved.Fill(topgen[0].pt)
-            h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch02_Resolved.Fill(topgen[0].pt, len(topresolved))
-            nEvBestRecoTopGenTop02Matched += 1
-            top_resolved_selected_loose_GenTopMatch02_Resolved, top_resolved_selected_medium_GenTopMatch02_Resolved, top_resolved_selected_tight_GenTopMatch02_Resolved = thresholdTopScore([topResolvedSelect[0]], Top_threshold, 'Resolved', year)
-            if len(top_resolved_selected_medium_GenTopMatch02_Resolved) != 0:
-                h_GenTop_pt_TagMediumWP_GenTopMatch02_Resolved.Fill(topgen[0].pt)
+    #         nEvBestRecoTopGenQuarktMatched += 1
+    #         top_resolved_selected_loose_QuarkMatch, top_resolved_selected_medium_QuarkMatch, top_resolved_selected_tight_QuarkMatch = thresholdTopScore([topResolvedSelect[0]], Top_threshold, 'Resolved', year)
+    #         if len(top_resolved_selected_medium_QuarkMatch) != 0:
+    #             h_GenTop_pt_TagMediumWP_QuarkMatch_Resolved.Fill(topgen[0].pt)
+    #     else:
+    #         h2_Num_cand_GenTop_pt_NotMatched_QuarkMatch_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #     #Il miglior candidato TROTA è matchato con un topgen con dr = 0.4
+    #     if len(matchingRecoTopGenTop(topgen, [topResolvedSelect[0]], 0.4))!=0:
+    #         h_GenTop_pt_Selection_GenTopMatch04_Resolved.Fill(topgen[0].pt)
+    #         h_GenTop_pt_RealLife_GenTopMatch04_Resolved.Fill(topgen[0].pt)
+    #         h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch04_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #         nEvBestRecoTopGenTop04Matched += 1
+    #         top_resolved_selected_loose_GenTopMatch04_Resolved, top_resolved_selected_medium_GenTopMatch04_Resolved, top_resolved_selected_tight_GenTopMatch04_Resolved = thresholdTopScore([topResolvedSelect[0]], Top_threshold, 'Resolved', year)  
+    #         if len(top_resolved_selected_medium_GenTopMatch04_Resolved) != 0:
+    #             h_GenTop_pt_TagMediumWP_GenTopMatch04_Resolved.Fill(topgen[0].pt)
+    #     else:
+    #         h2_Num_cand_GenTop_pt_NotMatched_GenTopMatch04_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #     #Il miglior candidato TROTA è matchato con un topgen con dr = 0.2
+    #     if len(matchingRecoTopGenTop(topgen, [topResolvedSelect[0]], 0.2))!=0:
+    #         h_GenTop_pt_Selection_GenTopMatch02_Resolved.Fill(topgen[0].pt)
+    #         h_GenTop_pt_RealLife_GenTopMatch02_Resolved.Fill(topgen[0].pt)
+    #         h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch02_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #         nEvBestRecoTopGenTop02Matched += 1
+    #         top_resolved_selected_loose_GenTopMatch02_Resolved, top_resolved_selected_medium_GenTopMatch02_Resolved, top_resolved_selected_tight_GenTopMatch02_Resolved = thresholdTopScore([topResolvedSelect[0]], Top_threshold, 'Resolved', year)
+    #         if len(top_resolved_selected_medium_GenTopMatch02_Resolved) != 0:
+    #             h_GenTop_pt_TagMediumWP_GenTopMatch02_Resolved.Fill(topgen[0].pt)
 
-        else:
-            h2_Num_cand_GenTop_pt_NotMatched_GenTopMatch02_Resolved.Fill(topgen[0].pt, len(topresolved))
+    #     else:
+    #         h2_Num_cand_GenTop_pt_NotMatched_GenTopMatch02_Resolved.Fill(topgen[0].pt, len(topresolved))
 
     if len(topMixedSelect) != 0:
         h2_DeltaR_BestTop_GenTop_pt_Mixed.Fill(topgen[0].pt, deltaR(topMixedSelect[0], topgen[0]))
@@ -734,7 +776,7 @@ for i in range(tree.GetEntries()):
         else:
             h2_Num_cand_GenTop_pt_NotMatched_QuarkMatch_Mixed.Fill(topgen[0].pt, len(topmixed))
         #Il miglior candidato TROTA è matchato con un topgen con dr = 0.4
-        if len(matchingRecoTopGenTop(topgen, [topMixedSelect[0]], 0.4))!=0:
+        if len(matchingRecoTopGenTop(topgen, [topMixedSelect[0]], 0.4, type = 'Mixed'))!=0:
             h_GenTop_pt_Selection_GenTopMatch04_Mixed.Fill(topgen[0].pt)
             h_GenTop_pt_RealLife_GenTopMatch04_Mixed.Fill(topgen[0].pt)
             h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch04_Mixed.Fill(topgen[0].pt, len(topmixed))
@@ -744,7 +786,7 @@ for i in range(tree.GetEntries()):
         else:
             h2_Num_cand_GenTop_pt_NotMatched_GenTopMatch04_Mixed.Fill(topgen[0].pt, len(topmixed))
         #Il miglior candidato TROTA è matchato con un topgen con dr = 0.2
-        if len(matchingRecoTopGenTop(topgen, [topMixedSelect[0]], 0.2))!=0:
+        if len(matchingRecoTopGenTop(topgen, [topMixedSelect[0]], 0.2, type = 'Mixed'))!=0:
             h_GenTop_pt_Selection_GenTopMatch02_Mixed.Fill(topgen[0].pt)
             h_GenTop_pt_RealLife_GenTopMatch02_Mixed.Fill(topgen[0].pt)
             h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch02_Mixed.Fill(topgen[0].pt, len(topmixed))
@@ -756,7 +798,7 @@ for i in range(tree.GetEntries()):
     if len(topMergedSelect) != 0:
         h2_DeltaR_BestTop_GenTop_pt_Merged.Fill(topgen[0].pt, deltaR(topMergedSelect[0], topgen[0]))
         #Il miglior candidato TROTA è matchato con quark
-        if len(matchingTopMerGenPart(genpart, [topMergedSelect[0]]))!=0:
+        if len(matchingTopMerGenPart(genpart, [topMergedSelect[0]], type= 'Merged'))!=0:
             h_GenTop_pt_Selection_QuarkMatch_Merged.Fill(topgen[0].pt)
             h_GenTop_pt_RealLife_QuarkMatch_Merged.Fill(topgen[0].pt)
             h2_Num_cand_GenTop_pt_BestMatched_QuarkMatch_Merged.Fill(topgen[0].pt, len(topmerged))
@@ -767,7 +809,7 @@ for i in range(tree.GetEntries()):
         else:
             h2_Num_cand_GenTop_pt_NotMatched_QuarkMatch_Merged.Fill(topgen[0].pt, len(topmerged))
         #Il miglior candidato TROTA è matchato con un topgen con dr = 0.4
-        if len(matchingRecoTopGenTop(topgen, [topMergedSelect[0]], 0.4))!=0:
+        if len(matchingRecoTopGenTop(topgen, [topMergedSelect[0]], 0.4, type = 'Merged'))!=0:
             h_GenTop_pt_Selection_GenTopMatch04_Merged.Fill(topgen[0].pt)
             h_GenTop_pt_RealLife_GenTopMatch04_Merged.Fill(topgen[0].pt)
             h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch04_Merged.Fill(topgen[0].pt, len(topmerged))
@@ -777,7 +819,7 @@ for i in range(tree.GetEntries()):
         else:
             h2_Num_cand_GenTop_pt_NotMatched_GenTopMatch04_Merged.Fill(topgen[0].pt, len(topmerged))
         #Il miglior candidato TROTA è matchato con un topgen con dr = 0.2
-        if len(matchingRecoTopGenTop(topgen, [topMergedSelect[0]], 0.2))!=0:
+        if len(matchingRecoTopGenTop(topgen, [topMergedSelect[0]], 0.2, type = 'Merged'))!=0:
             h_GenTop_pt_Selection_GenTopMatch02_Merged.Fill(topgen[0].pt)
             h_GenTop_pt_RealLife_GenTopMatch02_Merged.Fill(topgen[0].pt)
             h2_Num_cand_GenTop_pt_BestMatched_GenTopMatch02_Merged.Fill(topgen[0].pt, len(topmerged))
@@ -789,18 +831,18 @@ for i in range(tree.GetEntries()):
         #il miglior candidato TROTA è matchato con quark e topgen dr=0.4
 
 
-    if len(topResolvedSelect) !=0:
-        #Il miglior candidato TROTA è matchato con i quark e topgen dr<0.4
-        if len(matchingRecoTopGenTop(topgen, [topResolvedSelect[0]], 0.4))!=0 and len(matchingTopResGenPart(genpart, [topResolvedSelect[0]], jets))!=0:
-            h_GenTop_pt_RealLife_OldMatch_Resolved.Fill(topgen[0].pt)
+    # if len(topResolvedSelect) !=0:
+    #     #Il miglior candidato TROTA è matchato con i quark e topgen dr<0.4
+    #     if len(matchingRecoTopGenTop(topgen, [topResolvedSelect[0]], 0.4))!=0 and len(matchingTopResGenPart(genpart, [topResolvedSelect[0]], jets))!=0:
+    #         h_GenTop_pt_RealLife_OldMatch_Resolved.Fill(topgen[0].pt)
   
     if len(topMixedSelect) != 0:
         #Il miglior candidato TROTA è matchato con quark e topgen dr<0.4
-        if topMixedSelect[0].truth == 1 and len(matchingRecoTopGenTop(topgen,[topMixedSelect[0]], 0.4))!=0:
+        if topMixedSelect[0].truth == 1 and len(matchingRecoTopGenTop(topgen,[topMixedSelect[0]], 0.4, type = 'Mixed'))!=0:
             h_GenTop_pt_RealLife_OldMatch_Mixed.Fill(topgen[0].pt)
 
     if len(topMergedSelect) != 0:
-        if len(matchingTopMerGenPart(genpart, [topMergedSelect[0]]))!=0 and len(matchingRecoTopGenTop(topgen, [topMergedSelect[0]], 0.4))!=0:
+        if len(matchingTopMerGenPart(genpart, [topMergedSelect[0]], type = 'Merged'))!=0 and len(matchingRecoTopGenTop(topgen, [topMergedSelect[0]], 0.4, type = 'Merged'))!=0:
             h_GenTop_pt_RealLife_OldMatch_Merged.Fill(topgen[0].pt)
 
     
@@ -882,15 +924,15 @@ h_GenTop_pt_RealLife_OldMatch_Resolved.Write()
 outfile.Close()
 
 
-print("Reconstructable efficiency quark criterion resolved: %.4f" %(nEvRecoTopGenQuarktMatched/tree.GetEntries()))
-print("Reconstructable efficiency dr=0.4 criterion resolved: %.4f" %(nEvRecoTopGenTop04Matched/tree.GetEntries()))
-print("Reconstructable efficiency dr=0.2 criterion resolved: %.4f" %(nEvRecoTopGenTop02Matched/tree.GetEntries()))
-print("Selection efficiency quark criterion resolved: %.4f" %(nEvBestRecoTopGenQuarktMatched/nEvRecoTopGenQuarktMatched))
-print("Selection efficiency dr=0.4 criterion resolved: %.4f" %(nEvBestRecoTopGenTop04Matched/nEvRecoTopGenTop04Matched))
-print("Selection efficiency dr=0.2 criterion resolved: %.4f" %(nEvBestRecoTopGenTop02Matched/nEvRecoTopGenTop02Matched))
-print("Real Life efficiency quark criterion resolved: %.4f" %(nEvBestRecoTopGenQuarktMatched/tree.GetEntries()))
-print("Real Life efficiency dr=0.4 criterion resolved: %.4f" %(nEvBestRecoTopGenTop04Matched/tree.GetEntries()))
-print("Real Life efficiency dr=0.2 criterion resolved: %.4f" %(nEvBestRecoTopGenTop02Matched/tree.GetEntries()))
+# print("Reconstructable efficiency quark criterion resolved: %.4f" %(nEvRecoTopGenQuarktMatched/tree.GetEntries()))
+# print("Reconstructable efficiency dr=0.4 criterion resolved: %.4f" %(nEvRecoTopGenTop04Matched/tree.GetEntries()))
+# print("Reconstructable efficiency dr=0.2 criterion resolved: %.4f" %(nEvRecoTopGenTop02Matched/tree.GetEntries()))
+# print("Selection efficiency quark criterion resolved: %.4f" %(nEvBestRecoTopGenQuarktMatched/nEvRecoTopGenQuarktMatched))
+# print("Selection efficiency dr=0.4 criterion resolved: %.4f" %(nEvBestRecoTopGenTop04Matched/nEvRecoTopGenTop04Matched))
+# print("Selection efficiency dr=0.2 criterion resolved: %.4f" %(nEvBestRecoTopGenTop02Matched/nEvRecoTopGenTop02Matched))
+# print("Real Life efficiency quark criterion resolved: %.4f" %(nEvBestRecoTopGenQuarktMatched/tree.GetEntries()))
+# print("Real Life efficiency dr=0.4 criterion resolved: %.4f" %(nEvBestRecoTopGenTop04Matched/tree.GetEntries()))
+# print("Real Life efficiency dr=0.2 criterion resolved: %.4f" %(nEvBestRecoTopGenTop02Matched/tree.GetEntries()))
 
 
 
