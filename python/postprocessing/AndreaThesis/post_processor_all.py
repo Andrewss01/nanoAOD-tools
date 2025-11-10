@@ -13,6 +13,7 @@ from modules.nanoTopEvaluate_MultiScore_v3 import *
 
 fnames = [sys.argv[1]]
 # print(fnames)
+#pazza
 path = sys.argv[2]
 label = sys.argv[3]
 #preselction()
