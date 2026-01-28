@@ -107,11 +107,15 @@ class Idx_PFC_SV(Module):
 #                 fjIdx=int(particle.FatJetIdx)
 #                 dr_Fatjet=deltaR(particle, fjets[fjIdx])
 #                 is_in_fat_jet=1
-        
+        print ('------------------------------------------')
         for jSV in jetSVs:
             if jSV.sVIdx != -1:
                 if SVs_multiple_jets[jSV.sVIdx] == -1:
                     SVs_multiple_jets[jSV.sVIdx] = jSV.jetIdx
+                    sv_particle = SVs[jSV.sVIdx]
+                    jet = jets[jSV.jetIdx]
+                    dr = deltaR(sv_particle, jet)
+                    print('dr is: ', dr)
                 else:
                     jet_1_idx = int(SVs_multiple_jets[jSV.sVIdx])
                     sv_particle = SVs[jSV.sVIdx]
@@ -119,15 +123,15 @@ class Idx_PFC_SV(Module):
                     dr_1 = deltaR(sv_particle, jet_1)
                     jet_2 = jets[int(jSV.jetIdx)] 
                     dr_2 = deltaR(sv_particle, jet_2)
+                    print('dr1: ', dr_1, ' dr_2 : ', dr_2)
                     if dr_2 < dr_1:
                         SVs_multiple_jets[jSV.sVIdx] = jSV.jetIdx
-            
-
+       
         for fjSV in fatjetSVs:
             if fjSV.sVIdx != -1:
                 if SVs_multiple_fat_jets[fjSV.sVIdx] == -1:
                     SVs_multiple_fat_jets[fjSV.sVIdx] = fjSV.jetIdx
-                    
+                    # print('dr is: ', deltaR(sv_pa))
                 else:
                     fatjet_1_idx = int(SVs_multiple_fat_jets[fjSV.sVIdx])
                     sv_particle = SVs[fjSV.sVIdx]
@@ -135,6 +139,7 @@ class Idx_PFC_SV(Module):
                     dr_1 = deltaR(sv_particle, fatjet_1)
                     fatjet_2 = fatjets[fjSV.jetIdx]
                     dr_2 = deltaR(sv_particle, fatjet_2)
+                    # print('dr1: ', dr_1, ' dr2: ', dr_2)
                     if dr_2 < dr_1: 
                         SVs_multiple_fat_jets[fjSV.sVIdx] = fjSV.jetIdx
                 
@@ -142,8 +147,12 @@ class Idx_PFC_SV(Module):
             #PFCs_fat_jets_dz_PV[jPFC.pFCandsIdx]=fjPFC.dzFromPV
             #PFCs_fat_jets_dxy_PV[jPFC.pFCandsIdx]=fjPFC.dxyFromPV
         
-        # for fjSV in fatjetSVs:
-            # SVs_fat_jets_idx[fjSV.sVIdx] = fjSV.jetIdx
+        
+
+        # print('sv list is: ', SVs_multiple_fat_jets)
+        # for j in SVs_multiple_fat_jets:
+        #     if j != -1:
+        #         print(SVs_multiple_fat_jets)
 
       
 

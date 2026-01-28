@@ -98,8 +98,8 @@ QCD_2022                        = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_2022")
 QCD_2022.year                   = 2022
 QCD_2022.components             = [ 
                                     # QCD_HT40to70_2022, 
-                                    QCD_HT70to100_2022, QCD_HT100to200_2022, QCD_HT200to400_2022,
-                                    QCD_HT400to600_2022, QCD_HT600to800_2022, QCD_HT800to1000_2022, 
+                                    QCD_HT70to100_2022, QCD_HT100to200_2022, QCD_HT200to400_2022, QCD_HT400to600_2022, 
+                                    QCD_HT600to800_2022, QCD_HT800to1000_2022, 
                                     QCD_HT1000to1200_2022, QCD_HT1200to1500_2022,
                                     QCD_HT1500to2000_2022, QCD_HT2000_2022
                                 ]
@@ -132,7 +132,7 @@ TT_dilep_2022.EE            = 0
 
 TT_2022                     = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_2022")
 TT_2022.year                = 2022
-TT_2022.components          = [TT_semilep_2022, TT_hadr_2022]
+TT_2022.components          = [TT_semilep_2022, TT_hadr_2022, TT_dilep_2022]
 
 ################################ ZJets ################################
 
@@ -392,85 +392,176 @@ WJets_2jets_2022.components  = [WJets_2jets0J_2022, WJets_2jets1J_2022, WJets_2j
 TprimeToTZ_700_2022           = sample(ROOT.kGreen, 1, 1001, "T#rightarrow tZ M700GeV", "TprimeToTZ_700_2022")
 TprimeToTZ_700_2022.sigma     = 0.07804 #pb  # questa è 2018 non 2022
 TprimeToTZ_700_2022.year      = 2022
-TprimeToTZ_700_2022.dataset   = '/TprimeBtoTZ_M-700_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_700_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+TprimeToTZ_700_2022.dataset   = "/TprimeBtoTZ_M-700_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_700_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_700_2022.unix_code = 32000
+TprimeToTZ_700_2022.process   = "TprimeToTZ_700_2022"
 TprimeToTZ_700_2022.EE        = 0
 
 TprimeToTZ_800_2022           = sample(ROOT.kGreen, 1, 1001, "T#rightarrow tZ M800GeV", "TprimeToTZ_800_2022")
 TprimeToTZ_800_2022.sigma     = 0.04155 #pb  # questa è 2018 non 2022
 TprimeToTZ_800_2022.year      = 2022
-TprimeToTZ_800_2022.dataset   = '/TprimeBtoTZ_M-800_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_800_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+TprimeToTZ_800_2022.dataset   = "/TprimeBtoTZ_M-800_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_800_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_800_2022.unix_code = 32001
+TprimeToTZ_800_2022.process   = "TprimeToTZ_800_2022"
 TprimeToTZ_800_2022.EE        = 0
 
 TprimeToTZ_900_2022           = sample(ROOT.kGreen, 1, 1001, "T#rightarrow tZ M900GeV", "TprimeToTZ_900_2022")
 TprimeToTZ_900_2022.sigma     = 0.02335 #pb  # questa è 2018 non 2022
 TprimeToTZ_900_2022.year      = 2022
-TprimeToTZ_900_2022.dataset   = '/TprimeBtoTZ_M-900_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_900_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+TprimeToTZ_900_2022.dataset   = "/TprimeBtoTZ_M-900_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_900_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_900_2022.unix_code = 32002
+TprimeToTZ_900_2022.process   = "TprimeToTZ_900_2022"
 TprimeToTZ_900_2022.EE        = 0
 
 TprimeToTZ_1000_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1000GeV", "TprimeToTZ_1000_2022")
 TprimeToTZ_1000_2022.sigma     = 0.01362 #pb  # questa è 2018 non 2022
-TprimeToTZ_1000_2022.year      = 202
-TprimeToTZ_1000_2022.dataset   = '/TprimeBtoTZ_M-1000_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1000_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1000_2022.year      = 2022
+TprimeToTZ_1000_2022.dataset   =  "/TprimeBtoTZ_M-1000_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1000_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1000_2022.unix_code = 32003
+TprimeToTZ_1000_2022.process   = "TprimeToTZ_1000_2022"
 TprimeToTZ_1000_2022.EE        = 0
 
 TprimeToTZ_1100_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1100GeV", "TprimeToTZ_1100_2022")
 TprimeToTZ_1100_2022.sigma     = 0.008228 #pb  # questa è 2018 non 2022
 TprimeToTZ_1100_2022.year      = 2022
-TprimeToTZ_1100_2022.dataset   = '/TprimeBtoTZ_M-1100_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1100_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1100_2022.dataset   =  "/TprimeBtoTZ_M-1100_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1100_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1100_2022.unix_code = 32003
+TprimeToTZ_1100_2022.process   = "TprimeToTZ_1100_2022"
 TprimeToTZ_1100_2022.EE        = 0
 
 TprimeToTZ_1200_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1200GeV", "TprimeToTZ_1200_2022")
 TprimeToTZ_1200_2022.sigma     = 0.005113 #pb  # questa è 2018 non 2022
 TprimeToTZ_1200_2022.year      = 2022
-TprimeToTZ_1200_2022.dataset   = '/TprimeBtoTZ_M-1200_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1200_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1200_2022.dataset   =  "/TprimeBtoTZ_M-1200_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1200_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1200_2022.unix_code = 32003
+TprimeToTZ_1200_2022.process   = "TprimeToTZ_1200_2022"
 TprimeToTZ_1200_2022.EE        = 0
 
 TprimeToTZ_1300_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1300GeV", "TprimeToTZ_1300_2022")
 TprimeToTZ_1300_2022.sigma     = 0.003256 #pb  # questa è 2018 non 2022
 TprimeToTZ_1300_2022.year      = 2022
-TprimeToTZ_1300_2022.dataset   = '/TprimeBtoTZ_M-1300_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1300_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1300_2022.dataset   =  "/TprimeBtoTZ_M-1300_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1300_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1300_2022.unix_code = 32003
+TprimeToTZ_1300_2022.process   = "TprimeToTZ_1300_2022"
 TprimeToTZ_1300_2022.EE        = 0
 
 TprimeToTZ_1400_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1400GeV", "TprimeToTZ_1400_2022")
 TprimeToTZ_1400_2022.sigma     = 0.002121 #pb  # questa è 2018 non 2022
 TprimeToTZ_1400_2022.year      = 2022
-TprimeToTZ_1400_2022.dataset   = '/TprimeBtoTZ_M-1400_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1400_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1400_2022.dataset   =  "/TprimeBtoTZ_M-1400_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1400_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1400_2022.unix_code = 32003
+TprimeToTZ_1400_2022.process   = "TprimeToTZ_1400_2022"
 TprimeToTZ_1400_2022.EE        = 0
 
 TprimeToTZ_1500_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1500GeV", "TprimeToTZ_1500_2022")
 TprimeToTZ_1500_2022.sigma     = 0.001407 #pb  # questa è 2018 non 2022
 TprimeToTZ_1500_2022.year      = 2022
-TprimeToTZ_1500_2022.dataset   = '/TprimeBtoTZ_M-1500_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1500_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1500_2022.dataset   =  "/TprimeBtoTZ_M-1500_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1500_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1500_2022.unix_code = 32003
+TprimeToTZ_1500_2022.process   = "TprimeToTZ_1500_2022"
 TprimeToTZ_1500_2022.EE        = 0
 
 TprimeToTZ_1600_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1600GeV", "TprimeToTZ_1600_2022")
 TprimeToTZ_1600_2022.sigma     = 0.0009456 #pb  # questa è 2018 non 2022
 TprimeToTZ_1600_2022.year      = 2022
-TprimeToTZ_1600_2022.dataset   = '/TprimeBtoTZ_M-1600_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1600_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1600_2022.dataset   =  "/TprimeBtoTZ_M-1600_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1600_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1600_2022.unix_code = 32003
+TprimeToTZ_1600_2022.process   = "TprimeToTZ_1600_2022"
 TprimeToTZ_1600_2022.EE        = 0
 
 TprimeToTZ_1700_2022           = sample(ROOT.kGreen+2, 1, 1001, "T#rightarrow tZ M1700GeV", "TprimeToTZ_1700_2022")
 TprimeToTZ_1700_2022.sigma     = 0.0006454 #pb  # questa è 2018 non 2022
 TprimeToTZ_1700_2022.year      = 2022
-TprimeToTZ_1700_2022.dataset   = '/TprimeBtoTZ_M-1700_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1700_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER' 
+TprimeToTZ_1700_2022.dataset   =  "/TprimeBtoTZ_M-1700_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1700_v1-0fa328e40e38f44cd311b92489b92b5b/USER"
 TprimeToTZ_1700_2022.unix_code = 32003
+TprimeToTZ_1700_2022.process   = "TprimeToTZ_1700_2022"
 TprimeToTZ_1700_2022.EE        = 0
 
 TprimeToTZ_1800_2022           = sample(ROOT.kGreen+4, 1, 1001, "T#rightarrow tZ M1800GeV", "TprimeToTZ_1800_2022")
 TprimeToTZ_1800_2022.sigma     = 0.0004463 #pb
 TprimeToTZ_1800_2022.year      = 2022
-TprimeToTZ_1800_2022.dataset   = '/TprimeBtoTZ_M-1800_LH_TuneCP5_13p6TeV_madgraph-pythia8/apuglia-TprimeToTZ_1800_2022_v1-0fa328e40e38f44cd311b92489b92b5b/USER'
+TprimeToTZ_1800_2022.dataset   = ""
 TprimeToTZ_1800_2022.unix_code = 22000
+TprimeToTZ_1800_2022.process   = "TprimeToTZ_1800_2022"
 TprimeToTZ_1800_2022.EE        = 0
 
+################################DATA####################################################
 
+
+
+DataMuonC_2022              = sample(ROOT.kBlack, 1, 1001, "Data", "DataMuonC_2022")
+DataMuonC_2022.runP         = 'C'
+DataMuonC_2022.year         = 2022
+DataMuonC_2022.dataset      = '/Muon/apuglia-DataMuon_22Sep2023_v1-9d6cd248ad01d98982be66db74e631c2/USER'
+DataMuonC_2022.process     = "DataMuon_2022"
+DataMuonC_2022.unix_code    = 30100
+DataMuonC_2022.EE           = 0
+
+
+DataMuon_2022               = sample(ROOT.kBlack, 1, 1001, "Data", "DataMuon_2022")
+DataMuon_2022.year          = 2022
+DataMuon_2022.components    = [DataMuonC_2022]
+
+
+
+sample_dict = {
+
+
+    #######################################
+    ############# RUN III ################
+    #######################################
+
+    #####################2022
+    ############ QCD
+    'QCD_2022' : QCD_2022,
+    # "QCD_HT40to70_2022": QCD_HT40to70_2022, 
+    "QCD_HT70to100_2022": QCD_HT70to100_2022, 
+    "QCD_HT100to200_2022": QCD_HT100to200_2022, "QCD_HT200to400_2022": QCD_HT200to400_2022, 
+    "QCD_HT400to600_2022": QCD_HT400to600_2022, "QCD_HT600to800_2022": QCD_HT600to800_2022, 
+    "QCD_HT800to1000_2022": QCD_HT800to1000_2022, "QCD_HT1000to1200_2022": QCD_HT1000to1200_2022, 
+    "QCD_HT1200to1500_2022": QCD_HT1200to1500_2022, "QCD_HT1500to2000_2022": QCD_HT1500to2000_2022, "QCD_HT2000_2022": QCD_HT2000_2022,
+    ########### TT
+    'TT_2022': TT_2022, 'TT_semilep_2022' : TT_semilep_2022, 'TT_hadr_2022' : TT_hadr_2022, 'TT_dilep_2022' : TT_dilep_2022,
+    ########## SingleTop
+
+    ########## WJets
+    "WJets_2jets_2022": WJets_2jets_2022, 
+    "WJets_2jets0J_2022": WJets_2jets0J_2022, "WJets_2jets1J_2022": WJets_2jets1J_2022, "WJets_2jets2J_2022": WJets_2jets2J_2022,
+
+    "WJets_2022":WJets_2022, 
+    "WJets_HT120to200_2022":WJets_HT120to200_2022, "WJets_HT200to400_2022":WJets_HT200to400_2022, 
+    "WJets_HT400to800_2022":WJets_HT400to800_2022, "WJets_HT800to1500_2022":WJets_HT800to1500_2022, 
+    "WJets_HT1500to2500_2022":WJets_HT1500to2500_2022, "WJets_HT2500to4000_2022":WJets_HT2500to4000_2022, 
+    "WJets_HT4000to6000_2022":WJets_HT4000to6000_2022, "WJets_HT6000_2022":WJets_HT6000_2022,
+    ########## ZJetsToNuNu
+    "ZJetsToNuNu_2022":ZJetsToNuNu_2022, "ZJetsToNuNu_HT100to200_2022":ZJetsToNuNu_HT100to200_2022, 
+    "ZJetsToNuNu_HT200to400_2022":ZJetsToNuNu_HT200to400_2022, "ZJetsToNuNu_HT400to800_2022":ZJetsToNuNu_HT400to800_2022, 
+    "ZJetsToNuNu_HT800to1500_2022":ZJetsToNuNu_HT800to1500_2022, "ZJetsToNuNu_HT1500to2500_2022":ZJetsToNuNu_HT1500to2500_2022, 
+    "ZJetsToNuNu_HT2500_2022":ZJetsToNuNu_HT2500_2022,
+
+    "ZJetsToNuNu_2jets_2022":ZJetsToNuNu_2jets_2022,
+    "ZJetsToNuNu_2jets_PT40to100_1J_2022":ZJetsToNuNu_2jets_PT40to100_1J_2022, "ZJetsToNuNu_2jets_PT100to200_1J_2022":ZJetsToNuNu_2jets_PT100to200_1J_2022,
+    "ZJetsToNuNu_2jets_PT200to400_1J_2022":ZJetsToNuNu_2jets_PT200to400_1J_2022, "ZJetsToNuNu_2jets_PT400to600_1J_2022":ZJetsToNuNu_2jets_PT400to600_1J_2022,
+    "ZJetsToNuNu_2jets_PT600_1J_2022":ZJetsToNuNu_2jets_PT600_1J_2022, "ZJetsToNuNu_2jets_PT40to100_2J_2022":ZJetsToNuNu_2jets_PT40to100_2J_2022,
+    "ZJetsToNuNu_2jets_PT100to200_2J_2022":ZJetsToNuNu_2jets_PT100to200_2J_2022, "ZJetsToNuNu_2jets_PT200to400_2J_2022":ZJetsToNuNu_2jets_PT200to400_2J_2022,
+    "ZJetsToNuNu_2jets_PT400to600_2J_2022":ZJetsToNuNu_2jets_PT400to600_2J_2022, "ZJetsToNuNu_2jets_PT600_2J_2022":ZJetsToNuNu_2jets_PT600_2J_2022,
+                                    
+    ########## SIGNALS tDM or Tprime
+    "TprimeToTZ_700_2022":TprimeToTZ_700_2022,
+    "TprimeToTZ_800_2022":TprimeToTZ_800_2022,
+    "TprimeToTZ_900_2022":TprimeToTZ_900_2022,
+    "TprimeToTZ_1000_2022":TprimeToTZ_1000_2022,
+    "TprimeToTZ_1100_2022":TprimeToTZ_1100_2022,
+    "TprimeToTZ_1200_2022":TprimeToTZ_1200_2022,
+    "TprimeToTZ_1300_2022":TprimeToTZ_1300_2022,
+    "TprimeToTZ_1400_2022":TprimeToTZ_1400_2022,
+    "TprimeToTZ_1500_2022":TprimeToTZ_1500_2022,
+    "TprimeToTZ_1600_2022":TprimeToTZ_1600_2022,
+    "TprimeToTZ_1700_2022":TprimeToTZ_1700_2022,
+    "TprimeToTZ_1800_2022":TprimeToTZ_1800_2022,
+
+    "DataMuon_2022":DataMuon_2022, "DataMuonC_2022":DataMuonC_2022
+
+    
+
+    }

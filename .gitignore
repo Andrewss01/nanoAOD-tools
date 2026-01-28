@@ -8,3 +8,15 @@ build
 *.d
 *.so
 *.pcm
+*.root
+*.log
+*.err
+*.out
+tmp/
+__init__.py
+__pycache__/
+*.pyc
+.vscode/
+*.cc
+__pycache__/
+

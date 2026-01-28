@@ -1,5 +1,5 @@
 import os
-from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
+from PhysicsTools.NanoAODTools.postprocessing.samples.samples_2024 import *
 uid = int(os.getuid())
 
 

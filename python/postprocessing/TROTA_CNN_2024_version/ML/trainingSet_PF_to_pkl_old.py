@@ -17,8 +17,10 @@ hep.style.use(hep.style.CMS)
 import json
 from tqdm import tqdm
 import time
-
-
+'''
+QUESTO MODULO TRASFORMA I FILE IN PKL ED E' PENSATO PER GIRARE SU DATI DEL 2024 A CUI SONO STATE AGGIUNTE LE INFO
+DI JETPFIDX E JETID TRAMITE CMSSW_15_0_2 E TRAMITE JETID.PY
+'''
 start_time = time.time()
 
 ###### UTILITIES ######
@@ -46,89 +48,50 @@ def fill_mass(mass_dnn, idx_top, j0, j1, j2, fj, variables_cluster):
     return mass_dnn
 
 def fill_fj(fj_dnn, fj, idx_top):
-    if year==2018: 
-        fj_dnn[idx_top, 0]  = fj.area
-        fj_dnn[idx_top, 1]  = fj.btagDeepB
-        fj_dnn[idx_top, 2]  = fj.deepTagMD_TvsQCD
-        fj_dnn[idx_top, 3]  = fj.deepTagMD_WvsQCD
-        fj_dnn[idx_top, 4]  = fj.deepTag_QCD
-        fj_dnn[idx_top, 5]  = fj.deepTag_QCDothers
-        fj_dnn[idx_top, 6]  = fj.deepTag_TvsQCD
-        fj_dnn[idx_top, 7]  = fj.deepTag_WvsQCD
-        fj_dnn[idx_top, 8]  = fj.eta
-        fj_dnn[idx_top, 9]  = fj.mass
-        fj_dnn[idx_top, 10] = fj.phi
-        fj_dnn[idx_top, 11] = fj.pt
-    elif year==2022: 
-        fj_dnn[idx_top, 0]  = fj.area
-        fj_dnn[idx_top, 1]  = fj.btagDeepB
-        fj_dnn[idx_top, 2]  = fj.particleNetWithMass_TvsQCD
-        fj_dnn[idx_top, 3]  = fj.particleNetWithMass_WvsQCD
-        fj_dnn[idx_top, 4]  = fj.particleNet_QCD
-        fj_dnn[idx_top, 5]  = fj.particleNetWithMass_QCD
-        fj_dnn[idx_top, 6]  = fj.particleNet_XbbVsQCD
-        fj_dnn[idx_top, 7]  = fj.particleNet_XqqVsQCD
-        fj_dnn[idx_top, 8]  = fj.eta
-        fj_dnn[idx_top, 9]  = fj.mass
-        fj_dnn[idx_top, 10]  = fj.phi
-        fj_dnn[idx_top, 11]  = fj.pt
+    fj_dnn[idx_top, 0]   = fj.area
+    fj_dnn[idx_top, 1]   = fj.globalParT3_Xbb
+    fj_dnn[idx_top, 2]   = fj.particleNetWithMass_TvsQCD
+    fj_dnn[idx_top, 3]   = fj.particleNetWithMass_WvsQCD
+    fj_dnn[idx_top, 4]   = fj.particleNet_QCD
+    fj_dnn[idx_top, 5]   = fj.particleNetWithMass_QCD
+    fj_dnn[idx_top, 6]   = fj.particleNet_XbbVsQCD
+    fj_dnn[idx_top, 7]   = fj.particleNet_XqqVsQCD
+    fj_dnn[idx_top, 8]   = fj.eta
+    fj_dnn[idx_top, 9]   = fj.mass
+    fj_dnn[idx_top, 10]  = fj.phi
+    fj_dnn[idx_top, 11]  = fj.pt
+    fj_dnn[idx_top, 12]  = fj.globalParT3_TopbWev
+    fj_dnn[idx_top, 13]  = fj.globalParT3_TopbWmv
+    fj_dnn[idx_top, 14]  = fj.globalParT3_TopbWqq
     return fj_dnn
 
 def fill_jets(jets_dnn, j0, j1, j2, sumjet, fj_phi, fj_eta, idx_top): 
-    if year==2018:
-        jets_dnn[idx_top, 0, 0] = j0.area
-        jets_dnn[idx_top, 0, 1] = j0.btagDeepB
-        jets_dnn[idx_top, 0, 2] = deltaEta(j0.eta, sumjet.Eta())#j0.#delta eta 3jets-jet
-        jets_dnn[idx_top, 0, 3] = j0.mass
-        jets_dnn[idx_top, 0, 4] = deltaPhi(j0.phi, sumjet.Phi())#j0.#delta phi 3jets-jet
-        jets_dnn[idx_top, 0, 5] = j0.pt
-        jets_dnn[idx_top, 0, 6] = deltaPhi(j0.phi, fj_phi)#j0.#deltaphi fj-jet
-        jets_dnn[idx_top, 0, 7] = deltaEta(j0.eta, fj_eta)#j0.#deltaeta fj-jet
-        
-        jets_dnn[idx_top, 1, 0] = j1.area
-        jets_dnn[idx_top, 1, 1] = j1.btagDeepB
-        jets_dnn[idx_top, 1, 2] = deltaEta(j1.eta, sumjet.Eta())
-        jets_dnn[idx_top, 1, 3] = j1.mass
-        jets_dnn[idx_top, 1, 4] = deltaPhi(j1.phi, sumjet.Phi())
-        jets_dnn[idx_top, 1, 5] = j1.pt
-        jets_dnn[idx_top, 1, 6] = deltaPhi(j1.phi, fj_phi)
-        jets_dnn[idx_top, 1, 7] = deltaEta(j1.eta, fj_eta)
-        if hasattr(j2,"pt"):
-            jets_dnn[idx_top, 2, 0] = j2.area
-            jets_dnn[idx_top, 2, 1] = j2.btagDeepB
-            jets_dnn[idx_top, 2, 2] = deltaEta(j2.eta, sumjet.Eta())#j2.#delta eta fj-jet
-            jets_dnn[idx_top, 2, 3] = j2.mass
-            jets_dnn[idx_top, 2, 4] = deltaPhi(j2.phi, sumjet.Phi())#j2.#delta phi fatjet-jet
-            jets_dnn[idx_top, 2, 5] = j2.pt
-            jets_dnn[idx_top, 2, 6] = deltaPhi(j2.phi, fj_phi)
-            jets_dnn[idx_top, 2, 7] = deltaEta(j2.eta, fj_eta)
-    elif year==2022:
-        jets_dnn[idx_top, 0, 0] = j0.area
-        jets_dnn[idx_top, 0, 1] = j0.btagDeepFlavB
-        jets_dnn[idx_top, 0, 2] = deltaEta(j0.eta, sumjet.Eta())#j0.#delta eta 3jets-jet
-        jets_dnn[idx_top, 0, 3] = j0.mass
-        jets_dnn[idx_top, 0, 4] = deltaPhi(j0.phi, sumjet.Phi())#j0.#delta phi 3jets-jet
-        jets_dnn[idx_top, 0, 5] = j0.pt
-        jets_dnn[idx_top, 0, 6] = deltaPhi(j0.phi, fj_phi)#j0.#deltaphi fj-jet
-        jets_dnn[idx_top, 0, 7] = deltaEta(j0.eta, fj_eta)#j0.#deltaeta fj-jet
-        
-        jets_dnn[idx_top, 1, 0] = j1.area
-        jets_dnn[idx_top, 1, 1] = j1.btagDeepFlavB
-        jets_dnn[idx_top, 1, 2] = deltaEta(j1.eta, sumjet.Eta())
-        jets_dnn[idx_top, 1, 3] = j1.mass
-        jets_dnn[idx_top, 1, 4] = deltaPhi(j1.phi, sumjet.Phi())
-        jets_dnn[idx_top, 1, 5] = j1.pt
-        jets_dnn[idx_top, 1, 6] = deltaPhi(j1.phi, fj_phi)
-        jets_dnn[idx_top, 1, 7] = deltaEta(j1.eta, fj_eta)
-        if hasattr(j2,"pt"):
-            jets_dnn[idx_top, 2, 0] = j2.area
-            jets_dnn[idx_top, 2, 1] = j2.btagDeepFlavB
-            jets_dnn[idx_top, 2, 2] = deltaEta(j2.eta, sumjet.Eta())#j2.#delta eta fj-jet
-            jets_dnn[idx_top, 2, 3] = j2.mass
-            jets_dnn[idx_top, 2, 4] = deltaPhi(j2.phi, sumjet.Phi())#j2.#delta phi fatjet-jet
-            jets_dnn[idx_top, 2, 5] = j2.pt
-            jets_dnn[idx_top, 2, 6] = deltaPhi(j2.phi, fj_phi)
-            jets_dnn[idx_top, 2, 7] = deltaEta(j2.eta, fj_eta)
+    jets_dnn[idx_top, 0, 0] = j0.area
+    jets_dnn[idx_top, 0, 1] = j0.btagUParTAK4B 
+    jets_dnn[idx_top, 0, 2] = deltaEta(j0.eta, sumjet.Eta())#j0.#delta eta 3jets-jet
+    jets_dnn[idx_top, 0, 3] = j0.mass
+    jets_dnn[idx_top, 0, 4] = deltaPhi(j0.phi, sumjet.Phi())#j0.#delta phi 3jets-jet
+    jets_dnn[idx_top, 0, 5] = j0.pt
+    jets_dnn[idx_top, 0, 6] = deltaPhi(j0.phi, fj_phi)#j0.#deltaphi fj-jet
+    jets_dnn[idx_top, 0, 7] = deltaEta(j0.eta, fj_eta)#j0.#deltaeta fj-jet
+    
+    jets_dnn[idx_top, 1, 0] = j1.area
+    jets_dnn[idx_top, 1, 1] = j1.btagUParTAK4B
+    jets_dnn[idx_top, 1, 2] = deltaEta(j1.eta, sumjet.Eta())
+    jets_dnn[idx_top, 1, 3] = j1.mass
+    jets_dnn[idx_top, 1, 4] = deltaPhi(j1.phi, sumjet.Phi())
+    jets_dnn[idx_top, 1, 5] = j1.pt
+    jets_dnn[idx_top, 1, 6] = deltaPhi(j1.phi, fj_phi)
+    jets_dnn[idx_top, 1, 7] = deltaEta(j1.eta, fj_eta)
+    if hasattr(j2,"pt"):
+        jets_dnn[idx_top, 2, 0] = j2.area
+        jets_dnn[idx_top, 2, 1] = j2.btagUParTAK4B
+        jets_dnn[idx_top, 2, 2] = deltaEta(j2.eta, sumjet.Eta())#j2.#delta eta fj-jet
+        jets_dnn[idx_top, 2, 3] = j2.mass
+        jets_dnn[idx_top, 2, 4] = deltaPhi(j2.phi, sumjet.Phi())#j2.#delta phi fatjet-jet
+        jets_dnn[idx_top, 2, 5] = j2.pt
+        jets_dnn[idx_top, 2, 6] = deltaPhi(j2.phi, fj_phi)
+        jets_dnn[idx_top, 2, 7] = deltaEta(j2.eta, fj_eta)
     return jets_dnn
 
 #fai un boost e porta eta e phi nel sistema di riferimento del top
@@ -171,15 +134,15 @@ def fill_PFCs(n_PFCs, PFCs_dnn, PFCs, idx_top, pt_top, eta_top, phi_top, M_top):
             PFCs_dnn[idx_top, i, 1] = eta_boost
             PFCs_dnn[idx_top, i, 2] = phi_boost
             PFCs_dnn[idx_top, i, 3] = mass_boost
-            PFCs_dnn[idx_top, i, 4] = particle.d0
-            PFCs_dnn[idx_top, i, 5] = particle.dz
-            PFCs_dnn[idx_top, i, 6] = particle.JetDeltaR
-            PFCs_dnn[idx_top, i, 7] = particle.FatJetDeltaR
-            PFCs_dnn[idx_top, i, 8] = particle.charge
-            PFCs_dnn[idx_top, i, 9] = particle.pdgId
-            PFCs_dnn[idx_top, i, 10] = particle.pvAssocQuality  
-            PFCs_dnn[idx_top, i, 11] = particle.IsInJet
-            PFCs_dnn[idx_top, i, 12] = particle.IsInFatJet
+            # PFCs_dnn[idx_top, i, 4] = particle.d0
+            # PFCs_dnn[idx_top, i, 5] = particle.dz
+            PFCs_dnn[idx_top, i, 4] = particle.JetDeltaR
+            PFCs_dnn[idx_top, i, 5] = particle.FatJetDeltaR
+            # PFCs_dnn[idx_top, i, 6] = particle.charge
+            PFCs_dnn[idx_top, i, 6] = particle.pdgId
+            # PFCs_dnn[idx_top, i, 10] = particle.pvAssocQuality  
+            PFCs_dnn[idx_top, i, 7] = particle.IsInJet
+            PFCs_dnn[idx_top, i, 8] = particle.IsInFatJet
     return PFCs_dnn
     
 def fill_SVs(n_SVs, SVs_dnn, SVs, idx_top, pt_top, eta_top, phi_top, M_top):
@@ -209,22 +172,16 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
     
     doLoop        = True
     # Skip if empty file
-    # qcd_score_thr_mix, ft_score_thr_mix =  0.20259279012680054,  0.6126335859298706
-    # qcd_score_thr_res, ft_score_thr_res = 0.7311983704566956, 0.7370293140411377
     if tree.GetEntries()==0:
         doLoop    = False
     batch_output = {component: {cat: 0 for cat in categories}}
-    if doLoop:
-        if year==2018:
-            data_jets      = np.zeros((1,3,8))
-            data_fatjets   = np.zeros((1,12))
-        elif year==2022:        
-            n_SVs = 3
-            data_jets           = np.zeros((1,3,8))
-            data_fatjets        = np.zeros((1,12))
-            #mergia jet e fatjet e salvane sui 40 !!senza overlap e controlla l'ordinamento in pt eindice di distanza e se appatriene ejet fgj o entrambi
-            data_PFC         = np.zeros((1,n_PFCs,13)) #!! setta il masssimo delle 20 da prendere e andranno usate LSTM
-            data_SV          = np.zeros((1, n_SVs,12 ))
+    if doLoop:      
+        # n_SVs = 3
+        data_jets           = np.zeros((1,3,8))
+        data_fatjets        = np.zeros((1,15))
+        #mergia jet e fatjet e salvane sui 40 !!senza overlap e controlla l'ordinamento in pt eindice di distanza e se appatriene ejet fgj o entrambi
+        data_PFC         = np.zeros((1,n_PFCs,9)) #!! setta il masssimo delle 20 da prendere e andranno usate LSTM
+        # data_SV          = np.zeros((1, n_SVs,12 ))
         data_mass      = np.zeros((1,3))
         data_label     = np.zeros((1,1))
         event_category = np.zeros((1,1))
@@ -241,11 +198,11 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
             tops         = Collection(event, "TopMixed")
             ntops        = len(tops)
 
-            PFCands      = Collection(event,"PFCands")
-            SV_vertexes  = Collection(event, "SV")
+            PFCands      = Collection(event,"PFCand")
+            # SV_vertexes  = Collection(event, "SV")
 
             Indexes_pfc  = Collection(event, "IndexesPFC")
-            Indexes_sv   = Collection(event, "IndexesSV") 
+            # Indexes_sv   = Collection(event, "IndexesSV") 
             
 
             #presel toglibile se vogliamo
@@ -257,35 +214,41 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
             if ntops==0: 
                 continue   
             for top_num, t in enumerate(tops):
-                # if select_top_over_threshold: # AGGIUSTA NOME DATO ALLO SCORE, ALTRIMENTI DA ERRORE
-                #         if t.QCDScore <= qcd_score_thr_mix and t.FTScore <= ft_score_thr_mix:
-                #             continue
-                        # pass
+                # if t.pt>=pt_cut:
+                    # if select_top_over_threshold: # AGGIUSTA NOME DATO ALLO SCORE, ALTRIMENTI DA ERRORE
+                    #     if t.score_base<thr:
+                    #         continue
+                    #     # pass
                 best_top_category       = topcategory(t)
                 
-                if year==2018:
-                    jet_toappend            = np.zeros((1,3,8))
-                    fatjet_toappend         = np.zeros((1,12))
-                elif year==2022:
-                    jet_toappend            = np.zeros((1,3,8))
-                    fatjet_toappend         = np.zeros((1,12))
-                    PFC_toappend            = np.zeros((1,n_PFCs,13))
-                    SVs_toappend            = np.zeros((1,n_SVs, 12))
+
+                jet_toappend                = np.zeros((1,3,8))
+                fatjet_toappend             = np.zeros((1,15))
+                PFC_toappend                = np.zeros((1,n_PFCs, 9))
+            
+                # if year==2018:
+                #     jet_toappend            = np.zeros((1,3,8))
+                #     fatjet_toappend         = np.zeros((1,12))
+                # elif year==2022:
+                #     jet_toappend            = np.zeros((1,3,8))
+                #     fatjet_toappend         = np.zeros((1,12))
+                #     PFC_toappend            = np.zeros((1,n_PFCs,13))
+                #     SVs_toappend            = np.zeros((1,n_SVs, 12))
                 mass_toappend               = np.zeros((1,3))
                 label_toappend              = np.zeros((1,1))
                 event_category_toappend     = np.zeros((1,1))
 
                 PFCs=[]
                 pfc_indexes=[]
-                sv_indexes = []
-                SVs = []
+                # sv_indexes = []
+                # SVs = []
 
                 for idx in Indexes_pfc:    
                     #print(idx.idxPFC)
                     pfc_indexes.append(idx.idxPFC)
                 
-                for idx in Indexes_sv:
-                    sv_indexes.append(idx.idxSV)
+                # for idx in Indexes_sv:
+                #     sv_indexes.append(idx.idxSV)
 
                 #print(indexes)
                 #print(idx.idxPFC)
@@ -294,16 +257,16 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                 end_index_pfc = pfc_indexes.index(-(top_num+2))
                 idx_pfc_to_append = pfc_indexes[start_index_pfc+1:end_index_pfc]
 
-                start_index_sv = sv_indexes.index(-(top_num + 1))
-                end_index_sv   = sv_indexes.index(-(top_num + 2))
-                idx_sv_to_append = sv_indexes[start_index_sv+1 : end_index_sv]
+                # start_index_sv = sv_indexes.index(-(top_num + 1))
+                # end_index_sv   = sv_indexes.index(-(top_num + 2))
+                # idx_sv_to_append = sv_indexes[start_index_sv+1 : end_index_sv]
                 for particle in PFCands: #ciclo sulle particles
                     if particle.Idx in idx_pfc_to_append:
                         PFCs.append(particle)
             
-                for vertex in SV_vertexes:
-                    if vertex.Idx in idx_sv_to_append:
-                        SVs.append(vertex)
+                # for vertex in SV_vertexes:
+                #     if vertex.Idx in idx_sv_to_append:
+                #         SVs.append(vertex)
 
                 # if t.truth!=-1:
                 PFC_toappend    = fill_PFCs(n_PFCs=n_PFCs,
@@ -315,14 +278,14 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                                         phi_top=t.phi,
                                         M_top=t.mass)        
                 
-                SVs_toappend    = fill_SVs(n_SVs= n_SVs, 
-                                            SVs_dnn= SVs_toappend, 
-                                            SVs = SVs, 
-                                            idx_top = 0, 
-                                            pt_top = t.pt, 
-                                            eta_top = t.eta,
-                                            phi_top = t.phi,
-                                            M_top = t.mass)
+                # SVs_toappend    = fill_SVs(n_SVs= n_SVs, 
+                #                             SVs_dnn= SVs_toappend, 
+                #                             SVs = SVs, 
+                #                             idx_top = 0, 
+                #                             pt_top = t.pt, 
+                #                             eta_top = t.eta,
+                #                             phi_top = t.phi,
+                #                             M_top = t.mass)
                 
                 if best_top_category == 0: #3j1fj
                     fj              = fatjets[t.idxFatJet]
@@ -422,7 +385,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                 data_jets         = np.append(data_jets,      jet_toappend,            axis = 0)
                 data_fatjets      = np.append(data_fatjets,   fatjet_toappend,         axis = 0)
                 data_PFC          = np.append(data_PFC,       PFC_toappend,            axis = 0)
-                data_SV           = np.append(data_SV,        SVs_toappend,            axis = 0)
+                # data_SV           = np.append(data_SV,        SVs_toappend,            axis = 0)
                 #print("data", data_mass,"\nto append", mass_toappend)
                 data_mass       = np.append(data_mass,      mass_toappend,           axis = 0)
                 if (label_toappend[0]==2 and verbose): 
@@ -433,7 +396,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                     data_jets       = np.delete(data_jets,      0, axis = 0)
                     data_fatjets    = np.delete(data_fatjets,   0, axis = 0)
                     data_PFC        = np.delete(data_PFC,       0, axis = 0)
-                    data_SV         = np.delete(data_SV,        0, axis = 0)
+                    # data_SV         = np.delete(data_SV,        0, axis = 0)
                     data_mass       = np.delete(data_mass,      0, axis = 0)
                     data_label      = np.delete(data_label,     0, axis = 0)
                     event_category  = np.delete(event_category, 0, axis = 0)
@@ -447,7 +410,7 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
                 n = 2
             else:
                 n = 0
-            batch_output[component][cat] = [data_jets[event_category == n], data_fatjets[event_category == n],data_mass[event_category == n], data_label[event_category == n], data_PFC[event_category == n],  data_SV[event_category == n] ]
+            batch_output[component][cat] = [data_jets[event_category == n], data_fatjets[event_category == n],data_mass[event_category == n], data_label[event_category == n], data_PFC[event_category == n]]
             #output[component][cat] = [data_PFC[event_category == n], data_fatPFC[event_category == n], data_mass[event_category == n], data_label[event_category == n]]
     rfile.Close()
     return batch_output
@@ -457,9 +420,10 @@ def process_batch(batch_indexes, inFile_to_open, component, categories, n_PFCs, 
 def merge_batch_output(output, batch_output):
     # Iterate over the components in batch_output (component is the key, categories is the dataset for that component)
     for component, categories in batch_output.items():
-        #print(categories)
+        print(categories, component)
         for cat, data_type in categories.items():
             #print(len(data_type))
+            print(cat, data_type)
             for i in range(len(data_type)):
                 #print(i,data_type[i])
                 output[component][cat][i] = np.concatenate((output[component][cat][i],data_type[i]),axis=0)
@@ -485,14 +449,19 @@ parser.add_argument('-pt', '--pt_cut',                      dest = 'pt_cut',    
 
 options                     = parser.parse_args()
 
-usage  = "python3 trainingSet_PF_to_pkl.py -component tt -inFile_to_open /eos/user/a/apuglia/thesis/Datasets/nano_mcRun3_ttsl1_Skim_total.root -n 20 -pt 0" 
+'''
+usage  = "
+python3 trainingSet_PF_to_pkl.py -component tt -inFile_to_open /eos/user/a/apuglia/thesis/Datasets/nano_mcRun3_ttsl1_Skim_total.root -n 20 -pt 0" 
+
+python3 trainingSet_PF_to_pkl.py -component tt_dilep -inFile_to_open /eos/user/a/apuglia/TROTA_2024/PostProcessed_Datasets/TT_dilep_2024/file_0/file_0.root -verbose -n 20 -path_to_pkl = /eos/user/a/apuglia/TROTA_2024/PostProcessed_Datasets/TT_dilep_2024/trainingSet_file0.pkl -year 2024
+''' 
 ### ARGS ###
 year                        = options.year
 component                   = options.component
 inFile_to_open              = str(options.inFile_to_open)
 nev                         = options.nev    
 path_to_pkl                 = options.path_to_pkl
-select_top_over_threshold   = True
+select_top_over_threshold   = options.select_top_over_threshold
 thr                         = options.thr
 n_PFCs                      = options.n_PFCs
 # n_SVs                       = options.n_SVs
