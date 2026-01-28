@@ -71,7 +71,7 @@ for sample_ in samples:
         print('file is: ', file)
         rfile = ROOT.TFile.Open(file, 'READ')
         tree = InputTree(rfile.Get('Events'))
-        for i in range(100000):
+        for i in range(10000):
             event = Event(tree, i)
             topmixed = Collection(event, "TopMixed")
 

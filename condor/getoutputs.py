@@ -1,7 +1,7 @@
 # to run from lxplus9
 import ROOT, os
 import subprocess
-from samples_2024 import *
+from PhysicsTools.NanoAODTools.postprocessing.samples.samples_2024 import *
 import optparse
 import json
 from tqdm import tqdm
@@ -10,7 +10,7 @@ import sys
 usage = 'python3 getoutputs.py -d dataset_name'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
-parser.add_option('-o', '--output', dest='output', type=str, default = 'dict_samples_2024.json', help='Please enter a json output file')
+parser.add_option('-o', '--output', dest='output', type=str, default = '../python/postprocessing/samples/dict_samples_2024.json', help='Please enter a json output file')
 parser.add_option('--tier', dest='tier', type=str, default = 'bari', help='Please enter location where to write the output file (tier pisa or bari)')
 (opt, args) = parser.parse_args()
 where_to_read = opt.tier
