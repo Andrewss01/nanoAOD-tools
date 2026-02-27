@@ -128,20 +128,21 @@ for sample in samples:
             try:
                 rootfile = ROOT.TFile.Open(f)
                 out_strings.append(f)
-                runstree = rootfile.Get("Runs")
-                runstree.GetEntry(0)
-                geneventSumw = runstree.genEventSumw
-                tree = rootfile.Get("Events")
-                tree.GetEntry(0)
-                eventweight = abs(tree.Generator_weight)
-                n = round(abs(geneventSumw/eventweight))
-                ntot.append(n)
+                dir_ = rootfile.Get("plots")
+                h_genweight = dir_.Get("h_genweight")
+                # runstree = rootfile.Get("Runs")
+                n_toh_genweight.GetBinContent(0)
+                # runstree.GetEntry(0)
+                # geneventSumw = runstree.genEventSumw
+                # tree = rootfile.Get("Events")
+                # tree.GetEntry(0)
+                # eventweight = abs(tree.Generator_weight)
+                # n = round(abs(geneventSumw/eventweight))
+                # ntot.append(n)
             except:
-                # print("Could not open file: ", f)
-                
-                
-                n = rootfile.Get('Events').GetEntries()
-                
+                print("Could not open file: ", f)
+                # n = rootfile.Get('Events').GetEntries()
+                n = None
                 ntot.append(n)
                 continue
             # histo = rootfile.Get("plots/h_genweight")

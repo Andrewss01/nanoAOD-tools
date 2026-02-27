@@ -1,0 +1,16 @@
+{
+    "j_units": 15,
+    "j_activation": "sigmoid",
+    "j_kernel_initializer": "random_normal",
+    "pfc_units": 10,
+    "pfc_activation": "relu",
+    "pfc_kernel_initializer": "random_normal",
+    "dense_units": 5,
+    "dense_activation": "relu",
+    "dense_kernel_initializer": "random_normal",
+    "learning_rate": 0.1,
+    "tuner/epochs": 2,
+    "tuner/initial_epoch": 0,
+    "tuner/bracket": 4,
+    "tuner/round": 0
+}

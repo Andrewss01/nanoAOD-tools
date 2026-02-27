@@ -1,0 +1,14 @@
+{
+    "j_units": 30,
+    "j_activation": "relu",
+    "j_kernel_initializer": "random_uniform",
+    "dense_units": 25,
+    "dense_activation": "tanh",
+    "dense_kernel_initializer": "random_normal",
+    "learning_rate": 0.001,
+    "tuner/epochs": 100,
+    "tuner/initial_epoch": 34,
+    "tuner/bracket": 4,
+    "tuner/round": 4,
+    "tuner/trial_id": "0143"
+}

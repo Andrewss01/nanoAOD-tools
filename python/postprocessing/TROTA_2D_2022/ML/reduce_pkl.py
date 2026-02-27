@@ -40,7 +40,7 @@ inDir        = args.inDir
 # # multiscore    = args.multiscore
 # # label         = args.label
 verbose = True
-path_pkls = '/eos/user/a/apuglia/TROTA/pkls/'+inDir+'/'
+path_pkls = '/eos/user/a/apuglia/Tprime/pkls/'+inDir+'/'
 
 for fileName in os.listdir(path_pkls):
 
@@ -97,7 +97,10 @@ for fileName in os.listdir(path_pkls):
             'len 3: ',len(dataset[c][cat][3]), 'lent 4:', len(dataset[c][cat][4]))
 
 
-    path_to_pkl = '/eos/user/a/apuglia/TROTA/pkls/training_dataset/' + fileName
+    path_to_pkl = '/eos/user/a/apuglia/Tprime/pkls/training_dataset_pt_cut_600/' 
+
+    if not os.path.exists(path_to_pkl):
+        os.makedirs(path_to_pkl)
     print(path_to_pkl)
-    with open(path_to_pkl, "wb") as f:
+    with open(path_to_pkl + fileName, "wb") as f:
         pkl.dump(dataset, f)

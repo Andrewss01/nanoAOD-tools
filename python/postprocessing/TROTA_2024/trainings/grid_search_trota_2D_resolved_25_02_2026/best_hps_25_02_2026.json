@@ -1,0 +1,10 @@
+{
+    "j_units": 96,
+    "pfc_units": 64,
+    "dense_units": 32,
+    "learning_rate": 6.117391285246738e-05,
+    "tuner/epochs": 2,
+    "tuner/initial_epoch": 0,
+    "tuner/bracket": 4,
+    "tuner/round": 0
+}
