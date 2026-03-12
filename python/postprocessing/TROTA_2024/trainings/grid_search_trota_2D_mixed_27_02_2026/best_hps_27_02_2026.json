@@ -1,0 +1,12 @@
+{
+    "fj_units": 64,
+    "j_units": 32,
+    "j_dropout": 0.0,
+    "dense_units": 128,
+    "learning_rate": 0.001,
+    "tuner/epochs": 100,
+    "tuner/initial_epoch": 34,
+    "tuner/bracket": 4,
+    "tuner/round": 4,
+    "tuner/trial_id": "0144"
+}

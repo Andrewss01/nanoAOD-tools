@@ -274,12 +274,12 @@ def fill_SVs(n_SVs, SVs_dnn, SVs, idx_top, pt_top, eta_top, phi_top, M_top, year
 
 
 
-path_to_model = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/TROTA_CNN_2024_version/trainings/" % os.environ["CMSSW_BASE"]
+path_to_model = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/" % os.environ["CMSSW_BASE"]
 
 
 # model_Mixed = 'training_pfsv_Mixed_31_08_2025/model_31_08_2025.h5'
-model_Mixed = 'grid_search_trota_mixed_05_02_2026/model_05_02_2026.h5'
-model_Resolved = 'grid_search_trota_resolved_04_02_2026/model_04_02_2026.h5'
+model_Mixed = 'models/mixed/model_03_03_2026.h5'
+model_Resolved = 'models/resolved/model_04_02_2026.h5'
 
 models                  = {}
 models['mixed'] = tf.keras.models.load_model(path_to_model + model_Mixed)
