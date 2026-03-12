@@ -239,9 +239,8 @@ class trainer:
         outputs = Dense(3, activation = 'softmax')(x)
 
         outputs = Dense(3, activation = 'softmax')(x)
-        print('best hps are: ', self.best_hps['fj_units'], self.best_hps['fj_activation'], self.best_hps['fj_kernel_initializer'], 
-              self.best_hps['j_units'], self.best_hps['j_activation'], self.best_hps['j_kernel_initializer'], 
-              self.best_hps['j_dropout'], self.best_hps['learning_rate'])
+        print('best hps are: ', self.best_hps['fj_units'],self.best_hps['j_units'],  
+                self.best_hps['j_dropout'], self.best_hps['learning_rate'])
         self.model = tf.keras.Model(inputs = [fj_inputs, jet_inputs, top_inputs], outputs = outputs)
 
         optimizer = tf.keras.optimizers.Nadam(learning_rate = self.best_hps['learning_rate'])

@@ -342,7 +342,7 @@ class trainer:
 
     def training(self, validation_split, epochs, batch_size, save_model = True, path_to_model = outModel ):     
         self.callbacks()
-        self.model_builder(self.X_jet_train.shape[1:], self.X_top_train.shape[1], self.X_pfc_train.shape[1:])
+        self.model_builder(self.X_jet_train.shape[2], self.X_top_train.shape[1], self.X_pfc_train.shape[2])
         print('model is: ', self.model)
         print('y train is: ', np.unique(self.y_train))
         y_flat = self.y_train.flatten()

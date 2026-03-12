@@ -181,11 +181,11 @@ class trainer:
         
         # j_dropout = hp.Choice('j_dropout', values = list(np.arange(0,1,0.3)))
         jet1_processed = Dense(j_units, activation=j_activation, kernel_initializer = j_kernel_initializer)(jet_1)
-        jet1_processed.Dropout(0.2)(jet1_processed)
+        jet1_processed = Dropout(0.2)(jet1_processed)
         jet2_processed = Dense(j_units, activation=j_activation, kernel_initializer = j_kernel_initializer)(jet_2)
-        jet2_processed.Dropout(0.2)(jet2_processed)
+        jet2_processed = Dropout(0.2)(jet2_processed)
         jet3_processed = Dense(j_units, activation=j_activation, kernel_initializer = j_kernel_initializer)(jet_3)
-        jet3_processed.Dropout(0.2)(jet3_processed)
+        jet3_processed = Dropout(0.2)(jet3_processed)
         x = concatenate([jet1_processed, jet2_processed, jet3_processed])
        
         dense_units = hp.Int('dense_units', min_value =32,max_value = 96, step = 64)
